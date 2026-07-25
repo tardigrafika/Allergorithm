@@ -18,7 +18,7 @@ EMBEDDING_META = Path(
 )
 
 GOLD = Path(
-    "/home/lana/ALERGRAF/output/gold_standard_cross_reactivity.csv"
+    "/home/lana/ALERGRAF/output/cross_reactive_combined.csv"
 )
 
 OUTPUT = Path(
