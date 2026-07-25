@@ -1,57 +1,27 @@
 """
-HITS@K and MRR benchmark for ESM-2 embeddings.
+HITS@K и MRR benchmark za ESM-2 embeddinge
+Cilj: Proveriti da li cosine similarity ESM-2 embeddinga može da rangira poznate cross-reactive alergene visoko.
 
-Goal:
-Evaluate whether ESM-2 embedding cosine similarity can rank
-known cross-reactive allergen partners highly.
+Za svaki poznati cross-reactive par:
 
-For each known cross-reactive pair:
-    1. Take allergen A.
-    2. Compare it against all other allergens.
-    3. Rank all candidates by cosine similarity.
-    4. Find the rank of the known cross-reactive partner.
-    5. Calculate Hits@K and Reciprocal Rank.
+1. Uzme se alergen A.
+2. Poredi se sa svim ostalim alergenima.
+3. Kandidati se rangiraju prema cosine similarity.
+4. Proverava se pozicija poznatog cross-reactive partnera.
+5. Računaju se Hits@K i Reciprocal Rank.
 
-Evaluation is performed in BOTH directions:
+Evaluacija se radi u oba smera: A → B i B → A.
 
-    Allergen A -> Allergen B
-    Allergen B -> Allergen A
+Mapiranje: Pošto gold standard koristi zvanična imena alergena, a embeddingi WHO/IUIS ID-jeve, vrši se mapiranje:
 
-Important:
-The gold standard uses official allergen names in columns
-'allergen_id_1' and 'allergen_id_2', for example:
+official name → allergen ID → ESM-2 embedding
 
-    Bet v 1.0101
-    Mal d 1.0101
+Metrike: Hits@1, Hits@5, Hits@10, Hits@20 i MRR
 
-The embeddings use WHO/IUIS allergen IDs, for example:
+Ulazi: `embeddings.pkl`, `embeddings.parquet`, `gold_standard_cross_reactivity.csv`
 
-    WHO_802_ISO_1191.0
+Izlaz: `hits_mrr_results.csv`
 
-Therefore, this script maps:
-
-    official_name
-          |
-          v
-    allergen_id
-          |
-          v
-    ESM-2 embedding
-
-Metrics:
-    Hits@1
-    Hits@5
-    Hits@10
-    Hits@20
-    MRR
-
-Inputs:
-    embeddings/embeddings.pkl
-    embeddings/embeddings.parquet
-    output/gold_standard_cross_reactivity.csv
-
-Outputs:
-    output/hits_mrr_results.csv
 """
 
 
@@ -76,7 +46,7 @@ METADATA = Path(
 )
 
 GOLD = Path(
-    "/home/lana/ALERGRAF/output/gold_standard_cross_reactivity.csv"
+    "/home/lana/ALERGRAF/output/cross_reactive_combined.csv"
 )
 
 OUTPUT = Path(
