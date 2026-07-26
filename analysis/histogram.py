@@ -1,10 +1,10 @@
 """
-Plot cosine similarity distributions.
+Plot cosine similarity distributions
 
-Input:
+Ulaz:
     output/cosine_baseline_evaluation.csv
 
-Output:
+Izlaz:
     output/cosine_similarity_histogram.png
 """
 

@@ -7,9 +7,6 @@ Input:
 Outputs:
     data/embeddings.pkl
     data/embeddings.parquet
-
-Author: Lana Lejić
-Project: Prediction of Cross-Reactive Food Allergies Using Protein Language Models
 """
 
 from pathlib import Path
