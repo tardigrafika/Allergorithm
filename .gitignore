@@ -1,7 +1,10 @@
 # Python
 __pycache__/
 *.py[cod]
-
+.claude/
+plan/
+.gitignore
+alergraf/
 # Virtual environments
 venv/
 .venv/
@@ -27,3 +30,7 @@ output/
 
 # Datasets
 *.csv
+
+# Generated embeddings
+*.pkl
+*.parquet
