@@ -23,9 +23,9 @@ from collections import defaultdict
 import numpy as np
 
 # ---------------------------------------------------------------------------
-# Evidence tier -> confidence weight for positives.
-# Everything not explicitly listed falls back to DEFAULT_POS_WEIGHT.
-# Feel free to edit these to taste -- they're a starting point, not gospel.
+# nivo dokazanosti > confidence weight for positives
+# ono sto nije pomenuto DEFAULT_POS_WEIGHT.
+# "they're a starting point, not gospel"
 # ---------------------------------------------------------------------------
 EVIDENCE_WEIGHTS = {
     "Confirmed": 1.0,
@@ -53,14 +53,7 @@ EVIDENCE_WEIGHTS = {
 }
 DEFAULT_POS_WEIGHT = 0.5
 
-# Rows whose evidence_level marks them as a NEGATIVE/contradicting/contested
-# finding in the source file itself (your dataset intentionally keeps some of
-# these). These are excluded from the positive set entirely -- they are not
-# "cross reactive pairs", they're documented non-cross-reactivity or
-# contested/unresolved calls. "Risky/Contested" and "Suspected/Contested" are
-# excluded here (not kept as low-weight positives) to stay consistent with
-# every other *_1443 experiment script in this project, which all apply the
-# same exclusion rule (see analysis/hitsk_and_mrr_1443.py's docstring).
+
 NEGATIVE_EVIDENCE_MARKERS = (
     "Reported negative",
     "Reported NO cross-reactivity",
@@ -75,7 +68,7 @@ def is_negative_evidence(evidence_level: str) -> bool:
 
 
 # ---------------------------------------------------------------------------
-# Union-Find for connected components
+# Union-Find 
 # ---------------------------------------------------------------------------
 class UnionFind:
     def __init__(self, items):
@@ -94,7 +87,7 @@ class UnionFind:
 
 
 def load_allergens(path):
-    """Returns dict: official_name -> {source_food, organism, sequence_length}.
+    """vraca dict official_name > {source_food, organism, sequence_length}.
     NOTE: keyed by official_name (e.g. "Bet v 1.0101"), not the WHO/IUIS
     allergen_id used inside embeddings.pkl -- this matches how
     cross_reactive_combined.csv's "allergen_id_1"/"allergen_id_2" columns
@@ -113,7 +106,7 @@ def load_allergens(path):
 
 
 def load_embeddings(pickle_path):
-    """Returns dict: WHO/IUIS allergen_id -> 1280-d np.array embedding."""
+    """vraca dict WHO/IUIS allergen_id > 1280 np.array embedding."""
     with open(pickle_path, "rb") as f:
         return pickle.load(f)
 
@@ -122,12 +115,7 @@ def build_name_to_embedding(embeddings_pkl_path, embeddings_parquet_path):
     """
     Returns dict: official_name -> raw embedding vector, by joining
     embeddings.pkl (keyed by WHO/IUIS allergen_id) through
-    embeddings.parquet's allergen_id<->official_name mapping. Only names
-    that actually have a generated embedding end up in this dict -- used
-    to filter out allergens present in clean_allergens.csv but missing
-    from embeddings.pkl (there is exactly one such case in this project,
-    "Amb a 2", most likely dropped upstream for an invalid/missing
-    sequence during embedding generation).
+    embeddings.parquet's allergen_id<->official_name mapping
     """
     import pandas as pd
 
@@ -146,10 +134,7 @@ def build_name_to_embedding(embeddings_pkl_path, embeddings_parquet_path):
 
 def load_positive_pairs(path, known_allergens):
     """
-    Returns list of dicts: {a, b, evidence_level, weight, family}
-    Skips pairs whose evidence_level marks them as a documented NEGATIVE
-    finding, and warns (but keeps) pairs referencing an allergen not found
-    in clean_allergens.csv.
+    vraca listu dicts {a, b, evidence_level, weight, family}
     """
     pairs = []
     seen = set()
