@@ -11,6 +11,10 @@ venv/
 env/
 
 data/alphafold_structures/
+data/alphafold_structures.zip
+
+# Downloaded/built third-party binaries (Foldseek)
+tools/
 # VS Code
 .vscode/
 

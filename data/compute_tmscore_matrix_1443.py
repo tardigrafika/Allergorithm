@@ -4,7 +4,7 @@ za sve proteine koji imaju AlphaFold strukturu (data/alphafold_structures/*.pdb)
 
 Paralelizovano (multiprocessing, sva jezgra) jer je TM-align sporiji od
 sequence poravnanja koje smo koristili za BLAST (~27 poravnanja/sek na 1
-jezgru -> puna matrica bi trajala ~9h na 1 jezgru, ~1-1.5h na 8).
+jezgru > puna matrica bi trajala ~9h na 1 jezgru, ~1-1.5h na 8).
 
 TM-score se racuna u OBA smera (normalizovano dužinom svakog proteina
 posebno) i uzima se prosek (standardna konvencija za simetrican TM-score).
