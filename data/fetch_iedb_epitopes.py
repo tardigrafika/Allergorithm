@@ -31,9 +31,16 @@ CLEAN_ALLERGENS = Path("/home/lana/ALERGRAF/output/clean_allergens.csv")
 OUTPUT = Path("/home/lana/ALERGRAF/output/iedb_epitopes_1548.csv")
 
 PAGE_SIZE = 200
-REQUEST_DELAY = 1.0  # more conservative -- 0.2s still triggered sustained timeouts, likely soft rate-limiting
-REQUEST_TIMEOUT = 15
-MAX_RETRIES = 2
+REQUEST_DELAY = 0.3  # not actually a rate-limit issue (see below) -- just polite spacing
+# NAPOMENA: ono sto je izgledalo kao throttling bila je zapravo SPORA upita za
+# proteine BEZ IEDB podudaranja (ilike '%X%' bez match-a izgleda radi punu
+# pretragu tabele na njihovom serveru -- potvrdjeno: 22s da vrati 200 sa
+# praznim rezultatom). 15s timeout je bio prekratak i lazno je izgledao kao
+# blokada. Vecina od ~331 proteina verovatno NEMA IEDB podatke (~26% ukupna
+# pokrivenost iz ranijeg uzorka), pa ce vecina upita ici ovim sporim putem -
+# otud REQUEST_TIMEOUT=40 i realno ocekivano trajanje ~1-1.5h za ceo run.
+REQUEST_TIMEOUT = 40
+MAX_RETRIES = 1
 CONNECTED_UNIVERSE_IDS_FILE = Path("/home/lana/ALERGRAF/output/connected_universe_ids_1548.txt")
 
 df = pd.read_csv(CLEAN_ALLERGENS)
@@ -81,6 +88,7 @@ def fetch_page(uniprot, offset):
             return None, f"{type(e).__name__}: {e}"
 
 
+start = time.time()
 for i, row in enumerate(df.itertuples(index=False), 1):
     allergen_id = row.allergen_id
     uniprot = row.uniprot_clean
@@ -118,11 +126,17 @@ for i, row in enumerate(df.itertuples(index=False), 1):
         "epitope_ranges": ";".join(f"{a}-{b}" for a, b in ranges),
     })
 
-    if i % 50 == 0 or i == len(df):
+    if i % 10 == 0 or i == len(df):
         n_with_epitopes = sum(1 for r in results if r["n_positive_records"] > 0)
-        pd.DataFrame(results).to_csv(OUTPUT, index=False)  # periodic checkpoint save
+        elapsed = time.time() - start
+        rate = i / elapsed
+        remaining = (len(df) - i) / rate if rate > 0 else float("inf")
+        checkpoint = i % 50 == 0 or i == len(df)
+        if checkpoint:
+            pd.DataFrame(results).to_csv(OUTPUT, index=False)
         print(f"  {i}/{len(df)} processed, {n_with_epitopes} with >=1 positive epitope record "
-              f"(checkpoint saved)", flush=True)
+              f"({elapsed/60:.1f} min elapsed, ~{remaining/60:.1f} min remaining)"
+              + (" [checkpoint saved]" if checkpoint else ""), flush=True)
 
 status_df = pd.DataFrame(results)
 status_df.to_csv(OUTPUT, index=False)

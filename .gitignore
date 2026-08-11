@@ -15,6 +15,9 @@ data/alphafold_structures.zip
 
 # Downloaded/built third-party binaries (Foldseek)
 tools/
+
+# Trained model artifacts (reproducible from training script + data)
+embeddings/lora_adapter_1548/
 # VS Code
 .vscode/
 
