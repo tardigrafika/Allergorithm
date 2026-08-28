@@ -1,0 +1,15 @@
+{
+  "name": "xgboost_blast",
+  "type": "xgboost",
+  "_source": "ml/xgboost_blast_kfold_1443.py",
+  "params": {
+    "n_estimators": 300,
+    "max_depth": 6,
+    "learning_rate": 0.1,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "eval_metric": "logloss",
+    "tree_method": "hist"
+  },
+  "extra_features": ["blast_identity", "blast_score"]
+}

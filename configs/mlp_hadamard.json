@@ -1,0 +1,18 @@
+{
+  "name": "mlp_hadamard",
+  "type": "mlp",
+  "_source": "analysis/mlp_hadamard_input_1548.py + analysis/mlp_hadamard_pipeline_sensitivity_1548.py (sesija avgust 2026) -- najbolja konfiguracija (h32_lr1e-2_l2loss) iz sweep-a preko pravog pipeline-a",
+  "params": {
+    "input_encoding": "hadamard",
+    "standardize": false,
+    "hidden_dims": [32],
+    "dropout": [0.3],
+    "learning_rate": 1e-2,
+    "weight_decay": 0.0,
+    "l2_lambda": 1e-3,
+    "batch_size": 64,
+    "max_epochs": 300,
+    "patience": 20,
+    "val_fraction": 0.15
+  }
+}

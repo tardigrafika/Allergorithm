@@ -1,0 +1,147 @@
+[
+  {
+    "patient_id": "saretta2014_case",
+    "source": {
+      "citation": "Saretta F, Perini R, Tonutti E, Visentini D. Case Report: Revaluation of a previously diagnosed hazelnut allergy with component resolved diagnosis (CRD). Clin Transl Allergy 2014;4(Suppl 2):P39.",
+      "doi": "10.1186/2045-7022-4-S2-P39",
+      "pmid": null,
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4080093/"
+    },
+    "protein_family": "nsLTP_PR10_storage_mixed",
+    "patient_description": "11-year-old girl, previously told to strictly avoid peanut and all tree nuts (adrenaline auto-injector prescribed) based on SPT/sIgE, despite a history not suggestive of tree-nut allergy; previously successfully desensitized to milk and egg.",
+    "components": [
+      {"protein": "Jug r 3", "protein_family": "nsLTP", "source_food_or_organism": "walnut", "method": "ISAC", "value": null, "value_unit": "qualitative_moderate", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "Cor a 1", "protein_family": "PR-10", "source_food_or_organism": "hazelnut", "method": "ISAC", "value": null, "value_unit": "qualitative_mild", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "Cor a 8", "protein_family": "nsLTP", "source_food_or_organism": "hazelnut", "method": "ISAC", "value": null, "value_unit": null, "result": "negative", "confirmed_by_challenge": false},
+      {"protein": "Cor a 9", "protein_family": "storage_protein_11S", "source_food_or_organism": "hazelnut", "method": "ISAC", "value": null, "value_unit": null, "result": "negative", "confirmed_by_challenge": false},
+      {"protein": "Cor a 14", "protein_family": "storage_protein_2S", "source_food_or_organism": "hazelnut", "method": "ISAC", "value": null, "value_unit": null, "result": "negative", "confirmed_by_challenge": false},
+      {"protein": "hazelnut extract (prick-by-prick)", "protein_family": "whole_extract", "source_food_or_organism": "hazelnut", "method": "SPT", "value": null, "value_unit": null, "result": "negative", "confirmed_by_challenge": false},
+      {"protein": "hazelnut (whole)", "protein_family": "whole_extract", "source_food_or_organism": "hazelnut", "method": "OFC", "value": null, "value_unit": null, "result": "negative", "confirmed_by_challenge": true}
+    ],
+    "double_mixed": true,
+    "double_mixed_note": "2 positive named components (Jug r 3, Cor a 1) + 3 negative named components (Cor a 8, Cor a 9, Cor a 14) = QUALIFIES. Source also states 'all Ara h peanut components negative' but these were not individually itemized so are omitted here to avoid inventing specific protein names. OFC-confirmed tolerance is a strong bonus.",
+    "sequential_protocol": null,
+    "verification": {"status": "abstract_snippet_only", "notes": "Conference-supplement abstract (PMC4080093 free full text, but component values reported qualitatively as moderate/mild rather than numeric ISU). No numeric values available to transcribe; do not estimate them."}
+  },
+  {
+    "patient_id": "kalickamath2025_P44",
+    "source": {
+      "citation": "Kalic Kamath T, Djukic T, Kamath SD, et al. Dissecting the Sensitization Profiles in Parvalbumins From 12 Freshwater Fish Species to Improve Diagnosis of Fish Allergy. J Investig Allergol Clin Immunol 2025;35(6):452-462.",
+      "doi": "10.18176/jiaci.1069",
+      "pmid": null,
+      "url": "https://www.jiaci.org/revistas/vol35issue6_5.pdf"
+    },
+    "protein_family": "parvalbumin",
+    "patient_description": "One of 66 clinically confirmed fish-allergic patients in a multi-species freshwater parvalbumin study (Austria/multi-center); labeled 'P44' in the source. No further individual demographic detail accessible from the retrieved text.",
+    "components": [
+      {"protein": "brook trout parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "brook trout (Salvelinus fontinalis)", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "brown trout parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "brown trout (Salmo trutta)", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "Danube salmon parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "Danube salmon (Hucho hucho)", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "rainbow trout parvalbumin (Onc m 1)", "protein_family": "parvalbumin", "source_food_or_organism": "rainbow trout (Oncorhynchus mykiss)", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "European perch parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "European perch (Perca fluviatilis)", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "pikeperch parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "pikeperch (Sander lucioperca)", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "Northern pike parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "Northern pike (Esox lucius)", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "negative", "confirmed_by_challenge": false},
+      {"protein": "Wels catfish parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "Wels catfish (Silurus glanis)", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "negative", "confirmed_by_challenge": false},
+      {"protein": "common carp parvalbumin (Cyp c 1)", "protein_family": "parvalbumin", "source_food_or_organism": "common carp (Cyprinus carpio)", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "negative", "confirmed_by_challenge": false},
+      {"protein": "tench parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "tench (Tinca tinca)", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "negative", "confirmed_by_challenge": false},
+      {"protein": "European eel parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "European eel (Anguilla anguilla)", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "negative", "confirmed_by_challenge": false},
+      {"protein": "sterlet parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "sterlet (Acipenser ruthenus)", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "negative", "confirmed_by_challenge": false}
+    ],
+    "double_mixed": true,
+    "double_mixed_note": "6 positive (salmonids + percids: brook trout, brown trout, Danube salmon, rainbow trout, European perch, pikeperch) + 6 negative (Northern pike, Wels catfish, common carp, tench, European eel, sterlet) = QUALIFIES, and is the single richest double-mixed patient found across all searches so far. Verbatim from source: 'P44 was positive to parvalbumins from salmonids and percids and negative to all others.'",
+    "sequential_protocol": null,
+    "verification": {"status": "full_text_verified", "notes": "Full text read; positive/negative assignment per component verbatim from Results/Discussion text. Exact kUA/L values per component are in Figure S5 of the supplement, which was not retrievable in this session -- value fields left null rather than estimated. Positivity threshold for the whole study is 0.3 kUA/L. Each parvalbumin was confirmed as a distinct species protein by LC-MS/MS per the source, but note not all of these freshwater species have official IUIS allergen codes (e.g. rainbow trout Onc m 1 and common carp Cyp c 1 are IUIS-coded; several others are not) -- flag this if your pipeline requires IUIS-coded names specifically."}
+  },
+  {
+    "patient_id": "kalickamath2025_P38",
+    "source": {"citation": "Kalic Kamath T, et al. J Investig Allergol Clin Immunol 2025;35(6):452-462.", "doi": "10.18176/jiaci.1069", "pmid": null, "url": "https://www.jiaci.org/revistas/vol35issue6_5.pdf"},
+    "protein_family": "parvalbumin",
+    "patient_description": "One of 66 fish-allergic patients in the same cohort as P44, labeled 'P38'.",
+    "components": [
+      {"protein": "brook trout parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "brook trout", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "brown trout parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "brown trout", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "Danube salmon parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "Danube salmon", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "rainbow trout parvalbumin (Onc m 1)", "protein_family": "parvalbumin", "source_food_or_organism": "rainbow trout", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "European perch parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "European perch", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "pikeperch parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "pikeperch", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "Northern pike parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "Northern pike", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "common carp parvalbumin (Cyp c 1)", "protein_family": "parvalbumin", "source_food_or_organism": "common carp", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "tench parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "tench", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "European eel parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "European eel", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "sterlet parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "sterlet", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "Wels catfish parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "Wels catfish", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "negative", "confirmed_by_challenge": false}
+    ],
+    "double_mixed": false,
+    "double_mixed_note": "11 positive + 1 negative (Wels catfish only) = DOES NOT QUALIFY as double-mixed (needs >=2 negative). Included anyway since it is a real, fully named, verified single-mixed case -- useful for the leave-one-out 'what to test next' evaluation (Feature 1) even though it can't contribute to the paired Wilcoxon test. Filter out via double_mixed=false if you only want Priority #1 patients.",
+    "sequential_protocol": null,
+    "verification": {"status": "full_text_verified", "notes": "Verbatim from source: patients 'negative only to parvalbumin from Wels catfish' -- P38 and P39 are the two patients meeting this description; both encoded here as near-identical profiles per the source's grouped description. Individual kUA/L values not stated in accessible text."}
+  },
+  {
+    "patient_id": "kalickamath2025_P39",
+    "source": {"citation": "Kalic Kamath T, et al. J Investig Allergol Clin Immunol 2025;35(6):452-462.", "doi": "10.18176/jiaci.1069", "pmid": null, "url": "https://www.jiaci.org/revistas/vol35issue6_5.pdf"},
+    "protein_family": "parvalbumin",
+    "patient_description": "One of 66 fish-allergic patients in the same cohort as P44, labeled 'P39'.",
+    "components": [
+      {"protein": "brook trout parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "brook trout", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "brown trout parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "brown trout", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "Danube salmon parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "Danube salmon", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "rainbow trout parvalbumin (Onc m 1)", "protein_family": "parvalbumin", "source_food_or_organism": "rainbow trout", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "European perch parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "European perch", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "pikeperch parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "pikeperch", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "Northern pike parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "Northern pike", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "common carp parvalbumin (Cyp c 1)", "protein_family": "parvalbumin", "source_food_or_organism": "common carp", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "tench parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "tench", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "European eel parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "European eel", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "sterlet parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "sterlet", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "Wels catfish parvalbumin", "protein_family": "parvalbumin", "source_food_or_organism": "Wels catfish", "method": "multiplex_sIgE", "value": null, "value_unit": "kUA/L", "result": "negative", "confirmed_by_challenge": false}
+    ],
+    "double_mixed": false,
+    "double_mixed_note": "11 positive + 1 negative = DOES NOT QUALIFY as double-mixed. Same rationale as P38.",
+    "sequential_protocol": null,
+    "verification": {"status": "full_text_verified", "notes": "See P38 verification note; P38 and P39 are reported jointly in source as sharing this exact profile."}
+  },
+  {
+    "patient_id": "chaudhry2013_soy_pt_a",
+    "source": {
+      "citation": "Chaudhry RQ, Bigelsen S, Wolff AH, Yamin D. Differentiating Cause and Severity of Allergic Reaction to Soy Based on Component Testing to PR-10 and Storage Proteins. J Allergy Clin Immunol 2013;131(2 Suppl):AB97 (AAAAI Abstract 351).",
+      "doi": "10.1016/j.jaci.2012.12.1014",
+      "pmid": null,
+      "url": "https://www.jacionline.org/article/S0091-6749(12)03015-1/fulltext"
+    },
+    "protein_family": "PR-10",
+    "patient_description": "One of 6 soy-reactive patients (of 7 total) with a history of birch-pollen allergy who reacted to soy drinks but tolerated other soy products; oropharyngeal pruritus, some with systemic symptoms.",
+    "components": [
+      {"protein": "Gly m 4", "protein_family": "PR-10", "source_food_or_organism": "soybean", "method": "ISAC", "value": 0.4, "value_unit": "ISU", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "Gly m 5", "protein_family": "storage_protein_7S", "source_food_or_organism": "soybean", "method": "ISAC", "value": null, "value_unit": "ISU", "result": "negative", "confirmed_by_challenge": false},
+      {"protein": "Gly m 6", "protein_family": "storage_protein_11S", "source_food_or_organism": "soybean", "method": "ISAC", "value": null, "value_unit": "ISU", "result": "negative", "confirmed_by_challenge": false}
+    ],
+    "double_mixed": false,
+    "double_mixed_note": "1 positive (Gly m 4) + 2 negative (Gly m 5, Gly m 6) = DOES NOT QUALIFY as double-mixed (needs >=2 positive). LOW PRIORITY per your instructions -- included only for completeness / Feature-1 leave-one-out use, not for the paired test. There are 5 more patients identical in structure with Gly m 4 = 0.8, 1.5, 1.8, 2.4, 48 ISU respectively (not separately encoded here to avoid redundant low-value entries; see research report for the full list if needed).",
+    "sequential_protocol": null,
+    "verification": {"status": "abstract_snippet_only", "notes": "Meeting abstract; Gly m 5/Gly m 6 negativity reported collectively for all 6 patients ('All were negative to storage proteins GlyM5 and GlyM6'), not as 6 individual confirmed negative readouts -- treat with appropriate caution."}
+  },
+  {
+    "patient_id": "nojo2026_case",
+    "source": {
+      "citation": "Nojo M, Suzuki S, Uno T, et al. Case Report: First report of vonoprazan-associated severe Gly m 4-mediated PFAS anaphylaxis in the era of potent acid suppression. Frontiers in Allergy 2026;7:1893499.",
+      "doi": "10.3389/falgy.2026.1893499",
+      "pmid": null,
+      "url": "https://www.frontiersin.org/journals/allergy/articles/10.3389/falgy.2026.1893499/full"
+    },
+    "protein_family": "PR-10",
+    "patient_description": "59-year-old woman; mild oral-allergy symptoms after soy milk while tolerating other soy products; two anaphylaxis episodes after briefly-cooked soybean sprouts, temporally associated with vonoprazan (acid-suppressant) use; alder-pollen sensitized.",
+    "components": [
+      {"protein": "Gly m 4", "protein_family": "PR-10", "source_food_or_organism": "soybean", "method": "sIgE", "value": 5.66, "value_unit": "UA/mL", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "alder pollen (whole)", "protein_family": "whole_extract", "source_food_or_organism": "alder", "method": "sIgE", "value": 9.57, "value_unit": "UA/mL", "result": "positive", "confirmed_by_challenge": false},
+      {"protein": "Ara h 2", "protein_family": "storage_protein_2S", "source_food_or_organism": "peanut", "method": "sIgE", "value": null, "value_unit": "UA/mL", "result": "negative", "confirmed_by_challenge": false},
+      {"protein": "Jug r 1", "protein_family": "storage_protein_2S", "source_food_or_organism": "walnut", "method": "sIgE", "value": null, "value_unit": "UA/mL", "result": "negative", "confirmed_by_challenge": false},
+      {"protein": "Ana o 3", "protein_family": "storage_protein_2S", "source_food_or_organism": "cashew", "method": "sIgE", "value": null, "value_unit": "UA/mL", "result": "negative", "confirmed_by_challenge": false},
+      {"protein": "Tri a 19 (omega-5 gliadin)", "protein_family": "wheat_protein", "source_food_or_organism": "wheat", "method": "sIgE", "value": null, "value_unit": "UA/mL", "result": "negative", "confirmed_by_challenge": false},
+      {"protein": "Hev b 6.02", "protein_family": "latex_protein", "source_food_or_organism": "latex", "method": "sIgE", "value": null, "value_unit": "UA/mL", "result": "negative", "confirmed_by_challenge": false}
+    ],
+    "double_mixed": false,
+    "double_mixed_note": "1 positive named allergen component (Gly m 4; alder pollen is whole-extract not a named protein, excluded from count) + 5 negative named components (Ara h 2, Jug r 1, Ana o 3, Tri a 19, Hev b 6.02) = DOES NOT QUALIFY as double-mixed (needs >=2 positive). LOW PRIORITY, included for Feature-1 use only.",
+    "sequential_protocol": null,
+    "verification": {"status": "full_text_verified", "notes": "Full text open access. Gly m 4 and alder pollen numeric values verified; the five negative components are stated as negative in text but individual numeric values were not given (below assay cutoff), left null rather than estimated. Gly m 5/Gly m 6/Gly m 8/Bet v 1 were NOT assessed for this patient per the source, so no soy-storage-protein negative is available here."}
+  }
+]

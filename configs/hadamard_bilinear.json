@@ -1,0 +1,13 @@
+{
+  "name": "hadamard_bilinear",
+  "type": "hadamard_bilinear",
+  "_source": "ml/hadamard_bilinear_1548.py (prva verzija, AdamW weight_decay=1e-3, bez L2-u-lossu)",
+  "params": {
+    "max_epochs": 300,
+    "patience": 15,
+    "learning_rate": 1e-2,
+    "weight_decay": 1e-3,
+    "l2_lambda": 0.0,
+    "val_fraction": 0.15
+  }
+}

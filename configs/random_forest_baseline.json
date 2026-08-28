@@ -1,0 +1,11 @@
+{
+  "name": "random_forest_baseline",
+  "type": "random_forest",
+  "_source": "ml/random_forest_baseline.py",
+  "params": {
+    "n_estimators": 300,
+    "max_depth": 12,
+    "min_samples_leaf": 3,
+    "class_weight": "balanced"
+  }
+}

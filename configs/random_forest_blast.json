@@ -1,0 +1,12 @@
+{
+  "name": "random_forest_blast",
+  "type": "random_forest",
+  "_source": "ml/random_forest_blast_1443.py",
+  "params": {
+    "n_estimators": 300,
+    "max_depth": 12,
+    "min_samples_leaf": 3,
+    "class_weight": "balanced"
+  },
+  "extra_features": ["blast_identity", "blast_score"]
+}

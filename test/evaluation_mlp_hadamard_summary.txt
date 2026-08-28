@@ -1,0 +1,28 @@
+======================================================================
+MLP(hadamard) na 41 real-world pacijenta -- leave-one-out
+======================================================================
+
+Ukupno trials: 103  Preskoceno (monospecifican): 17
+Nerezolvovane komponente: ["13-kDa band ('probably Gad c 1 and analogues')", '25-kDa band (unnamed swordfish-specific allergen)', 'CCD', 'Gad m (cod parvalbumin marker)', 'Onc m (rainbow trout parvalbumin marker)', 'Pen m 1', 'SPT panel (native/recombinant parvalbumins, extracts)', 'Sal s (salmon parvalbumin marker)', 'Sol so (sole parvalbumin marker)', 'Thu a (tuna parvalbumin marker)', 'alpha-gal', 'beef (extract)', 'casein', 'cat dander', 'chicken (extract)', 'cod (whole)', 'cod muscle (whole, Gadus callarias)', 'hazelnut (whole)', 'herring (extract)', 'mackerel (extract)', 'nsLTP panel (ISAC)', 'parvalbumin band (~12-14kDa, immunoblot)', 'peach (whole)', 'peach extract', 'peanut (whole)', 'pistachio (whole, component not identified in source)', 'pork (cooked, prick-to-prick)', 'pork (extract)', 'pork (grilled)', 'rPhl p 1 + rPhl p 5b', 'salmon (whole)', 'soybean (whole)', 'soybean (whole, crude extract)', 'soybean (whole, treadmill after 100g tofu)', 'tuna (extract)', 'walnut (whole, component not identified in source)', '~35kDa band (beta-enolase, immunoblot)']
+
+--- SVI trials (hard + soft) ---
+  n_trials=103 (pos=56, neg=47), n_pacijenata=38
+  Pozitivne mete: medijan percentil = 20.4% (zelimo NIZAK)
+  Negativne mete: medijan percentil = 57.1% (zelimo VISOK)
+  Cluster-permutacija (N=10000): observed diff=+21.35pp, p=0.8195 -- nije znacajno
+  Patient-level parovi (>=1 poz I >=1 neg): n=8
+  Wilcoxon signed-rank: p=0.5273 -- nije znacajno
+
+--- SAMO hard (full_text_verified) ---
+  n_trials=77 (pos=42, neg=35), n_pacijenata=29
+  Pozitivne mete: medijan percentil = 37.5% (zelimo NIZAK)
+  Negativne mete: medijan percentil = 41.1% (zelimo VISOK)
+  Cluster-permutacija (N=10000): observed diff=+6.95pp, p=0.8209 -- nije znacajno
+  Patient-level parovi (>=1 poz I >=1 neg): n=8
+  Wilcoxon signed-rank: p=0.5273 -- nije znacajno
+
+======================================================================
+POREDJENJE sa produkcionim RRF signalom (test/evaluation_stats_corrected_summary.txt)
+======================================================================
+Vidi taj fajl za RRF-3 brojeve na (mogucem drugacijem broju) pacijenata -- 
+uporedi medijan percentil pozitivnih/negativnih i p-vrednosti iznad.

@@ -1,0 +1,16 @@
+{
+  "name": "mlp_baseline",
+  "type": "mlp",
+  "_source": "ml/mlp_baseline.py",
+  "params": {
+    "hidden_dims": [256, 64],
+    "dropout": [0.3, 0.2],
+    "val_fraction": 0.15,
+    "batch_size": 64,
+    "max_epochs": 200,
+    "patience": 20,
+    "learning_rate": 1e-3,
+    "weight_decay": 1e-4,
+    "l2_lambda": 0.0
+  }
+}
