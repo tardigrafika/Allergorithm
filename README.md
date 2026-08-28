@@ -1,8 +1,5 @@
 # Dnevnik rada projekta
 
-Predikcija cross-reaktivnih alergena na osnovu ESM-2 proteinskih embeddinga. Ovaj dokument sumira SVE testirane modele/pristupe, sa izvorima u `output/*_summary.txt` i `test/*_summary.txt`.
-
-Napomena o metrikama: projekat ne izveštava Hits@3 nigde — svuda se koristi Hits@1/5/10/20, pa tabela ispod koristi Hits@5 umesto Hits@3. MRR/Hits@K brojevi u glavnoj tabeli su sa **1548 datasetom** (3074 upita, 1537 parova) gde god postoje — najveći i najskoriji gold standard u projektu; gde model nije testiran na 1548, naznačeno je koji je dataset korišćen.
 
 ## Poređenje svih testiranih modela
 
