@@ -536,3 +536,53 @@ Samo 39.8% upita (723/1816) je poboljšalo rang.
 - **Nije "rešen problem"** — apsolutne MRR vrednosti (0.078, 0.084) ostaju daleko ispod dobro-ponašanih familija (Tropomiozin/Troponin C ~0.6-0.7). Ovo je "manje katastrofalno", ne "dobro".
 - PR-10 potpuno nepromenjen — mehanizam koji pomaže nsLTP/Profilin ne rešava šta god je specifično pokvareno kod PR-10; verovatno drugačiji uzrok.
 - Sledeći koraci (nije još urađeno): puna attention-MIL verzija (naučena po-prozor relevantnost, ne samo jedan globalni τ), per-familija τ (moguće objašnjenje zašto PR-10 ne reaguje), dijagnoza PR-10 specifično.
+
+---
+
+## PR-10 dijagnoza — zašto MI/LSE ne pomaže baš ovoj familiji
+
+**Cilj** — pre bilo kakvog daljeg ulaganja (per-familija τ, attention-MIL), razumeti STRUKTURNI razlog zašto isti mehanizam popravlja nsLTP/Profilin ali ne PR-10. Korisnički definisan skup od 6 provera.
+
+**Šta je urađeno** (`analysis/pr10_diagnosis_1548.py`, `analysis/pr10_hotspot_diagnosis_1548.py`)
+1. Distribucija dužine proteina po familiji
+2. Sequence identity gold parova po familiji
+3. Da li gold-pozitivni parovi dele isti relativni "hot spot" region (najbolji par prozora)
+4. Raznovrsnost unutar familije (prosečna međusobna cosine sličnost SVIH parova članova, ne samo gold)
+5. Label coverage / gustina grafa (broj poznatih partnera po proteinu)
+6. Distribucija delta po upitu (pravi null ili mešavina dobitaka/gubitaka koja se poništi)
+
+**Rezultati**
+
+| Familija | Dužina proteina (std) | Unutar-familijska cosine (mean / **std**) | Gustina grafa | Prosečan stepen |
+|---|---|---|---|---|
+| nsLTP | 28.1 aa | 0.9430 / **0.0465** | 46.3% | 19.0 |
+| Profilin | 4.7 aa | 0.9915 / **0.0255** | 46.1% | 17.1 |
+| **PR-10** | **1.8 aa** | 0.9918 / **0.0052** | 39.8% | 11.9 |
+| Tropomiozin (kontrola) | 35.2 aa | 0.9907 / 0.0209 | 67.3% | 11.4 |
+
+Hot-spot provera: PR-10 hot-spotovi su DOSLEDNO lokalizovani blizu C-terminusa (66% u poslednja 3/10 binova) — ali to nije partner-specifično; deluje kao univerzalno-konzervisan strukturni landmark cele familije. Distribucija delta po upitu (6): PR-10 IMA mešavinu velikih dobitaka/gubitaka (std=0.134, slično nsLTP/Profilin) — nije trivijalan "upiti nisu pogođeni" ishod, efekat se samo poništi na nuli.
+
+**Zaključak**
+- PR-10 (Bet v 1 fold) je izuzetno rigidna, strukturno uniformna familija (dužina proteina std=1.8 rezidua — gotovo identična dužina svih članova). Ovo se prevodi u skoro NULTU varijansu unutar-familijske embedding sličnosti (std=0.0052, 5-9x niže od ostalih familija) — nema diferencijacije koju BILO KOJI mehanizam agregacije može otkriti, jer ne postoji u embeddinzima.
+- Hot-spot koji LSE nalazi za PR-10 je verovatno univerzalno-konzervisan strukturni region, ne partner-specifičan epitop — pali podjednako jako za pravog partnera i bilo kog drugog člana familije, pa ne pomaže diskriminaciji.
+- Sekundaran faktor: PR-10 ima ređi gold graf (gustina 39.8% vs 46%+ kod ostalih, stepen 11.9 vs 17-19) — manje trening signala specifičnog za ovu familiju.
+- **Implikacija**: per-familija τ verovatno NE bi pomogao PR-10 — problem nije pogrešna temperatura agregacije, nego odsustvo diskriminativnog signala u samoj reprezentaciji, koje nijedan skalar hiperparametar ne može proizvesti. PR-10 verovatno zahteva kvalitativno drugačiju informaciju (prava 3D struktura, ili prošireno label coverage) — ne dalje variranje agregacije nad istim ESM embeddinzima. **Odlučeno: PR-10 ostaje dokumentovan negativan rezultat, dalji rad (attention-MIL) fokusiran samo na nsLTP/Profilin.**
+
+---
+
+## Attention-MIL (eskalacija LSE-poolinga)
+
+**Cilj** — testirati da li NAUČENA nelinearna funkcija (mala MLP, 1→8→1, primenjena na svaku sličnost para prozora pre softmax-attention agregacije) prevazilazi jednostavni LSE-pooling (jedan skalarni parametar τ). LSE je specijalan slučaj ove opštije forme (fiksna linearna f(s)=s/τ) — attention-MIL bi trebalo da bude STROGO izražajniji.
+
+**Šta je urađeno** (`analysis/attention_mil_1548.py`) — ista LOCO disciplina (2 fold-a, nsLTP i Profilin odvojeno izdvojeni, PR-10 namerno izostavljen kao cilj posle dijagnoze), isti bootstrap CI protokol.
+
+**Rezultati**
+
+| Familija | LSE-pooling (3 parametra) | Attention-MIL (~25 parametara) |
+|---|---|---|
+| nsLTP | delta=+0.0218, CI[+0.0116,+0.0329] **značajno** | delta=+0.0075, CI[−0.0048,+0.0200] **NIJE značajno** |
+| Profilin | delta=+0.0334, CI[+0.0183,+0.0487] značajno | delta=+0.0341, CI[+0.0189,+0.0502] značajno (praktično identično) |
+
+**Zaključak**
+- Dodatna fleksibilnost NIJE pomogla — na Profilinu praktično identičan rezultat kao jednostavni LSE, na nsLTP CAK GORE (izgubljena statistička značajnost). Verovatno blago overfitovanje na trening raspodelu koje se lošije generalizuje na held-out familiju nego ograničenija LSE forma.
+- **LSE-pooling (jedan naučen τ) ostaje najbolji, robusniji nalaz u ovom pravcu.** Odbačeno dalje širenje modela u ovom smeru — jednostavnije je ovde bilo bolje. Zatvoren pravac za MI/hypergraph agregacione eksperimente na trenutnom nivou infrastrukture (window-pooling preko ESM embeddinga).
