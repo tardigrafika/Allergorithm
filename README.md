@@ -24,6 +24,8 @@
 | [Weighted RRF (naučene težine)](#weighted-rrf-naucene-tezine) | 0.1309–0.1332 | — | — | — | Ne prevazilazi uniform RRF-4 |
 | [Retrieve-then-rerank](#retrieve-then-rerank) | 0.1751 | — | — | — | Nije značajno, blago negativno |
 | [Real-world validacija (pacijenti)](#real-world-validacija-pacijenti) | — | — | — | — | Smer tačan, nije statistički značajno (mala snaga) |
+| [Sliding-window ESM (nsLTP/Profilin/PR-10)](#sliding-window-esm-nsltpprofilinpr-10) | 0.0524 | — | — | — | Null/blago negativno — ne rešava unutar-familije zagušenje |
+| [MI/hypergraph LSE-pooling (nsLTP/Profilin/PR-10)](#mihypergraph-lse-pooling-nsltpprofilinpr-10) | 0.0537–0.0843 | — | — | — | **Prvo pravo poboljšanje na 2/3 familije, LOCO-potvrđeno** (nsLTP/Profilin značajno, PR-10 ne) |
 
 ---
 
@@ -481,4 +483,56 @@ Delta = −0.0082, CI[−0.0167,+0.0005], nije značajno (ali smer negativan).
 **Zaključak**
 - Nakon statističke ispravke: smer je dosledno tačan (pozitivne mete rangirane bolje od negativnih), ali NIJE statistički značajno — efektivna snaga ograničena na ~8 pacijenata koji imaju i poznat pozitivan i negativan hidden trial.
 - Odvojeno od ovoga: interni graph-propagation nalaz (RRF-4 na gold datasetu) OSTAJE značajan — ova korekcija se odnosi samo na eksterni test na pacijentima, ne menja status RRF-4.
-- Glavno usko grlo za dalji napredak: broj pacijenata sa i pozitivnim i negativnim resolvable komponentama, ne količina podataka za trening modela.
+
+---
+
+## Sliding-window ESM (nsLTP/Profilin/PR-10)
+
+**Cilj** — testirati da li lokalna rezolucija (preklapajući prozori od ~20 rezidua, veličina tipičnog linearnog epitopa, mean-pooled) razdvaja unutar-familije "zagušenje" bolje od whole-protein mean-pool cosine-a. Zagušenje je dijagnostikovano zasebno (`mrr_by_family_1548.py` + prosečan broj kandidata unutar 0.01 cosine-a od tačnog cilja: nsLTP=322.9, Profilin=161.5, PR-10=122.0 vs Tropomiozin=91.8) kao verovatan mehanizam iza katastrofalno niskog MRR-a baš ovih familija.
+
+**Šta je urađeno**
+- Prozor=20 rezidua, korak=5, mean-pooled iz postojećih per-residue ESM embeddinga.
+- Skor para = MAX cosine sličnost preko svih parova prozora (najbolje lokalno poklapanje), ne prosek.
+- Testirano SAMO na nsLTP/Profilin/PR-10 (gde je problem dijagnostikovan), whole-protein cosine na ISTOM podskupu kao referenca.
+- Razlikuje se od ranijeg null nalaza (`residue_topk_nsltp_profilin_1548.py`, top-15 pojedinačnih rezidua bez pool-ovanja) — ovo koristi lokalno pool-ovane prozore, manje šumovito.
+
+**Rezultati**
+
+| Familija | cosine MRR | sliding-window MRR | delta |
+|---|---|---|---|
+| nsLTP (n=798) | 0.0559 | 0.0561 | +0.0002 |
+| Profilin (n=648) | 0.0509 | 0.0451 | −0.0058 |
+| PR-10 (n=370) | 0.0549 | 0.0570 | +0.0021 |
+| **Ukupno (n=1816)** | **0.0539** | **0.0524** | **−0.0015** |
+
+Samo 39.8% upita (723/1816) je poboljšalo rang.
+
+**Zaključak**
+- Null/blago negativan rezultat — sliding-window MAX-pooling ne rešava zagušenje, na Profilinu ga pogoršava. Verovatno objašnjenje: panalergeni dele visoko konzervisano strukturno jezgro, pa gotovo svaki član familije ima BAR JEDAN par prozora koji se skoro savršeno poklapa negde u tom jezgru — MAX agregacija tu sličnost pojačava za skoro sve kandidate podjednako, umesto da razblaži zagušenje kako whole-protein prosek delimično radi. Odbačen u ovom obliku (MAX preko sliding-window prozora).
+- Brz follow-up (top-3 prosek umesto MAX-1, `sliding_window_top3_1548.py`) daje praktično identičan rezultat (ukupno delta=-0.0014, isti obrazac po familijama, 39.2% upita poboljšano) — problem nije u načinu agregacije prozora, potvrđuje da je hipoteza (konzervisano jezgro dominira signal) tačna nezavisno od agregacije. Zatvoren pravac.
+
+---
+
+## MI/hypergraph LSE-pooling (nsLTP/Profilin/PR-10)
+
+**Cilj** — testirati mentorovu multiple-instance/hypergraph ideju: umesto FIKSNE agregacije preko parova prozora (mean=cosine baseline, MAX=sliding-window, oba null), NAUČITI agregaciju. Koristi se Log-Sum-Exp ("smooth-max") pooling sa jednim trenabilnim parametrom temperature τ, koji glatko interpolira između mean-a (τ→∞) i max-a (τ→0) — principijelan srednji put između dve već testirane i odbačene krajnosti.
+
+**Šta je urađeno**
+- LSE_τ(S) = τ·log(mean_i(exp(S_i/τ))) preko cele matrice sličnosti svih parova prozora (window=20, stride=5, isti prozori kao sliding-window eksperimenti).
+- Trening: logistička regresija sa 3 parametra (τ, scale, bias), fit gradient descent-om (PyTorch, ~sekunde) na pozitivima + nasumičnim negativima iz celog poola (ista bezbedna metoda kao svuda u projektu — **ne** in-family hard-negative mining, ta ideja je razmotrena i odbačena kao biološki nepouzdana, videti niže).
+- **Prava LOCO validacija** (`mi_lse_loco_1548.py`): 3 odvojena fold-a, svaki izdvaja TAČNO JEDNU od tri ciljne familije iz treninga (druge dve ostaju) — moguće jer je svaka familija tačno jedna connected komponenta u gold grafu (potvrđeno u `bridge_protein_analysis_1548.py`). Rezultat identičan pilot verziji (koja je izdvojila sve tri odjednom) do 4. decimale — nezavisno od toga da li model vidi ostale dve teške familije u treningu.
+- **Šum-ablacija testirana i odbačena kao neefikasna** (ne kao pogrešna ideja): ~140 Inferred-tier parova ne prolazi WHO2001 kriterijum, ali WebSearch verifikacija pokazala je da su nsLTP (69)/2S albumin (33)/Lipocalin (11) sve literaturom potvrđene "nizak identitet ALI pravi fold-konzervisan cross-reactivity" panalergen familije — isključivanje bi uklonilo pravi signal, ne šum. Samo Mite group 5/7/21 (11 parova, svi grupa-7-naspram-5/21) ima literaturnu potvrdu za slabu/nepotvrđenu reaktivnost. Isključivanje baš tih 11 parova iz treninga nije promenilo NIŠTA merljivo (11 od ~3970 primera je premalo za 3-parametarski model).
+
+**Rezultati (LOCO, bootstrap CI 2000 resample po pair_id)**
+
+| Familija | cosine MRR | LSE-pooling MRR | delta | 95% CI | Značajno? |
+|---|---|---|---|---|---|
+| nsLTP (n=798) | 0.0559 | 0.0777 | +0.0218 | [+0.0116, +0.0329] | **DA** |
+| Profilin (n=648) | 0.0509 | 0.0843 | +0.0334 | [+0.0183, +0.0487] | **DA** |
+| PR-10 (n=370) | 0.0549 | 0.0537 | −0.0012 | [−0.0181, +0.0131] | Ne |
+
+**Zaključak**
+- Prvi mehanizam u celom ovom dijagnostičkom nizu (sliding-window MAX, top-3, konzerviranost, BepiPred, površinski top-K — sve null) koji pokazuje realan, LOCO-potvrđen pozitivan signal. Prvi NN-adjacent model od MLP(hadamard) naovamo koji prolazi punu LOCO disciplinu — i prvi koji to radi sa pravim poboljšanjem, ne samo izjednačenjem sa cosine-om.
+- **Nije "rešen problem"** — apsolutne MRR vrednosti (0.078, 0.084) ostaju daleko ispod dobro-ponašanih familija (Tropomiozin/Troponin C ~0.6-0.7). Ovo je "manje katastrofalno", ne "dobro".
+- PR-10 potpuno nepromenjen — mehanizam koji pomaže nsLTP/Profilin ne rešava šta god je specifično pokvareno kod PR-10; verovatno drugačiji uzrok.
+- Sledeći koraci (nije još urađeno): puna attention-MIL verzija (naučena po-prozor relevantnost, ne samo jedan globalni τ), per-familija τ (moguće objašnjenje zašto PR-10 ne reaguje), dijagnoza PR-10 specifično.
