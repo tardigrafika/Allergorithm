@@ -716,8 +716,7 @@ Hot-spot provera: PR-10 hot-spotovi su DOSLEDNO lokalizovani blizu C-terminusa (
 
 ---
 
-## OuterProductBilinear (mentorov predlog) — odbačeno
-
+## OuterProductBilinear 
 **Cilj** — mentorova ideja: umesto Hadamard produkta (u⊙v, hvata SAMO interakcije iste dimenzije), koristiti outer product (u⊗v, hvata SVE parove dimenzija u_i·v_j) pomnožen matricom težina, pa MLP — "dobićeš delove koji su bitni za reakciju".
 
 **Šta je urađeno** (`test/evaluate_bilinear_outer_1548.py`, `ml/loco_blast_vs_bilinear_1548.py`) — low-rank varijanta (pun 1280×1280 outer product bi dao ~1.6M parametara naspram samo 785 čistih trening parova — zagarantovano overfitovanje): deljena naučena projekcija A (1280→64), simetričan outer product (a⊗b + b⊗a, garantuje score(u,v)=score(v,u)), pa mali MLP. Testirano i na gold LOCO (40 folda) i na pacijentima (isti upareni test kao MLP/BLAST iznad).
