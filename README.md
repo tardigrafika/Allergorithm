@@ -26,19 +26,32 @@
 | [Real-world validacija (pacijenti)](#real-world-validacija-pacijenti) | — | — | — | — | Smer tačan, nije statistički značajno (mala snaga) |
 | [Sliding-window ESM (nsLTP/Profilin/PR-10)](#sliding-window-esm-nsltpprofilinpr-10) | 0.0524 | — | — | — | Null/blago negativno — ne rešava unutar-familije zagušenje |
 | [MI/hypergraph LSE-pooling (nsLTP/Profilin/PR-10)](#mihypergraph-lse-pooling-nsltpprofilinpr-10) | 0.0537–0.0843 | — | — | — | **Prvo pravo poboljšanje na 2/3 familije, LOCO-potvrđeno** (nsLTP/Profilin značajno, PR-10 ne) |
+| [Attention-MIL](#attention-mil-eskalacija-lse-poolinga) | — | — | — | — | Ne prevazilazi jednostavni LSE — zatvoren pravac |
+| [PR-10 dijagnoza](#pr-10-dijagnoza--zašto-mi-lse-ne-pomaže-baš-ovoj-familiji) | — | — | — | — | Strukturno bez lokalnog signala, treba drugu vrstu podataka |
+| [Error taxonomy + Inferred tier odluka](#error-taxonomy--inferred-tier-odluka) | — | — | — | — | 96% grešaka objašnjeno; Inferred isključen iz treninga (ne iz dataseta) |
+| [RRF-5 (family-aware LSE, pacijenti)](#rrf-5-family-aware-lse--test-na-pacijentima) | — | — | — | — | **Pogoršao pacijentski rezultat** — interno dobar signal ne prenosi se klinički |
+| [RRF-6 (MLP-hadamard, pacijenti)](#rrf-6-mlphadamard--test-na-pacijentima) | — | — | — | — | Bolji od RRF-4, ali **RRF fuzija sama pokazala se lošijom od pojedinačnih signala** (videti niže) |
+| [BLAST SAM vs MLP(hadamard) SAM — gold LOCO](#blast-sam-vs-mlphadamard-sam--gold-loco) | BLAST 0.1243 / MLP 0.1259 | — | — | — | Izjednačeni, delta zanemarljiv, nije značajno (ni pair ni study-level) |
+| [BLAST SAM vs MLP(hadamard) SAM — pacijenti (upareni test)](#blast-sam-vs-mlphadamard-sam--pacijenti-ispravan-upareni-test) | — | — | — | — | **MLP(hadamard) značajno bolji od BLAST-a na pacijentima** — glavni nalaz sesije |
+| [OuterProductBilinear (mentorov predlog)](#outerproductbilinear-mentorov-predlog--odbačeno) | ~0.005–0.05 (gold) / 0.083 (pac.) | — | — | — | Kolabira i na gold datasetu i na pacijentima — odbačeno |
 
 ---
-
+Trenutni broj gold-cross-reactive parova: 1922
 ## Trenutno najbolji model
 
-**RRF-4 (cosine + BLAST + FoldseekTM + graph-propagation)** je jedini model u projektu koji je **dvostruko statistički potvrđen**: RRF-3 značajno prevazilazi cosine (bootstrap CI), i graph-propagation signal značajno prevazilazi RRF-3. Graph-propagation koristi leave-one-edge-out signal iz poznatih suseda proteina u gold grafu — genuinski nezavisan signal od sekvence/strukture koje već čine RRF-3.
+**Najjača, najpouzdanije potvrđena tvrdnja projekta (2026-08-30): MLP(hadamard) SAM (bez RRF fuzije) statistički značajno prevazilazi čist BLAST na pravim pacijentima**, pravim uparenim testom na istim upitima. Videti [punu sekciju niže](#blast-sam-vs-mlphadamard-sam--pacijenti-ispravan-upareni-test) za metodologiju i brojeve — ovo je sada preporučena headline tvrdnja za tezu, ne RRF-4/RRF-6.
 
-| | MRR (primenljiv podskup) | Delta vs RRF-3 | 95% CI | Značajno? |
-|---|---|---|---|---|
-| RRF-3 | 0.1244 | — | — | — |
-| **RRF-4** | **0.1304** | **+0.0060** | **[+0.0017, +0.0100]** | **DA** |
+**RRF-4 (cosine + BLAST + FoldseekTM + graph-propagation)** ostaje produkcioni pipeline za praktičnu upotrebu, ALI sa važnom ogradom dodatom 2026-08-29 (videti [Error taxonomy + Inferred tier odluka](#error-taxonomy--inferred-tier-odluka)): njegove interne statističke tvrdnje su **slabije nego što je ranije prijavljeno**, otkriveno kroz study-level bootstrap (resampling po IZVORU citata, ne po pojedinačnom paru — mnogi parovi dele isti izvor, pa pair-level bootstrap potcenjuje nesigurnost). Dodatno, 2026-08-30 je otkriveno da **RRF fuzija (RRF-4/RRF-6) dosledno gubi od pojedinačnih signala (BLAST sam, MLP sam) na pacijentima** — kompleksnija fuzija nije uvek bolja.
 
-Zaključak: jedini dobitak u celom projektu koji je prošao i internu (bootstrap CI na gold datasetu) i nezavisnu proveru (potvrđeno ponovo u `weighted_rrf4_fusion_1548`, delta+0.0079 CI[+0.0037,+0.0123]) — svi kasniji pokušaji (RF, MLP, Hadamard, dodatni RRF signali, fuzije) nisu uspeli da ga prevaziđu.
+| | MRR (primenljiv podskup) | Delta | Pair-level 95% CI | **Study-level 95% CI** | Značajno (study-level)? |
+|---|---|---|---|---|---|
+| RRF-3 vs cosine | — | +0.0085 (pair) / +0.0113 (study) | [+0.0028,+0.0142] | [+0.0032,+0.0301] | DA (ali NE na ne-Inferred podskupu: CI[−0.0004,+0.0338]) |
+| RRF-3 vs BLAST | — | +0.0057 | [+0.0001,+0.0116] | [−0.0139,+0.0113] | **NE** |
+| RRF-4 vs RRF-3 (graph-prop) | — | +0.0060 | [+0.0016,+0.0101] | [−0.0015,+0.0172] | **NE** |
+
+Tačka procene ostaje pozitivna svuda — ovo NIJE dokaz da je RRF-4 pogrešan, znači da je deo dataseta (57.5% je jedan blanket-citat, Inferred tier) manje nezavisan dokaz nego što je pair-level bootstrap pretpostavljao.
+
+**Novi kandidat, još ne potvrđen dovoljno podataka: RRF-6 (RRF-4 + MLP(hadamard))** — prva dopuna koja NE kvari, nego poboljšava rezultat na pravim pacijentima (videti [RRF-6 sekciju](#rrf-6-mlphadamard--test-na-pacijentima)). Nije još zamenio RRF-4 kao default — glavni pacijentski test i dalje nije statistički značajan, treba više podataka.
 
 ---
 
@@ -586,3 +599,132 @@ Hot-spot provera: PR-10 hot-spotovi su DOSLEDNO lokalizovani blizu C-terminusa (
 **Zaključak**
 - Dodatna fleksibilnost NIJE pomogla — na Profilinu praktično identičan rezultat kao jednostavni LSE, na nsLTP CAK GORE (izgubljena statistička značajnost). Verovatno blago overfitovanje na trening raspodelu koje se lošije generalizuje na held-out familiju nego ograničenija LSE forma.
 - **LSE-pooling (jedan naučen τ) ostaje najbolji, robusniji nalaz u ovom pravcu.** Odbačeno dalje širenje modela u ovom smeru — jednostavnije je ovde bilo bolje. Zatvoren pravac za MI/hypergraph agregacione eksperimente na trenutnom nivou infrastrukture (window-pooling preko ESM embeddinga).
+
+---
+
+## Error taxonomy + Inferred tier odluka
+
+**Cilj** — mentorov predlog: umesto nagađanja familija-po-familija (kako je rađeno za PR-10), sistematski kategorisati SVE loše rangirane RRF-4 upite po verovatnom uzroku, da se vidi gde stvarno vredi ulagati dalje.
+
+**Šta je urađeno** (`analysis/error_taxonomy_1548.py`) — svaki upit sa rangom > 100 (211/3074 = 6.9%) označen po kategoriji: cold_start, ccd_driven, inferred_tier, who2001_borderline_expected (familije gde je nizak identitet OČEKIVAN — nsLTP/2S albumin/Lipocalin), who2001_fail_suspect, low_identity, directionality_known.
+
+**Rezultati**
+
+| Kategorija | Udeo loših upita |
+|---|---|
+| Inferred tier | 90% (3.5× veći rizik neuspeha nego ne-Inferred: 8.5% vs 2.5% stopa) |
+| WHO2001 pada, očekivano (fold-conserved familije) | 14.7% |
+| Nizak identitet (<30%) | 14.2% |
+| WHO2001 pada, sumnjivo | 8.5% |
+| CCD-vođeno | 2.4% |
+| **NEOBJAŠNJENO** | **3.8%** (8/211 upita) |
+
+**96.2% loših upita ima bar jednu poznatu, već dijagnostikovanu kategoriju** — samo 8 upita je prava misterija.
+
+**Zaključak i odluka (2026-08-29)**
+- Ono što izgleda kao "loš MRR" je uglavnom posledica kvaliteta/pouzdanosti Inferred tier-a (57.5% dataseta, jedan blanket citat), ne skrivenog reprezentacijskog problema — konvergira sa study-level bootstrap nalazom (ista tier je i statistički najmanje pouzdana).
+- **Literatura-nadogradnja**: primenjeno 13/17 već pronađenih kandidata (Scala et al. 2011, n=3113 pacijenata, samo Profilin — nedvosmisleno pokriveno) na `evidence_level="Strong evidence (population correlation...)"`. 4 sumnjiva kandidata (3 PR-10, 1 Oleosin) namerno OSTAVLJENA kao Inferred — izvor ih ne pokriva nedvosmisleno.
+- **Za ostatak (~1093 para) koji se ne može pojedinačno nadograditi**: korisnica je eksplicitno odbacila potpuno brisanje (87% prolazi WHO2001, nekoliko familija ima nizak identitet iz pravih bioloških razloga — brisanje bi verovatno uklonilo pretežno tačne podatke, kosi se sa "nikad ne brišemo informacije" principom). Umesto toga: **novi `training_eligible_pairs()` u `ml/pipeline/common/data.py`** isključuje preostale Inferred parove SAMO iz treninga supervizovanih modela — ostaju puni deo dataseta i evaluacije. Aditivna, bezbedna izmena (ne menja ponašanje nijednog postojećeg skripta dok se eksplicitno ne pozove).
+
+---
+
+## RRF-5 (family-aware LSE) — test na pacijentima
+
+**Cilj** — konkretan predlog za "novi glavni pipeline": umesto univerzalne formule, dodati LSE-pooling (dokazano poboljšanje na nsLTP/Profilin, LOCO-potvrđeno) SAMO za upite iz tih familija, testirati direktno na proširenom pacijentskom test suite-u (49 pacijenata, 4 nova profilin slučaja dodata baš za ovaj test).
+
+**Šta je urađeno** (`test/evaluate_rrf5_family_aware_1548.py`) — identičan RRF-4 mehanizam (`CrossReactivityRanker`), plus LSE-pooling termin za poznate pozitive iz nsLTP/Profilin. Testirano i sa punim gold treningom i sa `training_eligible_pairs()` (bez preostalih Inferred) — **oba varijante daju praktično identičan (loš) rezultat**.
+
+**Rezultati** (cluster-permutacija + patient-level Wilcoxon, ista metodologija kao real-world validacija)
+
+| Test | RRF-4 (bazni) | RRF-5 original | RRF-5 čist trening |
+|---|---|---|---|
+| Svi pacijenti, cluster-perm p | 0.517 | 0.555 | 0.555 |
+| Bez Mothes-Luksch, cluster-perm p | **0.044 (značajno)** | 0.131 (nije) | 0.131 (nije) |
+| Bez Mothes-Luksch, Wilcoxon p | **0.047 (značajno)** | 0.156 (nije) | 0.156 (nije) |
+
+**Zaključak**
+- Dodavanje INTERNO potvrđenog signala (LSE-pooling) **pogoršalo je** rezultat na pravim pacijentima — nestao je jedini značajan nalaz koji je RRF-4 imao. Čišćenje trening podataka (bez Inferred) NIJE popravilo problem — identičan rezultat, isključuje hipotezu "nepouzdan trening je kriv".
+- Verovatno objašnjenje: LSE-pooling optimizuje uzak sekvencijalni/strukturni signal (validiran na molekularnom gold datasetu) koji se ne prenosi na stvarnu kliničku IgE reaktivnost — isti gap koji alat već priznaje u svom disclaimer-u.
+- RRF-5 u ovom obliku NE zamenjuje RRF-4.
+
+---
+
+## RRF-6 (MLP-hadamard) — test na pacijentima
+
+**Cilj** — revizitirati MLP(hadamard) (interno tačno izjednačio cosine pod LOCO — ni pobeda ni poraz) na pravim pacijentima, sa istom disciplinom kao RRF-5 ali GLOBALNO dodato (ne familijski-ograničeno — MLP nema dokazanu familijsku prednost, za razliku od LSE-a).
+
+**Šta je urađeno** (`test/evaluate_rrf6_mlp_hadamard_1548.py`) — MLP(hadamard) treniran od početka na `training_eligible_pairs()` (785 čistih parova, bez Inferred), dodat kao dodatni RRF term za SVAKOG poznatog pozitiva, svih familija. Uhvaćen i ispravljen potencijalni bug PRE pokretanja: `CrossReactivityRanker.pool` i `dataset.all_ids` imaju različit redosled istog skupa proteina — bez eksplicitne permutacije, MLP skorovi bi se tiho pogrešno poravnali sa pogrešnim proteinima.
+
+**Rezultati**
+
+| Test | RRF-4 (bazni) | RRF-5 (LSE) | **RRF-6 (MLP-hadamard)** |
+|---|---|---|---|
+| Svi pacijenti, cluster-perm p | 0.517 | 0.555 | **0.168** |
+| Bez Mothes-Luksch, cluster-perm p | 0.044 (značajno) | 0.131 (nije) | **0.009 (značajno, 5× jače)** |
+| Bez Mothes-Luksch, Wilcoxon p | 0.047 (značajno) | 0.156 (nije) | **0.047 (značajno, isto)** |
+
+**Zaključak**
+- **Prva dopuna u celoj sesiji koja ne kvari, nego poboljšava rezultat na pravim pacijentima** — glavni test se pomerio u obećavajućem smeru (iako još nije značajan), sensitivity provera je ojačala skoro 5×.
+- Interno-vs-klinički gap NIJE univerzalan — specifičan je za LSE-pooling (ili lokalne/familijski-ograničene signale generalno), ne za "bilo koji ML dodatak". MLP(hadamard), uprkos internoj redundantnosti sa cosine-om, hvata nešto na pravim pacijentima što RRF-3/RRF-4 sami ne hvataju.
+- **Vodeći kandidat za bolji alat od RRF-4** — još nije dovoljno potvrđen (glavni test nije značajan, treba više pacijentskih podataka) da zameni produkcioni default, ali prvi kredibilan pravac napretka na metrici koja je stvarno bitna.
+- **AŽURIRANO 2026-08-30**: sledeći koraci (niže) pokazuju da čak i RRF-6 fuzija gubi od SAMOG MLP(hadamard) signala bez ikakve RRF fuzije — ova sekcija ostaje kao istorijski zapis prvog pozitivnog pomaka, ali headline tvrdnja projekta je sada jednostavnija (videti niže).
+
+---
+
+## BLAST SAM vs MLP(hadamard) SAM — gold LOCO
+
+**Cilj** — vratiti se na jezgro naučnog pitanja (korisnički zahtev 2026-08-30): da li embedding-based metoda SAMA (bez RRF fuzije koja već sadrži BLAST kao sastojak) statistički značajno prevazilazi čist BLAST — na CELOM gold datasetu, punom LOCO metodologijom.
+
+**Šta je urađeno** (`ml/loco_blast_vs_mlp_hadamard_only_1548.py`) — 40-fold LOCO, MLP(hadamard) treniran ISPOČETKA svaki fold na `training_eligible_pairs()` (cist trening), BLAST rang računat naspram CELOG pool-a od 1535 proteina za svaki upit. Bootstrap CI na oba nivoa (pair i study).
+
+**Rezultati** (3756 upita, ceo dataset)
+
+| | MRR (micro) | Delta | Pair-level 95% CI | Study-level 95% CI |
+|---|---|---|---|---|
+| BLAST | 0.1243 | — | — | — |
+| MLP(hadamard) | 0.1259 | +0.0016 | [−0.0061,+0.0091] nije značajno | [−0.0333,+0.0123] nije značajno |
+
+**Zaključak**
+- Na molekularnom gold datasetu, sam MLP(hadamard) i sam BLAST su statistički izjednačeni — nema dokaza da embedding-based klasifikator sam po sebi prevazilazi sekvencijalno poravnanje na OVOJ metrici. Ovo se poklapa sa ranijim LOCO nalazom da MLP(hadamard) tačno izjednačuje cosine.
+
+---
+
+## BLAST SAM vs MLP(hadamard) SAM — pacijenti (ispravan upareni test)
+
+**Cilj** — isti test kao gore, ali na metrici koja je klinički najbitnija: pravi pacijenti (54, leave-one-out). **VAŽNA METODOLOŠKA NAPOMENA**: prvi pokušaj ovog poređenja (cluster-permutacija posebno za MLP i posebno za BLAST, svaki protiv sopstvene permutovane nulte hipoteze) bio je **pogrešan** — dokazuje samo da svaki model pojedinačno nosi signal iznad slučajnosti, ne da je jedan bolji od drugog. Ispravljeno na zahtev korisnice/mentora: pravi upareni test na ISTIM upitima.
+
+**Šta je urađeno**
+- `test/evaluate_mlp_only_vs_blast_only_patients_1548.py` — dva rankera, SVAKI sa SAMO JEDNIM signalom (ne RRF-3+X), isti "sabiranje 1/(K+rang) preko poznatih pozitiva" mehanizam kao `CrossReactivityRanker`. MLP(hadamard) treniran na `training_eligible_pairs()`.
+- `test/paired_test_mlp_vs_blast_1548.py` — ISPRAVAN upareni test, tri metode, sve uparene po (patient_id, hidden_protein) — spajanje verifikovano 1:1, bez duplikata:
+  1. Patient-level Wilcoxon signed-rank na MRR(MLP)−MRR(BLAST) po pacijentu
+  2. Cluster-permutacija koja permutuje OZNAKU MODELA (ne ishod) unutar svakog pacijenta
+  3. Patient-level bootstrap CI, resample po pacijentu (ne po upitu)
+
+**Rezultati**
+
+| Test | Svi upiti (n=152, 51 pac.) | Samo "hard"/verifikovano (n=124, 41 pac.) |
+|---|---|---|
+| Patient-level Wilcoxon | p=0.030 **značajno** | p=0.012 **značajno** |
+| Cluster-permutacija (permutuj MLP/BLAST oznaku) | p=0.079 nije značajno | p=0.033 **značajno** |
+| Patient-level bootstrap CI | [+0.0000,+0.0246] **značajno** (jedva) | [+0.0029,+0.0318] **značajno** |
+
+**Zaključak**
+- **Na "hard" (najpouzdanijem) podskupu, sva tri nezavisna testa se slažu: MLP(hadamard) SAM statistički značajno prevazilazi BLAST SAM**, pravim uparenim poređenjem na istim pacijentima. Prosečna prednost ≈ +0.015 do +0.019 MRR.
+- Na punom skupu (uključujući manje pouzdano verifikovane slučajeve) dva od tri testa su značajna; cluster-permutacija je granična (p=0.079) — pošteno naznačeno kao slabija karika, ne prećutano.
+- **Ovo je NAJJAČA, metodološki najispravnija tvrdnja cele sesije za centralno naučno pitanje** ("da li embedding-based metoda prevazilazi baseline bez embeddinga") — suprotstavljeno gold-LOCO rezultatu iznad (izjednačeno na gold datasetu), što samo po sebi govori da gold-standard molekularne labele i stvarna klinička reaktivnost nisu ista stvar — MLP hvata nešto klinički relevantno što BLAST ne hvata, iako oba podjednako dobro pogađaju gold-dataset labele.
+- **Opšta lekcija**: dva odvojena testa "iznad slučajnosti" NIKAD nisu zamena za jedan pravi upareni test — ova greška je lako napraviti kad se izveštavaju paralelni rezultati značajnosti jedan pored drugog, i treba je eksplicitno proveravati pre svake "X bolji od Y" tvrdnje.
+
+---
+
+## OuterProductBilinear (mentorov predlog) — odbačeno
+
+**Cilj** — mentorova ideja: umesto Hadamard produkta (u⊙v, hvata SAMO interakcije iste dimenzije), koristiti outer product (u⊗v, hvata SVE parove dimenzija u_i·v_j) pomnožen matricom težina, pa MLP — "dobićeš delove koji su bitni za reakciju".
+
+**Šta je urađeno** (`test/evaluate_bilinear_outer_1548.py`, `ml/loco_blast_vs_bilinear_1548.py`) — low-rank varijanta (pun 1280×1280 outer product bi dao ~1.6M parametara naspram samo 785 čistih trening parova — zagarantovano overfitovanje): deljena naučena projekcija A (1280→64), simetričan outer product (a⊗b + b⊗a, garantuje score(u,v)=score(v,u)), pa mali MLP. Testirano i na gold LOCO (40 folda) i na pacijentima (isti upareni test kao MLP/BLAST iznad).
+
+**Rezultati**
+- Gold LOCO (prvih 5/40 folda, obrazac već nedvosmislen, run prekinut): MRR 0.005–0.05 naspram BLAST-ovih 0.05–0.15 — **5-20× gore po foldu**, isti obrazac kolapsa kao raniji odbačeni "MLP embedding-transform" model.
+- Pacijenti: MRR=0.083 (znatno niže od MLP-hadamard/BLAST), **značajno GORE od BLAST-a** na "svi upiti" podskupu (patient-Wilcoxon p=0.0136, u pogrešnom smeru), dosledno gore (nije značajno) i od MLP(hadamard)-a.
+
+**Zaključak**
+- Odbačeno u ovom obliku. Verovatno objašnjenje: čak i low-rank (r=64) bilinearna forma je previše izražajna za ~785 čistih trening primera — dodatna izražajnost ovde šteti, ne pomaže, ista lekcija kao attention-MIL (25 parametara) koji je izgubio od LSE-poolinga (3 parametra) ranije istog dana. Puna (bez low-rank redukcije) verzija bi imala još više parametara — očekivano još gore, ne bolje, pa nije ni testirana. Hadamard produkt (dijagonalne interakcije) ostaje bolje-prilagođen induktivni bias za ovaj problem sa ovoliko malo podataka.
