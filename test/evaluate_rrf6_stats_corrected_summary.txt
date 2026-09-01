@@ -4,27 +4,27 @@ Statisticka ispravka: cluster-permutacija umesto Mann-Whitney na 'ravnim' trials
 
 --- SVI 76 trials (hard + soft) ---
   n_trials=152 (pos=84, neg=68), n_pacijenata=51
-  Cluster-permutacija (N=10000, within-patient shuffle): observed diff=+24.37pp, p=0.5138 -- nije znacajno
+  Cluster-permutacija (N=10000, within-patient shuffle): observed diff=+26.52pp, p=0.1692 -- nije znacajno
   Patient-level parovi (>=1 poz I >=1 neg hidden trial): n_pacijenata=14
-  Wilcoxon signed-rank (median_neg - median_pos > 0): p=0.5205 -- nije znacajno
+  Wilcoxon signed-rank (median_neg - median_pos > 0): p=0.2657 -- nije znacajno
 
 --- SAMO hard (full_text_verified) ---
   n_trials=124 (pos=70, neg=54), n_pacijenata=41
-  Cluster-permutacija (N=10000, within-patient shuffle): observed diff=+20.16pp, p=0.5225 -- nije znacajno
+  Cluster-permutacija (N=10000, within-patient shuffle): observed diff=+20.25pp, p=0.1754 -- nije znacajno
   Patient-level parovi (>=1 poz I >=1 neg hidden trial): n_pacijenata=14
-  Wilcoxon signed-rank (median_neg - median_pos > 0): p=0.5205 -- nije znacajno
+  Wilcoxon signed-rank (median_neg - median_pos > 0): p=0.2657 -- nije znacajno
 
 --- SVI 76, BEZ Mothes-Luksch kohorte (sensitivity) ---
   n_trials=120 (pos=70, neg=50), n_pacijenata=38
-  Cluster-permutacija (N=10000, within-patient shuffle): observed diff=+29.98pp, p=0.0427 -- ZNACAJNO
+  Cluster-permutacija (N=10000, within-patient shuffle): observed diff=+32.32pp, p=0.0089 -- ZNACAJNO
   Patient-level parovi (>=1 poz I >=1 neg hidden trial): n_pacijenata=10
-  Wilcoxon signed-rank (median_neg - median_pos > 0): p=0.0469 -- ZNACAJNO
+  Wilcoxon signed-rank (median_neg - median_pos > 0): p=0.0547 -- nije znacajno
 
 --- SAMO hard, BEZ Mothes-Luksch kohorte (sensitivity) ---
   n_trials=92 (pos=56, neg=36), n_pacijenata=28
-  Cluster-permutacija (N=10000, within-patient shuffle): observed diff=+25.08pp, p=0.0473 -- ZNACAJNO
+  Cluster-permutacija (N=10000, within-patient shuffle): observed diff=+24.56pp, p=0.0097 -- ZNACAJNO
   Patient-level parovi (>=1 poz I >=1 neg hidden trial): n_pacijenata=10
-  Wilcoxon signed-rank (median_neg - median_pos > 0): p=0.0469 -- ZNACAJNO
+  Wilcoxon signed-rank (median_neg - median_pos > 0): p=0.0547 -- nije znacajno
 
 ======================================================================
 NAPOMENA o graph-propagation nalazu (+0.006 MRR)

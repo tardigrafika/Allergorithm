@@ -58,8 +58,22 @@ def map_gold_pairs(gold: pd.DataFrame, name_to_id: dict, id_to_index: dict) -> l
             "id_1": id_1, "id_2": id_2,
             "name_1": name_1, "name_2": name_2,
             "family_1": row.get("family_1"), "family_2": row.get("family_2"),
+            "evidence_level": row.get("evidence_level"),
         })
     return gold_pairs
+
+
+def training_eligible_pairs(gold_pairs: list) -> list:
+    """Izbacuje Inferred-tier parove (evidence_level pocinje sa "Inferred")
+    iz TRENING skupa -- odluka od 2026-08-29 (error_taxonomy_1548.py pokazao
+    Inferred parovi padaju 3.5x cesce nego ostali, study_level_bootstrap_1548.py
+    pokazao da njihova statisticka tezina nije pouzdana). NAMERNO odvojeno od
+    load_dataset()/gold_pairs -- Inferred parovi OSTAJU validni evaluacioni
+    ciljevi (ne brisemo verovatno tacne podatke, WHO2001 prolazi 87% njih),
+    samo se vise ne koriste kao "ground truth" signal za treniranje
+    supervizovanih modela (RF/MLP/LSE/Hadamard). Pozvati EKSPLICITNO pri
+    gradnji trening skupa, ne menja dataset.gold_pairs samo po sebi."""
+    return [p for p in gold_pairs if not str(p.get("evidence_level", "")).startswith("Inferred")]
 
 
 def filter_negative_evidence(gold_raw: pd.DataFrame) -> pd.DataFrame:
@@ -73,8 +87,20 @@ def filter_negative_evidence(gold_raw: pd.DataFrame) -> pd.DataFrame:
     return gold_raw.loc[~negative_mask].copy()
 
 
+def filter_ccd_confirmed(gold_raw: pd.DataFrame) -> pd.DataFrame:
+    """Izbacuje parove gde je ccd_flag="ccd_glycan_confirmed" (data/add_ccd_flag_1548.py) --
+    reaktivnost verifikovano potice od glikanskog (CCD), ne proteinskog epitopa.
+    Model uci SAMO iz proteinske sekvence (ESM embedding), pa ovakav par nema
+    naucljiv signal -- ukljucivanje bi samo unelo sum/pogresan label. Namerno NE
+    izbacuje "ccd_possible_unverified" (rizicna zona, ali pojedinacno nije
+    potvrdjeno) -- to ostaje u datasetu dok se ne verifikuje."""
+    if "ccd_flag" not in gold_raw.columns:
+        return gold_raw
+    return gold_raw.loc[gold_raw["ccd_flag"] != "ccd_glycan_confirmed"].copy()
+
+
 def load_dataset(embeddings_path: Path, metadata_path: Path, gold_path: Path,
-                  filter_negatives: bool = True) -> Dataset:
+                  filter_negatives: bool = True, filter_ccd: bool = True) -> Dataset:
     embeddings_dict = load_embeddings(embeddings_path)
 
     metadata = pd.read_parquet(metadata_path)
@@ -88,6 +114,7 @@ def load_dataset(embeddings_path: Path, metadata_path: Path, gold_path: Path,
 
     gold_raw = pd.read_csv(gold_path)
     gold = filter_negative_evidence(gold_raw) if filter_negatives else gold_raw
+    gold = filter_ccd_confirmed(gold) if filter_ccd else gold
 
     gold_pairs = map_gold_pairs(gold, name_to_id, id_to_index)
     positive_pair_set = {tuple(sorted((p["id_1"], p["id_2"]))) for p in gold_pairs}

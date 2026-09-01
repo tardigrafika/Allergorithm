@@ -1,0 +1,37 @@
+======================================================================
+Statisticka ispravka: cluster-permutacija umesto Mann-Whitney na 'ravnim' trials-ima
+======================================================================
+
+--- SVI 76 trials (hard + soft) ---
+  n_trials=126 (pos=71, neg=55), n_pacijenata=46
+  Cluster-permutacija (N=10000, within-patient shuffle): observed diff=+29.51pp, p=0.5549 -- nije znacajno
+  Patient-level parovi (>=1 poz I >=1 neg hidden trial): n_pacijenata=10
+  Wilcoxon signed-rank (median_neg - median_pos > 0): p=0.3301 -- nije znacajno
+
+--- SAMO hard (full_text_verified) ---
+  n_trials=98 (pos=57, neg=41), n_pacijenata=36
+  Cluster-permutacija (N=10000, within-patient shuffle): observed diff=+26.94pp, p=0.5644 -- nije znacajno
+  Patient-level parovi (>=1 poz I >=1 neg hidden trial): n_pacijenata=10
+  Wilcoxon signed-rank (median_neg - median_pos > 0): p=0.3301 -- nije znacajno
+
+--- SVI 76, BEZ Mothes-Luksch kohorte (sensitivity) ---
+  n_trials=94 (pos=57, neg=37), n_pacijenata=33
+  Cluster-permutacija (N=10000, within-patient shuffle): observed diff=+37.11pp, p=0.1309 -- nije znacajno
+  Patient-level parovi (>=1 poz I >=1 neg hidden trial): n_pacijenata=6
+  Wilcoxon signed-rank (median_neg - median_pos > 0): p=0.1562 -- nije znacajno
+
+--- SAMO hard, BEZ Mothes-Luksch kohorte (sensitivity) ---
+  n_trials=66 (pos=43, neg=23), n_pacijenata=23
+  Cluster-permutacija (N=10000, within-patient shuffle): observed diff=+36.01pp, p=0.1254 -- nije znacajno
+  Patient-level parovi (>=1 poz I >=1 neg hidden trial): n_pacijenata=6
+  Wilcoxon signed-rank (median_neg - median_pos > 0): p=0.1562 -- nije znacajno
+
+======================================================================
+NAPOMENA o graph-propagation nalazu (+0.006 MRR)
+======================================================================
+Taj nalaz (ml/graph_propagation_signal_1548.py, ml/weighted_rrf4_fusion_1548.py)
+je INTERNI -- racunat leave-one-edge-out na GOLD datasetu (cross_reactive_1548.csv,
+1537 kurianih parova), NEMA veze sa ovih 33 real-world pacijenata iz literature.
+Taj interni nalaz JESTE prosao bootstrap CI (2000 resample po pair_id): CI
+[+0.0037,+0.0123], znacajno. To je odvojena, vec ranije zavrsena provera --
+ova skripta ispravlja SAMO statistiku eksternog 33-pacijentskog test-suite-a.

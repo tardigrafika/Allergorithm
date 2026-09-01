@@ -1,0 +1,14 @@
+======================================================================
+RRF-6 (RRF-4 + MLP(hadamard), cist trening) -- leave-one-out rezultati
+======================================================================
+
+Ukupno trials: 152
+
+--- SVI ---
+  Pozitivne mete (n=84): medijan percentil = 3.6%
+  Negativne mete (n=68): medijan percentil = 58.3%
+
+--- HARD (full_text_verified) ---
+  Pozitivne mete (n=70): medijan percentil = 3.5%
+  Negativne mete (n=54): medijan percentil = 54.5%
+

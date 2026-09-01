@@ -34,12 +34,20 @@
 | [BLAST SAM vs MLP(hadamard) SAM — gold LOCO](#blast-sam-vs-mlphadamard-sam--gold-loco) | BLAST 0.1243 / MLP 0.1259 | — | — | — | Izjednačeni, delta zanemarljiv, nije značajno (ni pair ni study-level) |
 | [BLAST SAM vs MLP(hadamard) SAM — pacijenti (upareni test)](#blast-sam-vs-mlphadamard-sam--pacijenti-ispravan-upareni-test) | — | — | — | — | **MLP(hadamard) značajno bolji od BLAST-a na pacijentima** — glavni nalaz sesije |
 | [OuterProductBilinear (mentorov predlog)](#outerproductbilinear-mentorov-predlog--odbačeno) | ~0.005–0.05 (gold) / 0.083 (pac.) | — | — | — | Kolabira i na gold datasetu i na pacijentima — odbačeno |
+| [57-pacijentski suite + ojačan nalaz](#57-pacijentski-test-suite--ojačan-blast-vs-mlphadamard-nalaz) | — | — | — | — | Sva 3 testa sada značajna na oba podskupa (bilo granično na 54 pac.) |
+| [Failure analysis MLP vs BLAST (57 pac.)](#failure-analysis-gde-mlphadamard-greši-naspram-blast-a-57-pacijenata) | — | — | — | — | 5 empirijskih nalaza — MLP bolji na PR-10/nsLTP pozitivima, lošiji na crowded negativima |
+| [Targeted hard-negative eksperiment](#targeted-hard-negative-eksperiment--pokušaj-popravke-negativan-rezultat) | 0.0804–0.1267 (gold LOCO, 4 ratio-a) | — | — | — | Bez efekta na LOCO, POGORŠAO flagship probu — odbačeno, veto odbijen |
+| [LSE-pooling kao primarni ranker](#lse-pooling-kao-primarni-ranker--feasibility-check-odustalo-se-pre-punog-pokretanja) | — | — | — | — | ~3h projektovana cena — odloženo pre punog LOCO-a |
+| [LayerNorm ablacija](#layernorm-ablacija-za-mlphadamard--čist-značajan-negativan-rezultat) | 0.0804 | — | — | — | Značajno GORE od baseline-a (−0.0455, CI isključuje 0) — odbačeno |
+| [ESM-1b naspram ESM-2 backbone](#esm-1b-naspram-esm-2-backbone--mlphadamard-značajan-negativan-rezultat) | 0.1065 (ESM-1b) | — | — | — | Značajno GORE od ESM-2 (−0.0195, CI isključuje 0) — ne koristiti |
 
 ---
 Trenutni broj gold-cross-reactive parova: 1922
 ## Trenutno najbolji model
 
-**Najjača, najpouzdanije potvrđena tvrdnja projekta (2026-08-30): MLP(hadamard) SAM (bez RRF fuzije) statistički značajno prevazilazi čist BLAST na pravim pacijentima**, pravim uparenim testom na istim upitima. Videti [punu sekciju niže](#blast-sam-vs-mlphadamard-sam--pacijenti-ispravan-upareni-test) za metodologiju i brojeve — ovo je sada preporučena headline tvrdnja za tezu, ne RRF-4/RRF-6.
+**Najjača, najpouzdanije potvrđena tvrdnja projekta (2026-08-30, ojačana 2026-08-31 na 57 pacijenata): MLP(hadamard) SAM (bez RRF fuzije) statistički značajno prevazilazi čist BLAST na pravim pacijentima**, pravim uparenim testom na istim upitima — sada sva tri testa (Wilcoxon, cluster-permutacija, bootstrap) značajna na OBA podskupa (svi upiti i "hard"), ne samo na hard podskupu kao ranije. Videti [punu sekciju](#blast-sam-vs-mlphadamard-sam--pacijenti-ispravan-upareni-test) i [57-pacijentski update](#57-pacijentski-test-suite--ojačan-blast-vs-mlphadamard-nalaz) — ovo je headline tvrdnja za tezu, ne RRF-4/RRF-6.
+
+**Svaki pokušaj poboljšanja MLP(hadamard)-a preko ovog nalaza (2026-08-30/31) vratio se negativan ili nepraktičan**: targeted hard-negative trening (bez efekta, pogoršao flagship probu), inference-time veto (eksplicitno odbijen — slabi naučnu interpretaciju), LSE-pooling kao primarni ranker (odloženo, ~3h projektovana cena), LayerNorm (značajno gore, CI isključuje 0). Detaljna [failure analysis](#failure-analysis-gde-mlphadamard-greši-naspram-blast-a-57-pacijenata) pokazuje TAČNO gde i zašto: MLP dobija na true pozitivima u PR-10/nsLTP, gubi na potiskivanju negativa unutar crowded familija — ovo ostaje dokumentovano, nerešeno ograničenje trenutnog modela, ne patch-ovano pravilom.
 
 **RRF-4 (cosine + BLAST + FoldseekTM + graph-propagation)** ostaje produkcioni pipeline za praktičnu upotrebu, ALI sa važnom ogradom dodatom 2026-08-29 (videti [Error taxonomy + Inferred tier odluka](#error-taxonomy--inferred-tier-odluka)): njegove interne statističke tvrdnje su **slabije nego što je ranije prijavljeno**, otkriveno kroz study-level bootstrap (resampling po IZVORU citata, ne po pojedinačnom paru — mnogi parovi dele isti izvor, pa pair-level bootstrap potcenjuje nesigurnost). Dodatno, 2026-08-30 je otkriveno da **RRF fuzija (RRF-4/RRF-6) dosledno gubi od pojedinačnih signala (BLAST sam, MLP sam) na pacijentima** — kompleksnija fuzija nije uvek bolja.
 
@@ -727,3 +735,122 @@ Hot-spot provera: PR-10 hot-spotovi su DOSLEDNO lokalizovani blizu C-terminusa (
 
 **Zaključak**
 - Odbačeno u ovom obliku. Verovatno objašnjenje: čak i low-rank (r=64) bilinearna forma je previše izražajna za ~785 čistih trening primera — dodatna izražajnost ovde šteti, ne pomaže, ista lekcija kao attention-MIL (25 parametara) koji je izgubio od LSE-poolinga (3 parametra) ranije istog dana. Puna (bez low-rank redukcije) verzija bi imala još više parametara — očekivano još gore, ne bolje, pa nije ni testirana. Hadamard produkt (dijagonalne interakcije) ostaje bolje-prilagođen induktivni bias za ovaj problem sa ovoliko malo podataka.
+
+---
+
+## 57-pacijentski test suite + ojačan BLAST vs MLP(hadamard) nalaz
+
+**Cilj** — dodati nove pacijente u test suite i proveriti da li glavni nalaz sesije (MLP(hadamard) SAM značajno bolji od BLAST-a SAMOG na pacijentima) ostaje stabilan/jača se kad se doda više podataka, ne samo jednom potvrđen na 54 pacijenta.
+
+**Šta je urađeno** — 3 nova pacijenta iz da Silva et al. 2016 (`test/real_world_cases_6.json`, food-dependent exercise-induced urticaria/anaphylaxis, nsLTP-pozitivni ISAC profili) konvertovana u `test/test_cases.json` šemu (54→57 pacijenata). Svih 9 referenciranih proteina (Pru p 3, Cor a 8, Ara h 9, Jug r 3, Pla a 3, Art v 3, Tri a 14, Mal d 1, Pru p 1) se čisto rezolvuju u pool-u — nema novog data gap-a (za razliku od otvorenog Pen a1/m1/m4 nedostatka koji i dalje blokira 11 Giuffrida pacijenata). `test/evaluate_mlp_only_vs_blast_only_patients_1548.py` + `test/paired_test_mlp_vs_blast_1548.py` ponovo pokrenuti nepromenjeni (152→176 trial-ova).
+
+**Rezultati**
+
+| Test | Svi upiti — staro (n=152, 51 pac.) | Svi upiti — novo (n=176, 54 pac.) | Hard — staro (n=124, 41 pac.) | Hard — novo (n=148, 44 pac.) |
+|---|---|---|---|---|
+| Patient-level Wilcoxon | p=0.030 | **p=0.0116** | p=0.0124 | **p=0.0042** |
+| Cluster-permutacija | p=0.079 (nije značajno) | **p=0.0304 (ZNAČAJNO)** | p=0.0331 | **p=0.0080** |
+| Bootstrap CI | [+0.0000,+0.0246] | **[+0.0019,+0.0237]** | [+0.0029,+0.0318] | **[+0.0043,+0.0295]** |
+
+**Zaključak**
+- Dodavanjem 3 nova pacijenta, **sva tri testa su sada značajna na OBA podskupa** — pre toga je cluster-permutacija na "svim upitima" bila granična/neznačajna (p=0.079). Ovo zatvara jedinu slabu kariku iz prethodne METODOLOŠKE ISPRAVKE — glavni nalaz sesije je sada robustniji, ne samo ponovljen.
+
+---
+
+## Failure analysis: gde MLP(hadamard) greši naspram BLAST-a (57 pacijenata)
+
+**Cilj** — na zahtev korisnice: sistematski analizirati SVIH 176 trial-ova (patient/candidate/organism/protein_family/MLP i BLAST rank-percentil/pobednik), ne samo agregatni MRR — čisto analitički rad, bez treniranja novog modela ili heuristike.
+
+**Šta je urađeno** (`analysis/mlp_blast_crd_failure_analysis_1548.py`) — spojeni MLP/BLAST raw rezultati sa `organism` (`clean_allergens.csv`) i `protein_family` (component-level polje iz `test_cases.json`, 280/280 popunjeno). Kategorije grešaka (preklapaju se): isti-organizam/različita-familija, family crowding (nsLTP/profilin/PR-10), profilin posebno, storage proteini. Za svaku kategoriju/familiju: medijan percentil (ne samo mean — mean se pokazao zaveden duplim pacijentima sa identičnim profilom u istoj koorti).
+
+**Rezultati**
+
+| Familija | Pozitivi (medijan %) | Negativi (medijan %, potiskivanje) |
+|---|---|---|
+| PR-10 (n=23) | MLP 37.0 vs BLAST 73.9 — **MLP bolji, 12/12 trial-ova jednosmerno** | MLP 48.7 vs BLAST 84.8 — MLP lošiji |
+| nsLTP (n=34) | MLP 2.3 vs BLAST 2.7 — **MLP bolji, 26/28 trial-ova** | MLP 23.8 vs BLAST 49.0 — MLP lošiji |
+| profilin (n=29) | MLP 5.5 vs BLAST 1.7 — **BLAST bolji na 10/12 tipičnih slučajeva** (mean je bio zaveden sa 2 duplirana Phl p12 slučaja) | MLP 34.3 vs BLAST 66.9 — MLP lošiji |
+| Storage proteini (n=32) | — | MLP 67.8 vs BLAST 66.0 — **praktično izjednačeno** (za razliku od crowded familija) |
+
+**Zaključak — 5 empirijskih nalaza**
+1. MLP robusno bolji od BLAST-a na pravim pozitivima u PR-10 (jednosmerno, 12/12) i nsLTP (26/28) — najjači nalaz u celom skupu.
+2. Profilin je izuzetak: tipičan slučaj (medijan) favorizuje BLAST na pozitivima, suprotno od PR-10/nsLTP.
+3. MLP-ova slabost potiskivanja negativa je koncentrisana u crowded familijama (−37.7pp), NE univerzalna — kod storage proteina razlike praktično nema.
+4. **Pru p1/Pru p3 je deo prepoznatljivog ali ASIMETRIČNOG obrasca**: od 12 distinktnih isti-organizam/različita-familija parova u stvarnim trial-ovima, 7/12 ide u MLP-ovu štetu, 5/12 (svi mite Der p parovi) u njegovu korist — ali dva apsolutno najveća promašaja u celom 176-trial datasetu (Pru p3→Pru p1: 61.5pp; Phl p5→Phl p12: 59.1pp) su baš u ovoj kategoriji.
+5. Family-crowding win-count je tačno 43:43 po trial-u — MLP dobija na senzitivnosti (pozitivi), gubi na specifičnosti (negativi), neto izjednačeno po broju iako su mehanizmi suprotni.
+
+---
+
+## Targeted hard-negative eksperiment — pokušaj popravke, negativan rezultat
+
+**Cilj** — testirati da li ciljano mešanje "isti organizam, različita familija, nije poznat pozitivan par" negativa (umesto čisto uniformnog nasumičnog uzorkovanja) tokom MLP(hadamard) treninga popravlja dijagnostikovanu slabost potiskivanja (npr. Pru p1 kad je Pru p3 poznat pozitivan). **VAŽNO ograničenje korisnice**: nema izmišljanja negativnih parova, nema korišćenja pacijentskih CRD podataka u treningu.
+
+**Šta je urađeno** (`ml/loco_targeted_hardneg_mlp_hadamard_1548.py`) — kandidati mineni ISKLJUČIVO iz `clean_allergens.csv` (`organism` kolona, 1536/1536 popunjena) + `cross_reactive_1548.csv` (`family_1`/`family_2`), zahtevajući DOSLEDNU family labelu za oba proteina (32/477 proteina sa nekonzistentnim stringovima konzervativno isključeno, ne fuzzy-normalizovano). Rezultat: **930 pouzdanih kandidata, 76 organizama, 192 različite family-par kombinacije** — (Pru p1, Pru p3) je tačno 1 od njih, potvrđujući da flagship slučaj nije specijalno tretiran. Testirano 0%/5%/10%/20% zamene negativnog budžeta po foldu, isti 40 LOCO folda, per-fold leakage guard.
+
+**Rezultati**
+
+| Ratio | LOCO MRR delta vs BLAST | Znacajno? | Produkcioni probe: rank(Pru p1 \| query=Pru p3) |
+|---|---|---|---|
+| 0% (baseline) | −0.0003 | ne | 561 (36.6 percentil) |
+| 5% | +0.0025 | ne | 556 (36.2 percentil) |
+| 10% | −0.0010 | ne | 347 (22.6 percentil) |
+| 20% | +0.0004 | ne | **175 (11.4 percentil)** |
+
+**Zaključak**
+- Nema dose-response efekta na agregatnoj LOCO metrici (sve CI uključuju nulu). **Na flagship dijagnostičkom slučaju rezultat je SUPROTAN od željenog** — Pru p1 se pomera KA VRHU (rank 561→175) kako raste udeo ciljanih negativa, dok pravi pozitivi (Cor a8, Ara h9, Jug r3) ostaju stabilni. Ovo NIJE slučaj "nema dovoljno podataka" (930 kandidata je bilo dovoljno, popunjenost 100% cilja na 5%/10%). **Odbačeno za produkciju.** Speculativna, nepotvrđena hipoteza: forsiranje separacije na ovom uskom obrascu možda pomera Hadamard-prostor decision boundary tako da POVEĆA sličnost za ovaj par umesto da je smanji — trebalo bi dalje dijagnostikovati pre nego što se tretira kao objašnjenje.
+- **Odluka korisnice**: predložen inference-time veto/rule (organism/family penalizacija pri rangiranju) kao sledeći korak — EKSPLICITNO ODBIJENO. Rule-based patch na predikcije učenog modela slabi naučnu interpretaciju teze (zamagljuje "šta model uči" vs "šta ručno pravilo radi"). Kad training-side popravka ne uspe, ostaje se na dokumentovanoj analizi, ne na patch-u. Veto bi mogao biti implementiran KASNIJE samo kao eksplicitno odvojen appendix/error-mitigation baseline, nikad uduvan u glavni model.
+
+---
+
+## LSE-pooling kao primarni ranker — feasibility check, odustalo se pre punog pokretanja
+
+**Cilj** — MI/hypergraph LSE-pooling je jedini mehanizam u projektu sa pravim LOCO-potvrđenim dobitkom baš na dijagnostikovanom obrascu (nsLTP/Profilin crowding). Pre punog 40-fold LOCO pokretanja kao samostalnog full-pool rankera (nikad ranije testiran ovako — ranije samo protiv 3 ciljne familije), izmereno vreme na 1-2 foldu da se proceni realna cena.
+
+**Šta je urađeno** — direktno merenje umesto pretpostavke. Full-pool scoring (postojeći padded-gather vektorizovani skorer iz `analysis/mi_lse_pooling_1548.py`) ispao je jeftin (~3s jednokratni setup + ~0.09s/upit). **Pravo usko grlo: tau/scale/bias refit po foldu — izmereno end-to-end na medijan-veličine foldu, 289.8s (~4.8 min) za 300 epoha**, zbog nevektorizovane Python petlje koja poziva `torch.logsumexp` posebno po primeru (~5585 primera/fold), ne zbog residue podataka samih.
+
+**Rezultati**
+- Projekcija za pun 40-fold LOCO: **~3+ sata**, naspram 87 min za ceo 4-ratio MLP hard-negative eksperiment.
+
+**Zaključak**
+- **Korisnička odluka: nije vredno toga trenutno** — pravac je ODLOŽEN (shelved), NE oborен/odbačen kao pogrešan. Ako se ikad revizituje, fit petlju bi trebalo prvo vektorizovati/batch-ovati (isti padded pattern već korišćen za scorer) pre nego što pun LOCO postane dovoljno jeftin da se opravda.
+
+---
+
+## LayerNorm ablacija za MLP(hadamard) — čist, značajan negativan rezultat
+
+**Cilj** — jeftinija alternativa LSE-poolingu: LayerNorm na skrivenim aktivacijama (Linear→LayerNorm→ReLU→Dropout), MEHANIČKI drugačija intervencija od već utvrđene `standardize=False` odluke (ona je globalna z-score standardizacija SIROVIH ulaznih Hadamard feature-a, LayerNorm je per-primer normalizacija SKRIVENIH aktivacija posle prvog linearnog sloja).
+
+**Šta je urađeno** — nov, podrazumevano-isključen `use_layernorm` parametar dodat u `PairMLP`/`MLPPairClassifier` (`ml/pipeline/models/classifiers/mlp.py`) — aditivna izmena, ne menja ponašanje nijednog postojećeg skripta. Pun 40-fold LOCO, oba config-a na identičnim foldovima (`ml/loco_mlp_hadamard_layernorm_ablation_1548.py`).
+
+**Rezultati**
+
+| Config | MRR | Delta vs BLAST | Značajno? |
+|---|---|---|---|
+| baseline | 0.1259 | +0.0016 | ne |
+| +LayerNorm | 0.0804 | **−0.0439** | **DA, značajno GORE** |
+
+Direktno poređenje (isti upiti, upareni bootstrap): LayerNorm vs baseline delta = **−0.0455**, 95% CI [−0.0523,−0.0389] — jasno isključuje nulu.
+
+**Zaključak**
+- Baseline broj se poklapa TAČNO sa ranije dokumentovanim rezultatom (0.1259) — potvrđuje da je rerun veran, ne artefakt seed-a. LayerNorm ubrzava konvergenciju (rano zaustavljanje, npr. epoha 21 naspram 86 na probnom foldu) ali ka ZNAČAJNO lošijem rešenju (val AUC 0.69 naspram 0.99 na istom probnom foldu) — verovatno zato što per-primer normalizacija skrivenih aktivacija uništava deo Hadamard-produkt skale koja, kao i kod `standardize=False` odluke, sama nosi signal, iako je mehanički drugačiji sloj. **Odbačeno za produkciju.**
+- **Ovim je zatvoren "jeftin arhitektonski trik" pravac za sada** — kombinovano sa neuspelim hard-negative eksperimentom, odbijenim veto-om, i odloženim LSE-pravcem, svaki pokušaj poboljšanja MLP(hadamard)-a u ovoj sesiji je vraćen negativan ili nepraktičan. **Trenutno stanje: plain MLP(hadamard) (bez LayerNorm-a, standardize=False, hidden_dims=[32]) ostaje najbolja potvrđena konfiguracija** — dijagnostikovana slabost potiskivanja negativa u crowded familijama ostaje dokumentovano, nerešeno ograničenje, ne patch-ovano.
+
+---
+
+## ESM-1b naspram ESM-2 backbone — MLP(hadamard), značajan negativan rezultat
+
+**Cilj** — testirati da li NEZAVISNO trenirana proteinska reprezentacija (ESM-1b, 2019, drugačiji training recipe/UniRef filter od ESM-2, ali isti red veličine, 650M) menja nešto za MLP(hadamard) — na eksplicitan zahtev korisnice, SAMO za ovaj model, ne nova RRF fuzija.
+
+**Šta je urađeno** — ESM-1b embeddinzi generisani na klasteru (`hpclab/generate_esm1b_embeddings.py`, mean-pooling, ista konvencija kao glavni `embeddings.pkl`) — čist run, 1535/1535 proteina, 0 NaN, 100% ID preklapanje sa ESM-2 setom. Poređeno preko `ml/loco_esm1b_vs_esm2_mlp_hadamard_1548.py`, isti 40 LOCO folda. **Efikasnost**: prva verzija skripta je nepotrebno RETRENIRALA ESM-2 baseline iznova — korisnica je to odmah primetila; ispravljeno ponovnom upotrebom već postojećeg `output/loco_blast_vs_mlp_hadamard_only_1548_per_query.csv` (BLAST i ESM-2 rezultat su deterministički identični ranije dobijenim, ne treba ih računati dvaput) — runtime pao sa projektovanih ~40-60 min na 11 min.
+
+**Rezultati**
+
+| | MRR | Delta vs BLAST | Značajno? |
+|---|---|---|---|
+| MLP(hadamard) na ESM-2 | 0.1259 | +0.0016 | ne |
+| MLP(hadamard) na ESM-1b | **0.1065** | **−0.0178** | **DA, značajno GORE** |
+
+Direktno poređenje (isti upiti): ESM-1b vs ESM-2 delta = **−0.0195**, 95% CI [−0.0256,−0.0132] — značajno, oba nivoa (pair i study).
+
+**Zaključak**
+- Prelazak na ESM-1b NE probija representation ceiling — čini ga gorim, ne izjednačenim. Očekivano s obzirom da je ESM-1b (2019) stariji/slabije treniran model od ESM-2 (2022), ali sada empirijski zatvoreno, ne pretpostavljeno. **Ne koristiti ESM-1b kao backbone.** AlphaFold-bazirani embeddinzi/feature-i eksplicitno odloženi za kasniju sesiju, nisu još probani.

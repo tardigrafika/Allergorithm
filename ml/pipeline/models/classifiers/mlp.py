@@ -50,16 +50,25 @@ DEFAULT_PARAMS = dict(
     learning_rate=1e-3,
     weight_decay=1e-4,     # AdamW decoupled weight decay (podrazumevano, kao originalni skript)
     l2_lambda=0.0,          # eksplicitan L2 U loss-u, iskljuceno podrazumevano
+    use_layernorm=False,    # LayerNorm na SKRIVENIM aktivacijama (Linear->LayerNorm->ReLU->Dropout),
+                             # podrazumevano iskljuceno (verno originalu). NIJE isto sto i standardize=False
+                             # za input_encoding="hadamard" -- ono je globalna z-score standardizacija
+                             # SIROVIH ulaznih feature-a (dijagnostikovano da unistava signal), ovo je
+                             # per-primer normalizacija SKRIVENIH aktivacija posle prvog linearnog sloja,
+                             # razlicit mehanizam (analysis/mlp_layernorm_ablation_1548.py, avgust 2026).
 )
 
 
 class PairMLP(nn.Module):
-    def __init__(self, input_dim, hidden_dims, dropout):
+    def __init__(self, input_dim, hidden_dims, dropout, use_layernorm=False):
         super().__init__()
         layers = []
         prev_dim = input_dim
         for h, d in zip(hidden_dims, dropout):
-            layers += [nn.Linear(prev_dim, h), nn.ReLU(), nn.Dropout(d)]
+            layers.append(nn.Linear(prev_dim, h))
+            if use_layernorm:
+                layers.append(nn.LayerNorm(h))
+            layers += [nn.ReLU(), nn.Dropout(d)]
             prev_dim = h
         layers.append(nn.Linear(prev_dim, 1))
         self.net = nn.Sequential(*layers)
@@ -118,7 +127,7 @@ class MLPPairClassifier(PairClassifier):
         X_fit, X_val, y_fit, y_val = train_test_split(
             X_scaled, y, test_size=p["val_fraction"], random_state=self.seed, stratify=y)
 
-        self.model = PairMLP(X.shape[1], p["hidden_dims"], p["dropout"])
+        self.model = PairMLP(X.shape[1], p["hidden_dims"], p["dropout"], use_layernorm=p["use_layernorm"])
 
         n_pos_fit, n_neg_fit = float(y_fit.sum()), float((y_fit == 0).sum())
         pos_weight = torch.tensor(n_neg_fit / n_pos_fit, dtype=torch.float32)

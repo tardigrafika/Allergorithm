@@ -2,34 +2,34 @@
 Test-suite evaluacija: Feature 1 (rank_for_patient), 33 pacijenta
 ======================================================================
 
-Ukupno leave-one-out trials: 110 (hard/full_text_verified: 82, soft/ostalo: 28)
-Preskoceno (monospecifican, nema known pozitivan): 19
+Ukupno leave-one-out trials: 152 (hard/full_text_verified: 124, soft/ostalo: 28)
+Preskoceno (monospecifican, nema known pozitivan): 20
 
 --- HARD (full_text_verified) -- ovo je osnova za pass/fail ---
-  Pozitivne mete (n=46): medijan percentil = 21.9% (zelimo NIZAK)
-  Negativne mete (n=36): medijan percentil = 70.3% (zelimo VISOK)
-  Mann-Whitney U (pozitivne < negativne po percentilu): p=0.0033 -- ZNACAJNO
+  Pozitivne mete (n=70): medijan percentil = 3.0% (zelimo NIZAK)
+  Negativne mete (n=54): medijan percentil = 51.0% (zelimo VISOK)
+  Mann-Whitney U (pozitivne < negativne po percentilu): p=0.0169 -- ZNACAJNO
 
 --- soft (abstract_snippet_only/partially_verified) -- samo informativno ---
-  Pozitivne mete (n=14): medijan percentil = 1.9% (zelimo NIZAK)
-  Negativne mete (n=14): medijan percentil = 51.0% (zelimo VISOK)
+  Pozitivne mete (n=14): medijan percentil = 1.8% (zelimo NIZAK)
+  Negativne mete (n=14): medijan percentil = 51.6% (zelimo VISOK)
   Mann-Whitney U (pozitivne < negativne po percentilu): p=0.0000 -- ZNACAJNO
 
 --- Istaknuti slucajevi ---
 
 vando2005_pt04 (monospecifican Gad c 1+, sve ostalo -): 1 trials
-    sakriveno=Sal s 1.0101 (stvarno negative): rang 28/1533 (1.8%)
+    sakriveno=Sal s 1.0101 (stvarno negative): rang 28/1534 (1.8%)
 
 penas2014_case (EXPECTED-FAILURE test -- beta-enolaza, ne parvalbumin, NE tretirati kao pass/fail): 0 trials
 
 uklejasokolowska2021_pt04 vs _pt18 (inverzni par -- mite+/tropomiozin- naspram mite-/tropomiozin+):
   uklejasokolowska2021_pt04:
-    sakriveno=Der p 1.0101 (stvarno positive): rang 254/1532 (16.6%)
-    sakriveno=Der p 2.0101 (stvarno positive): rang 233/1532 (15.2%)
-    sakriveno=Der p 10.0101 (stvarno negative): rang 1077/1532 (70.3%)
+    sakriveno=Der p 1.0101 (stvarno positive): rang 202/1533 (13.2%)
+    sakriveno=Der p 2.0101 (stvarno positive): rang 233/1533 (15.2%)
+    sakriveno=Der p 10.0101 (stvarno negative): rang 937/1533 (61.1%)
   uklejasokolowska2021_pt18:
-    sakriveno=Der p 1.0101 (stvarno negative): rang 789/1532 (51.5%)
-    sakriveno=Der p 2.0101 (stvarno negative): rang 662/1532 (43.2%)
+    sakriveno=Der p 1.0101 (stvarno negative): rang 786/1533 (51.3%)
+    sakriveno=Der p 2.0101 (stvarno negative): rang 663/1533 (43.2%)
 
 ======================================================================
 Feature 2 (graduated_introduction_path) -- KVALITATIVNO, NE validirano

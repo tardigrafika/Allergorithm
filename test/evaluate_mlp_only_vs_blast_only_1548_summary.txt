@@ -1,0 +1,12 @@
+======================================================================
+MLP(hadamard) SAM vs BLAST SAM -- leave-one-out na pacijentima
+======================================================================
+
+--- MLP(hadamard) SAM ---
+  SVI: Pozitivne (n=100) medijan=2.9%  Negativne (n=76) medijan=46.9%
+  HARD: Pozitivne (n=86) medijan=2.3%  Negativne (n=62) medijan=33.6%
+
+--- BLAST SAM ---
+  SVI: Pozitivne (n=100) medijan=2.6%  Negativne (n=76) medijan=66.2%
+  HARD: Pozitivne (n=86) medijan=2.6%  Negativne (n=62) medijan=66.2%
+

@@ -1,0 +1,140 @@
+{
+  "dataset_name": "patient_crd_trials",
+  "version": "0.1",
+  "description": "Individual patient-level component-resolved diagnostic trials extracted from published studies. Only explicitly recoverable patient-level component results are included.",
+  "selection_priority": [
+    "patients_with_both_positive_and_negative_components",
+    "component_resolved_diagnosis",
+    "family_diversity"
+  ],
+  "positivity_rules": {
+    "ISAC": {
+      "positive_if": ">=0.3 ISU",
+      "negative_if": "<0.3 ISU",
+      "unit": "ISU"
+    }
+  },
+  "patients": [
+    {
+      "patient_id": "daSilva2016_P01",
+      "source": {
+        "title": "Cross-reactive LTP sensitization in food-dependent exercise-induced urticaria/anaphylaxis: a pilot study of a component-resolved and in vitro depletion approach",
+        "year": 2016,
+        "doi": "10.1186/s13601-016-0136-5",
+        "platform": "ImmunoCAP ISAC 112"
+      },
+      "diagnostic_platform": "ISAC",
+      "positivity_threshold": {
+        "value": 0.3,
+        "unit": "ISU"
+      },
+      "clinical_context": "food-dependent exercise-induced anaphylaxis/urticaria",
+      "positive_components": [
+        "Pru_p_3",
+        "Cor_a_8",
+        "Ara_h_9",
+        "Jug_r_3",
+        "Pla_a_3",
+        "Art_v_3"
+      ],
+      "negative_components": [
+        "Tri_a_14",
+        "Mald_1",
+        "Pru_p_1"
+      ],
+      "protein_families_positive": [
+        "nsLTP"
+      ],
+      "has_positive_and_negative": true,
+      "usable_for_paired_test": true,
+      "evidence_type": "explicit_individual_ISAC_profile",
+      "notes": "Table 2 reports positive LTP components. Pru p 3, Cor a 8, Ara h 9, Jug r 3, Pla a 3 and Art v 3 are detected; other listed components including Tri a 14, Mal d 1 and Pru p 1 are not detected."
+    },
+    {
+      "patient_id": "daSilva2016_P02",
+      "source": {
+        "title": "Cross-reactive LTP sensitization in food-dependent exercise-induced urticaria/anaphylaxis: a pilot study of a component-resolved and in vitro depletion approach",
+        "year": 2016,
+        "doi": "10.1186/s13601-016-0136-5",
+        "platform": "ImmunoCAP ISAC 112"
+      },
+      "diagnostic_platform": "ISAC",
+      "positivity_threshold": {
+        "value": 0.3,
+        "unit": "ISU"
+      },
+      "clinical_context": "food-dependent exercise-induced anaphylaxis",
+      "positive_components": [
+        "Pru_p_3",
+        "Cor_a_8",
+        "Ara_h_9",
+        "Jug_r_3",
+        "Pla_a_3",
+        "Art_v_3"
+      ],
+      "negative_components": [
+        "Tri_a_14",
+        "Mald_1",
+        "Pru_p_1"
+      ],
+      "protein_families_positive": [
+        "nsLTP"
+      ],
+      "has_positive_and_negative": true,
+      "usable_for_paired_test": true,
+      "evidence_type": "explicit_individual_ISAC_profile",
+      "notes": "Native serum profile reported in Table 2. Walnut was the suspected culprit. Component depletion was subsequently tested."
+    },
+    {
+      "patient_id": "daSilva2016_P03",
+      "source": {
+        "title": "Cross-reactive LTP sensitization in food-dependent exercise-induced urticaria/anaphylaxis: a pilot study of a component-resolved and in vitro depletion approach",
+        "year": 2016,
+        "doi": "10.1186/s13601-016-0136-5",
+        "platform": "ImmunoCAP ISAC 112"
+      },
+      "diagnostic_platform": "ISAC",
+      "positivity_threshold": {
+        "value": 0.3,
+        "unit": "ISU"
+      },
+      "clinical_context": "food-dependent exercise-induced anaphylaxis",
+      "positive_components": [
+        "Pru_p_3",
+        "Ara_h_9",
+        "Jug_r_3",
+        "Tri_a_14"
+      ],
+      "negative_components": [
+        "Mald_1",
+        "Pru_p_1"
+      ],
+      "protein_families_positive": [
+        "nsLTP"
+      ],
+      "has_positive_and_negative": true,
+      "usable_for_paired_test": true,
+      "evidence_type": "explicit_individual_ISAC_profile",
+      "notes": "Patient had wheat-associated FDEIA; Tri a 14 was the suspected culprit. Additional sensitization to Pru p 3, Ara h 9 and Jug r 3 was explicitly reported."
+    }
+  ],
+  "excluded_aggregate_sources": [
+    {
+      "source": "LTP Allergy Follow-Up Study: Development of Allergy to New Plant Foods 10 Years Later",
+      "reason": "The paper contains highly valuable Pru p 3-negative patient groups, but Table 3 reports combinations as group frequencies rather than uniquely mapping every combination to an individual patient ID.",
+      "potential_value": "High; requires supplementary material or original patient-level table before inclusion."
+    },
+    {
+      "source": "Performance of component resolved microarray diagnosis in nuts allergy",
+      "reason": "Reports component-positive counts for 100 patients but does not provide patient-by-patient component vectors in the accessible main text.",
+      "potential_value": "Very high; particularly useful for Ara h, Jug r and Cor a families if individual supplementary data can be recovered."
+    }
+  ],
+  "quality_control": {
+    "individual_patient_only": true,
+    "aggregate_counts_converted_to_patients": false,
+    "unknown_results_marked_negative": false,
+    "negative_means_below_assay_threshold": true,
+    "ready_for_patient_level_wilcoxon": true
+  }
+}

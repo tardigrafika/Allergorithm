@@ -2972,5 +2972,885 @@
       "status": "abstract_snippet_only",
       "notes": "Meeting abstract; Gly m 5/Gly m 6 negativity reported collectively for all 6 patients ('All were negative to storage proteins GlyM5 and GlyM6'), not as 6 individual confirmed negative readouts -- treat with appropriate caution."
     }
+  },
+  {
+    "patient_id": "vieira2012_pt01",
+    "source": {
+      "citation": "Vieira T, Lopes C, Pereira A, et al. Microarray based IgE detection in poly-sensitized allergic patients with suspected food allergy -- an approach in four clinical cases. Allergologia et Immunopathologia. 2012;40(3):172-180.",
+      "doi": "10.1016/j.aller.2011.03.013",
+      "pmid": null,
+      "url": "https://www.elsevier.es/en-revista-allergologia-et-immunopathologia-105-articulo-microarray-based-ige-detection-in-S0301054611001996"
+    },
+    "protein_family": "profilin",
+    "patient_description": "31-year-old Caucasian female, dentist. Primarna senzibilizacija na nsLTP (Pru p 3 visoko pozitivan), profilin (Pru p 4) NEGATIVAN -- koristan kontrastni slucaj (jaka nsLTP reaktivnost BEZ profilin ko-senzibilizacije).",
+    "components": [
+      {
+        "protein": "Pru p 3",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "peach",
+        "method": "ImmunoCAP (sIgE monocomponent)",
+        "value": 35.2,
+        "value_unit": "kUA/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Cor a 8",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "hazelnut",
+        "method": "ImmunoCAP (sIgE monocomponent)",
+        "value": 14.0,
+        "value_unit": "kUA/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pru p 4",
+        "protein_family": "profilin",
+        "source_food_or_organism": "peach",
+        "method": "ImmunoCAP (sIgE monocomponent)",
+        "value": 0.1,
+        "value_unit": "kUA/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pru p 1",
+        "protein_family": "PR-10",
+        "source_food_or_organism": "peach",
+        "method": "ImmunoCAP (sIgE monocomponent)",
+        "value": 0.1,
+        "value_unit": "kUA/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Podaci izvuceni putem WebFetch (ne direktno citanje PDF-a) -- URADJENA DVOSTRUKA provera preko drugog, precciznijeg fetch-a nakon sto je prvi prolaz dao pogresnu vrednost (izmisljen/pogresno pripisan 'Mer a 1' za Case 2, koji je zapravo bio Bet v 1/PR-10 sa drugom vrednoscu -- ispravljeno u ovoj verziji). Vrednosti ispod potvrdjene u drugom prolazu direktnim citatom iz Tabele 1/2 clanka."
+    }
+  },
+  {
+    "patient_id": "vieira2012_pt02",
+    "source": {
+      "citation": "Vieira T, Lopes C, Pereira A, et al. Microarray based IgE detection in poly-sensitized allergic patients with suspected food allergy -- an approach in four clinical cases. Allergologia et Immunopathologia. 2012;40(3):172-180.",
+      "doi": "10.1016/j.aller.2011.03.013",
+      "pmid": null,
+      "url": "https://www.elsevier.es/en-revista-allergologia-et-immunopathologia-105-articulo-microarray-based-ige-detection-in-S0301054611001996"
+    },
+    "protein_family": "profilin",
+    "patient_description": "23-year-old Caucasian female, student. OAS (oral allergy syndrome) na razlicito voce, exercise-induced astma/rinokonjunktivitis -- BOGAT multi-vrsni profilin pozitivan profil (birch/grass/latex/olive), plus PR-10 (Bet v 1) pozitivan.",
+    "components": [
+      {
+        "protein": "Bet v 2",
+        "protein_family": "profilin",
+        "source_food_or_organism": "birch pollen",
+        "method": "ISAC microarray (ISU-E)",
+        "value": 15.0,
+        "value_unit": "ISU-E",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Phl p 12",
+        "protein_family": "profilin",
+        "source_food_or_organism": "timothy grass",
+        "method": "ISAC microarray (ISU-E)",
+        "value": 5.8,
+        "value_unit": "ISU-E",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Hev b 8",
+        "protein_family": "profilin",
+        "source_food_or_organism": "latex",
+        "method": "ISAC microarray (ISU-E)",
+        "value": 11.0,
+        "value_unit": "ISU-E",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Ole e 2",
+        "protein_family": "profilin",
+        "source_food_or_organism": "olive pollen",
+        "method": "ISAC microarray (ISU-E)",
+        "value": 14.0,
+        "value_unit": "ISU-E",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Bet v 1",
+        "protein_family": "PR-10",
+        "source_food_or_organism": "birch pollen",
+        "method": "ISAC microarray (ISU-E)",
+        "value": 15.0,
+        "value_unit": "ISU-E",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Podaci izvuceni putem WebFetch (ne direktno citanje PDF-a) -- URADJENA DVOSTRUKA provera preko drugog, precciznijeg fetch-a nakon sto je prvi prolaz dao pogresnu vrednost (izmisljen/pogresno pripisan 'Mer a 1' za Case 2, koji je zapravo bio Bet v 1/PR-10 sa drugom vrednoscu -- ispravljeno u ovoj verziji). Vrednosti ispod potvrdjene u drugom prolazu direktnim citatom iz Tabele 1/2 clanka."
+    }
+  },
+  {
+    "patient_id": "vieira2012_pt03",
+    "source": {
+      "citation": "Vieira T, Lopes C, Pereira A, et al. Microarray based IgE detection in poly-sensitized allergic patients with suspected food allergy -- an approach in four clinical cases. Allergologia et Immunopathologia. 2012;40(3):172-180.",
+      "doi": "10.1016/j.aller.2011.03.013",
+      "pmid": null,
+      "url": "https://www.elsevier.es/en-revista-allergologia-et-immunopathologia-105-articulo-microarray-based-ige-detection-in-S0301054611001996"
+    },
+    "protein_family": "PR-10",
+    "patient_description": "29-year-old Danish male, artist. Tesak atopijski ekcem, astma, rinitis, vise anafilaktickih epizoda sa indijskim orasom -- dominantan PR-10 profil (klasican breza-voce sindrom), profilin (Bet v 2) NEGATIVAN uprkos ekstremno visokom Bet v 1.",
+    "components": [
+      {
+        "protein": "Bet v 1",
+        "protein_family": "PR-10",
+        "source_food_or_organism": "birch pollen",
+        "method": "ImmunoCAP (sIgE monocomponent)",
+        "value": 92.8,
+        "value_unit": "kUA/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pru p 1",
+        "protein_family": "PR-10",
+        "source_food_or_organism": "peach",
+        "method": "ImmunoCAP (sIgE monocomponent)",
+        "value": 72.2,
+        "value_unit": "kUA/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Ara h 8",
+        "protein_family": "PR-10",
+        "source_food_or_organism": "peanut",
+        "method": "ImmunoCAP (sIgE monocomponent)",
+        "value": 56.9,
+        "value_unit": "kUA/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Bet v 2",
+        "protein_family": "profilin",
+        "source_food_or_organism": "birch pollen",
+        "method": "ImmunoCAP (sIgE monocomponent)",
+        "value": 0.43,
+        "value_unit": "kUA/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pru p 3",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "peach",
+        "method": "ISAC microarray (ISU-E)",
+        "value": 8.2,
+        "value_unit": "ISU-E",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Podaci izvuceni putem WebFetch (ne direktno citanje PDF-a) -- URADJENA DVOSTRUKA provera preko drugog, precciznijeg fetch-a nakon sto je prvi prolaz dao pogresnu vrednost (izmisljen/pogresno pripisan 'Mer a 1' za Case 2, koji je zapravo bio Bet v 1/PR-10 sa drugom vrednoscu -- ispravljeno u ovoj verziji). Vrednosti ispod potvrdjene u drugom prolazu direktnim citatom iz Tabele 1/2 clanka."
+    }
+  },
+  {
+    "patient_id": "vieira2012_pt04",
+    "source": {
+      "citation": "Vieira T, Lopes C, Pereira A, et al. Microarray based IgE detection in poly-sensitized allergic patients with suspected food allergy -- an approach in four clinical cases. Allergologia et Immunopathologia. 2012;40(3):172-180.",
+      "doi": "10.1016/j.aller.2011.03.013",
+      "pmid": null,
+      "url": "https://www.elsevier.es/en-revista-allergologia-et-immunopathologia-105-articulo-microarray-based-ige-detection-in-S0301054611001996"
+    },
+    "protein_family": "profilin",
+    "patient_description": "51-year-old Caucasian female, secretary. Lateks-senzibilisana pozadina (faringealni angioedem), dominantan travni polen profil -- profilin (Phl p 12/Hev b 8) NEGATIVAN/rezidualan uprkos jasnoj travnoj i lateks senzibilizaciji ('cross-reactivity to profilins was barely detectable').",
+    "components": [
+      {
+        "protein": "Phl p 5",
+        "protein_family": "Grass group 5",
+        "source_food_or_organism": "timothy grass",
+        "method": "ImmunoCAP (sIgE monocomponent)",
+        "value": 4.88,
+        "value_unit": "kUA/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Phl p 12",
+        "protein_family": "profilin",
+        "source_food_or_organism": "timothy grass",
+        "method": "ImmunoCAP (sIgE monocomponent)",
+        "value": 0.22,
+        "value_unit": "kUA/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Hev b 8",
+        "protein_family": "profilin",
+        "source_food_or_organism": "latex",
+        "method": "ImmunoCAP (sIgE monocomponent)",
+        "value": 0.25,
+        "value_unit": "kUA/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Podaci izvuceni putem WebFetch (ne direktno citanje PDF-a) -- URADJENA DVOSTRUKA provera preko drugog, precciznijeg fetch-a nakon sto je prvi prolaz dao pogresnu vrednost (izmisljen/pogresno pripisan 'Mer a 1' za Case 2, koji je zapravo bio Bet v 1/PR-10 sa drugom vrednoscu -- ispravljeno u ovoj verziji). Vrednosti ispod potvrdjene u drugom prolazu direktnim citatom iz Tabele 1/2 clanka."
+    }
+  },
+  {
+    "patient_id": "kim2020_pt01",
+    "source": {
+      "citation": "Kim C, Kim SW, Hwang YH. Recurrent urticaria caused by specific cat serum albumin IgE cross-reacting with pork serum albumin. Clin Exp Pediatr. 2020;63(11):451-453.",
+      "doi": "10.3345/cep.2019.01725",
+      "pmid": null,
+      "url": "https://www.e-cep.org/journal/view.php?number=20125553633"
+    },
+    "protein_family": "Serum albumin",
+    "patient_description": "6-godisnji decak, ponavljana urtikarija posle jela svinjetine (pork-cat sindrom) -- senzibilisan na macku (vlasnistvo macke 2015/2017/2018), pozitivan oralni prehrambeni izazov na svinjetinu, alpha-gal NEGATIVAN i kazein negativan (iskljucuje alpha-gal sindrom i mleko-posredovanu senzibilizaciju).",
+    "components": [
+      {
+        "protein": "Fel d 2",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "domestic cat",
+        "method": "ImmunoCAP (sIgE monocomponent)",
+        "value": 61.4,
+        "value_unit": "kUA/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Bos d 6",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "cow",
+        "method": "ImmunoCAP (sIgE monocomponent)",
+        "value": 1.0,
+        "value_unit": "kUA/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Puna PDF tabela procitana direktno (open access, Creative Commons), sve vrednosti potvrdjene iz Table 1. Alpha-gal (0.03 kUA/L, negativan) i whole-extract/kazein rezultati NISU ukljuceni -- ne rezolvuju se na pojedinacni WHO/IUIS protein u nasem pool-u (alpha-gal je ugljenohidratni epitop, ne protein)."
+    }
+  },
+  {
+    "patient_id": "ozdemiral2025_pt15",
+    "source": {
+      "citation": "Ozdemiral C, Konuralp I, Sekerel BE. Serum albumin sensitization in children with cow's milk allergy: Clinical relevance to red meat reactions. Pediatr Allergy Immunol. 2025;36(7):e70157.",
+      "doi": "10.1111/pai.70157",
+      "pmid": "40708118",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12290251"
+    },
+    "protein_family": "Serum albumin",
+    "patient_description": "Dete sa alergijom na kravlje mleko, kontakt sa sirovim mesom -- senzibilisano na goveci i svinjski serumski albumin.",
+    "components": [
+      {
+        "protein": "Bos d 6",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "cow",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 7.74,
+        "value_unit": "kUA/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Sus s 1",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "pig",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 3.12,
+        "value_unit": "kUA/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Fel d 2",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "cat",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 0.4,
+        "value_unit": "kUA/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Gal d 5",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "chicken",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 0,
+        "value_unit": "kUA/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Can f 3",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "dog",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 0,
+        "value_unit": "kUA/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Equ c 3",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "horse",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 0,
+        "value_unit": "kUA/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Ozdemiral 2025, Table 3 (70-detetov CMA kohorta, samo 7 crveno-meso-reaktivnih pacijenata individualno tabelirano). Sve vrednosti direktno citirane iz clanka (full-text potvrdjen, open access CC-BY). Fel d 2=0.4 je granicno pozitivan (cutoff 0.30)."
+    }
+  },
+  {
+    "patient_id": "ozdemiral2025_pt21",
+    "source": {
+      "citation": "Ozdemiral C, Konuralp I, Sekerel BE. Serum albumin sensitization in children with cow's milk allergy: Clinical relevance to red meat reactions. Pediatr Allergy Immunol. 2025;36(7):e70157.",
+      "doi": "10.1111/pai.70157",
+      "pmid": "40708118",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12290251"
+    },
+    "protein_family": "Serum albumin",
+    "patient_description": "Dete sa alergijom na kravlje mleko, kontakt sa krvlju (Eid al-Adha) -- senzibilisano na goveci i svinjski serumski albumin, jasno negativan na ostale cetiri.",
+    "components": [
+      {
+        "protein": "Bos d 6",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "cow",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 10.07,
+        "value_unit": "kUA/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Sus s 1",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "pig",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 3.08,
+        "value_unit": "kUA/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Gal d 5",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "chicken",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 0,
+        "value_unit": "kUA/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Fel d 2",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "cat",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 0,
+        "value_unit": "kUA/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Can f 3",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "dog",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 0,
+        "value_unit": "kUA/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Equ c 3",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "horse",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 0,
+        "value_unit": "kUA/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Ozdemiral 2025, Table 3 (70-detetov CMA kohorta, samo 7 crveno-meso-reaktivnih pacijenata individualno tabelirano). Sve vrednosti direktno citirane iz clanka (full-text potvrdjen, open access CC-BY). Robustan, nema granicnih vrednosti."
+    }
+  },
+  {
+    "patient_id": "ozdemiral2025_pt23",
+    "source": {
+      "citation": "Ozdemiral C, Konuralp I, Sekerel BE. Serum albumin sensitization in children with cow's milk allergy: Clinical relevance to red meat reactions. Pediatr Allergy Immunol. 2025;36(7):e70157.",
+      "doi": "10.1111/pai.70157",
+      "pmid": "40708118",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12290251"
+    },
+    "protein_family": "Serum albumin",
+    "patient_description": "Dete sa alergijom na kravlje mleko, jelo sirov salam -- senzibilisano na goveci albumin, granicno pozitivno na svinjski.",
+    "components": [
+      {
+        "protein": "Bos d 6",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "cow",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 8.12,
+        "value_unit": "kUA/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Sus s 1",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "pig",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 0.31,
+        "value_unit": "kUA/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Gal d 5",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "chicken",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 0,
+        "value_unit": "kUA/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Fel d 2",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "cat",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 0,
+        "value_unit": "kUA/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Can f 3",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "dog",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 0,
+        "value_unit": "kUA/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Equ c 3",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "horse",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 0,
+        "value_unit": "kUA/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Ozdemiral 2025, Table 3 (70-detetov CMA kohorta, samo 7 crveno-meso-reaktivnih pacijenata individualno tabelirano). Sve vrednosti direktno citirane iz clanka (full-text potvrdjen, open access CC-BY). OPREZ: Sus s 1=0.31 je TIK iznad cutoff-a od 0.30 (izvor ga eksplicitno oznacava kao granicnu vrednost) -- koriscen je paper-ov sopstveni cutoff, ne naknadno poo\u0161tren prag."
+    }
+  },
+  {
+    "patient_id": "ozdemiral2025_pt66",
+    "source": {
+      "citation": "Ozdemiral C, Konuralp I, Sekerel BE. Serum albumin sensitization in children with cow's milk allergy: Clinical relevance to red meat reactions. Pediatr Allergy Immunol. 2025;36(7):e70157.",
+      "doi": "10.1111/pai.70157",
+      "pmid": "40708118",
+      "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12290251"
+    },
+    "protein_family": "Serum albumin",
+    "patient_description": "Dete sa alergijom na kravlje mleko -- sirok pozitivan profil (govedo, piletina, konj, svinja), jasno negativan na macku i psa.",
+    "components": [
+      {
+        "protein": "Bos d 6",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "cow",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 29.21,
+        "value_unit": "kUA/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Gal d 5",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "chicken",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 13.17,
+        "value_unit": "kUA/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Equ c 3",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "horse",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 0.91,
+        "value_unit": "kUA/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Sus s 1",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "pig",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 2.49,
+        "value_unit": "kUA/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Fel d 2",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "cat",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 0,
+        "value_unit": "kUA/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Can f 3",
+        "protein_family": "Serum albumin",
+        "source_food_or_organism": "dog",
+        "method": "ALEX2 macroarray (kUA/L, cutoff >=0.30, CCD-inhibited)",
+        "value": 0,
+        "value_unit": "kUA/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Ozdemiral 2025, Table 3 (70-detetov CMA kohorta, samo 7 crveno-meso-reaktivnih pacijenata individualno tabelirano). Sve vrednosti direktno citirane iz clanka (full-text potvrdjen, open access CC-BY). Robustan, sve vrednosti jasno iznad/ispod cutoff-a."
+    }
+  },
+  {
+    "patient_id": "daSilva2016_P01",
+    "source": {
+      "citation": "Cross-reactive LTP sensitization in food-dependent exercise-induced urticaria/anaphylaxis: a pilot study of a component-resolved and in vitro depletion approach (2016).",
+      "doi": "10.1186/s13601-016-0136-5"
+    },
+    "protein_family": "nsLTP",
+    "patient_description": "food-dependent exercise-induced anaphylaxis/urticaria",
+    "components": [
+      {
+        "protein": "Pru p 3",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "peach",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Cor a 8",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "hazelnut",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Ara h 9",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "peanut",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Jug r 3",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "walnut",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pla a 3",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "plane tree pollen",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Art v 3",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "mugwort pollen",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Tri a 14",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "wheat",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Mal d 1",
+        "protein_family": "PR-10",
+        "source_food_or_organism": "apple",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pru p 1",
+        "protein_family": "PR-10",
+        "source_food_or_organism": "peach",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Table 2 reports positive LTP components. Pru p 3, Cor a 8, Ara h 9, Jug r 3, Pla a 3 and Art v 3 are detected; other listed components including Tri a 14, Mal d 1 and Pru p 1 are not detected."
+    }
+  },
+  {
+    "patient_id": "daSilva2016_P02",
+    "source": {
+      "citation": "Cross-reactive LTP sensitization in food-dependent exercise-induced urticaria/anaphylaxis: a pilot study of a component-resolved and in vitro depletion approach (2016).",
+      "doi": "10.1186/s13601-016-0136-5"
+    },
+    "protein_family": "nsLTP",
+    "patient_description": "food-dependent exercise-induced anaphylaxis",
+    "components": [
+      {
+        "protein": "Pru p 3",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "peach",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Cor a 8",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "hazelnut",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Ara h 9",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "peanut",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Jug r 3",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "walnut",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pla a 3",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "plane tree pollen",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Art v 3",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "mugwort pollen",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Tri a 14",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "wheat",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Mal d 1",
+        "protein_family": "PR-10",
+        "source_food_or_organism": "apple",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pru p 1",
+        "protein_family": "PR-10",
+        "source_food_or_organism": "peach",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Native serum profile reported in Table 2. Walnut was the suspected culprit. Component depletion was subsequently tested."
+    }
+  },
+  {
+    "patient_id": "daSilva2016_P03",
+    "source": {
+      "citation": "Cross-reactive LTP sensitization in food-dependent exercise-induced urticaria/anaphylaxis: a pilot study of a component-resolved and in vitro depletion approach (2016).",
+      "doi": "10.1186/s13601-016-0136-5"
+    },
+    "protein_family": "nsLTP",
+    "patient_description": "food-dependent exercise-induced anaphylaxis",
+    "components": [
+      {
+        "protein": "Pru p 3",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "peach",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Ara h 9",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "peanut",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Jug r 3",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "walnut",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Tri a 14",
+        "protein_family": "nsLTP",
+        "source_food_or_organism": "wheat",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Mal d 1",
+        "protein_family": "PR-10",
+        "source_food_or_organism": "apple",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pru p 1",
+        "protein_family": "PR-10",
+        "source_food_or_organism": "peach",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Patient had wheat-associated FDEIA; Tri a 14 was the suspected culprit. Additional sensitization to Pru p 3, Ara h 9 and Jug r 3 was explicitly reported."
+    }
   }
 ]

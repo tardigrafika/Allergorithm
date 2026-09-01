@@ -1,0 +1,15 @@
+======================================================================
+RRF-5 (family-aware LSE dodatak) -- leave-one-out rezultati
+======================================================================
+
+Ukupno trials: 126, sa LSE-boost: 52
+Produkcioni tau: 8.5889
+
+--- SVI ---
+  Pozitivne mete (n=71): medijan percentil = 5.2%
+  Negativne mete (n=55): medijan percentil = 54.3%
+
+--- HARD (full_text_verified) ---
+  Pozitivne mete (n=57): medijan percentil = 13.2%
+  Negativne mete (n=41): medijan percentil = 61.1%
+

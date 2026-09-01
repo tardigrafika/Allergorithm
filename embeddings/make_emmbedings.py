@@ -180,7 +180,7 @@ with open(
         protocol=pickle.HIGHEST_PROTOCOL
     )
 
-
+*
 print("Saving parquet...")
 
 embedding_df = pd.DataFrame(

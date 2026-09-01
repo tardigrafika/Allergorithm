@@ -1,27 +1,37 @@
 """
-Generise Ankh (ElnaggarLab/ankh-base) embeddinge za WHO/IUIS alergene
-(Google Colab GPU) - mean pooling, isti pristup kao glavni ESM-2 embeddings.pkl.
+Generise ESM-1b (facebook/esm1b_t33_650M_UR50S) embeddinge za WHO/IUIS
+alergene -- namenjeno za pokretanje na klasteru (ne Google Colab, za
+razliku od ostalih generate_*_embeddings.py skripti u ovom folderu).
 
-Zasto Ankh: T5-stil encoder-decoder arhitektura (koristi se samo enkoder deo
-za embeddinge), arhitekturno DALJE od ESM-2 (encoder-only, BERT-stil) nego
-npr. ProtBERT - veca sansa da nauci genuinski drugaciju reprezentaciju.
-Test hipoteze: da li Ankh cosine similarity nosi nezavisan signal koji
-pomaze RRF fuziji (cosine_ESM + BLAST + FoldseekTM), slicno kao sto je
-FoldseekTM pomogao dodavanjem STRUKTURNE (ne sekvencijalne) informacije.
+Zasto ESM-1b: stariji model (2019, pre ESM-2 arhitekturnih/trening
+poboljsanja), ali TRENIRAN NA MANJE/DRUGACIJE FILTRIRANOM UniRef50 skupu i
+BEZ ESM-2-specificnih izmena (relative position embeddings, veci training
+recipe) -- test da li nezavisno trenirana reprezentacija istog velicinskog
+reda (650M, ISTA velicina kao trenutni glavni embeddings.pkl iz
+facebook/esm2_t33_650M_UR50D) probija "representation ceiling" nalaz koji
+drzi kroz ceo projekat (cosine/RF/MLP/bilinear svi pogadjaju isti plafon na
+ESM-2 embeddinzima -- videti README.md).
 
-VAZNO o Ankh tokenizaciji: T5-stil sentencepiece tokenizer OCEKUJE sekvencu
-kao LISTU pojedinacnih karaktera (ne string), sa is_split_into_words=True -
-drugacije od ESM tokenizera koji uzima string direktno. Videti tokenize_batch()
-nize.
+Isti mean-pooling konvencija kao glavni embeddings.pkl
+(embeddings/make_emmbedings.py) -- prosek preko validnih tokena, padding
+maskiran -- da rezultat bude direktno uporediv (ista pool-metoda, samo
+drugi encoder).
 
-Ulaz:
-    /content/clean_allergens.csv
+VAZNA razlika od ESM-2 tokenizacije: ESM-1b tokenizer/model OCEKUJE da
+sekvence budu <=1022 rezidue (isti limit kao ESM-2 u ovom projektu, ali
+proveri upozorenja pri ucitavanju -- ESM-1b je treniran sa max_position_
+embeddings=1026, sto ukljucuje <cls>/<eos>, otud MAX_LENGTH=1022 ispod).
+
+Ulaz (transferuj na klaster):
+    clean_allergens.csv   (kopija output/clean_allergens.csv iz repo-a)
 
 Izlaz:
-    /content/embeddings_ankh.pkl
-    /content/embeddings_ankh.parquet
-"""
+    embeddings_esm1b.pkl
+    embeddings_esm1b.parquet
 
+Pokretanje (primer za SLURM, prilagodi klasteru):
+    python3 generate_esm1b_embeddings.py
+"""
 
 # ======================================================
 # Imports
@@ -35,23 +45,23 @@ import pandas as pd
 import torch
 
 from tqdm.auto import tqdm
-from transformers import AutoTokenizer, T5EncoderModel
+from transformers import AutoTokenizer, EsmModel
 
 
 # ======================================================
-# Configuration
+# Configuration -- relativne putanje, pokreni skript IZ foldera gde je
+# clean_allergens.csv transferovan (vidi transfer checklist u odgovoru)
 # ======================================================
 
-INPUT_CSV = Path("/content/clean_allergens.csv")
+INPUT_CSV = Path("clean_allergens.csv")
 
-OUTPUT_PICKLE = Path("/content/embeddings_ankh.pkl")
-OUTPUT_PARQUET = Path("/content/embeddings_ankh.parquet")
+OUTPUT_PICKLE = Path("embeddings_esm1b.pkl")
+OUTPUT_PARQUET = Path("embeddings_esm1b.parquet")
 
-MODEL_NAME = "ElnaggarLab/ankh-base"  # ~450M -- uporediva velicina sa ESM-2 650M
-# MODEL_NAME = "ElnaggarLab/ankh-large"  # ~1.9B -- probaj ovo tek ako ankh-base pokaze signal
+MODEL_NAME = "facebook/esm1b_t33_650M_UR50S"
 
 MAX_LENGTH = 1022
-BATCH_SIZE = 8
+BATCH_SIZE = 8  # smanji na 4 ili 2 ako GPU VRAM ne dozvoljava (isti red velicine kao ESM-2 650M)
 
 
 # ======================================================
@@ -73,22 +83,23 @@ print()
 # Load model
 # ======================================================
 
-print("Loading tokenizer...")
+print(f"Loading tokenizer ({MODEL_NAME})...")
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 
-print("Loading Ankh model (encoder only -- we don't need/want the decoder for embeddings)...")
-model = T5EncoderModel.from_pretrained(MODEL_NAME)
+print(f"Loading ESM-1b model ({MODEL_NAME})...")
+model = EsmModel.from_pretrained(MODEL_NAME)
 
 model.to(device)
 model.eval()
 
-# NAPOMENA: FP16 namerno NIJE koriscen ovde (za razliku od ESM skripte).
-# T5-stil modeli (Ankh je T5 arhitektura) su poznato numericki nestabilni u
-# FP16 - aktivacije mogu da predju FP16 opseg i postanu NaN (potvrdjeno na
-# prvom pokusaju: SVI embeddinzi su izasli kao NaN). FP32 je sporije ali
-# ispravno - ESM (BERT-stil, encoder-only) nema ovaj problem, otud razlika
-# u odnosu na generate_embedidngs.py.
-print("Running in FP32 (T5/Ankh is numerically unstable in FP16)")
+# FP16 samo na GPU -- ESM (BERT-stil, encoder-only) NEMA numericku
+# nestabilnost koju ima T5/Ankh u FP16 (videti generate_ankh_embeddings.py
+# napomenu), ista pretpostavka kao glavni ESM-2 max-pool skript.
+use_fp16 = False
+if device.type == "cuda":
+    model.half()
+    use_fp16 = True
+    print("Using FP16 acceleration")
 print()
 
 
@@ -109,32 +120,14 @@ print()
 
 
 # ======================================================
-# Tokenization (Ankh/T5-style: list-of-characters, not raw string)
-# ======================================================
-
-def tokenize_batch(sequences):
-    truncated = [s[:MAX_LENGTH] for s in sequences]
-    char_lists = [list(s) for s in truncated]
-    # tokenizer(...) instead of the older .batch_encode_plus(...) -- same
-    # kwargs/output, but not at risk of being removed in newer transformers
-    return tokenizer(
-        char_lists,
-        add_special_tokens=True,
-        padding=True,
-        is_split_into_words=True,
-        return_tensors="pt",
-    )
-
-
-# ======================================================
-# Mean pooling (identical convention to the main ESM embeddings.pkl:
-# average over real tokens only, padding/special tokens masked out)
+# Mean pooling (identicna konvencija kao make_emmbedings.py -- prosek
+# preko validnih tokena, padding maskiran)
 # ======================================================
 
 def mean_pool(last_hidden_state, attention_mask):
     mask = attention_mask.unsqueeze(-1).expand(last_hidden_state.size()).float()
     summed = torch.sum(last_hidden_state * mask, dim=1)
-    counts = torch.clamp(mask.sum(dstaim=1), min=1e-9)
+    counts = torch.clamp(mask.sum(dim=1), min=1e-9)
     return summed / counts
 
 
@@ -155,10 +148,15 @@ with torch.no_grad():
         batch = df.iloc[start:start + BATCH_SIZE]
         sequences = batch["fasta_sequence"].tolist()
 
-        tokens = tokenize_batch(sequences)
+        tokens = tokenizer(sequences, padding=True, truncation=True,
+                             max_length=MAX_LENGTH, return_tensors="pt")
         tokens = {k: v.to(device) for k, v in tokens.items()}
 
-        outputs = model(**tokens)
+        if use_fp16:
+            with torch.cuda.amp.autocast():
+                outputs = model(**tokens)
+        else:
+            outputs = model(**tokens)
 
         pooled = mean_pool(outputs.last_hidden_state, tokens["attention_mask"])
         pooled = pooled.float().cpu().numpy()
@@ -199,9 +197,10 @@ print("==============================")
 print("Proteins embedded:", len(embedding_df))
 print("Embedding size:", len(embedding_rows[0]["embedding"]))
 print(f"Proteins with a NaN embedding: {n_nan}/{len(embeddings_dict)}"
-      + ("  <<< PROBLEM, do not use these -- check FP16/precision settings" if n_nan else "  (clean)"))
+      + ("  <<< PROBLEM, proveri FP16/precision" if n_nan else "  (clean)"))
 print("Saved:", OUTPUT_PICKLE)
 print("Saved:", OUTPUT_PARQUET)
 print()
-print("Download both files back to your local embeddings/ folder, "
-      "then we'll build the Ankh cosine RRF voter (same pattern as FoldseekTM/kmer).")
+print("Prebaci embeddings_esm1b.pkl i embeddings_esm1b.parquet nazad u lokalni "
+      "embeddings/ folder, pa nastavljamo isti RRF/cosine-comparison pattern "
+      "kao za Ankh (embeddings/generate_ankh_embeddings.py).")
