@@ -1,0 +1,1586 @@
+[
+  {
+    "patient_id":"motheslucksch2017_pt01",
+    "hidden_protein":"Pru p 3.0101",
+    "true_result":"positive",
+    "rank":101,
+    "n_candidates":1533,
+    "percentile":6.5883887802,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt01",
+    "hidden_protein":"Bet v 1.0101",
+    "true_result":"positive",
+    "rank":1276,
+    "n_candidates":1533,
+    "percentile":83.2354859752,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt01",
+    "hidden_protein":"Phl p 12.0101",
+    "true_result":"positive",
+    "rank":406,
+    "n_candidates":1533,
+    "percentile":26.4840182648,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt02",
+    "hidden_protein":"Bet v 1.0101",
+    "true_result":"negative",
+    "rank":939,
+    "n_candidates":1533,
+    "percentile":61.252446184,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt02",
+    "hidden_protein":"Phl p 12.0101",
+    "true_result":"negative",
+    "rank":207,
+    "n_candidates":1533,
+    "percentile":13.5029354207,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt03",
+    "hidden_protein":"Pru p 3.0101",
+    "true_result":"negative",
+    "rank":143,
+    "n_candidates":1533,
+    "percentile":9.3281148076,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt03",
+    "hidden_protein":"Phl p 12.0101",
+    "true_result":"negative",
+    "rank":734,
+    "n_candidates":1533,
+    "percentile":47.8799739074,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt04",
+    "hidden_protein":"Bet v 1.0101",
+    "true_result":"negative",
+    "rank":939,
+    "n_candidates":1533,
+    "percentile":61.252446184,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt04",
+    "hidden_protein":"Phl p 12.0101",
+    "true_result":"negative",
+    "rank":207,
+    "n_candidates":1533,
+    "percentile":13.5029354207,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt05",
+    "hidden_protein":"Pru p 3.0101",
+    "true_result":"positive",
+    "rank":143,
+    "n_candidates":1533,
+    "percentile":9.3281148076,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt05",
+    "hidden_protein":"Bet v 1.0101",
+    "true_result":"positive",
+    "rank":939,
+    "n_candidates":1533,
+    "percentile":61.252446184,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt05",
+    "hidden_protein":"Phl p 12.0101",
+    "true_result":"negative",
+    "rank":406,
+    "n_candidates":1533,
+    "percentile":26.4840182648,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt06",
+    "hidden_protein":"Pru p 3.0101",
+    "true_result":"negative",
+    "rank":143,
+    "n_candidates":1533,
+    "percentile":9.3281148076,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt06",
+    "hidden_protein":"Phl p 12.0101",
+    "true_result":"negative",
+    "rank":734,
+    "n_candidates":1533,
+    "percentile":47.8799739074,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt07",
+    "hidden_protein":"Pru p 3.0101",
+    "true_result":"positive",
+    "rank":101,
+    "n_candidates":1533,
+    "percentile":6.5883887802,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt07",
+    "hidden_protein":"Bet v 1.0101",
+    "true_result":"positive",
+    "rank":1276,
+    "n_candidates":1533,
+    "percentile":83.2354859752,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt07",
+    "hidden_protein":"Phl p 12.0101",
+    "true_result":"positive",
+    "rank":406,
+    "n_candidates":1533,
+    "percentile":26.4840182648,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt08",
+    "hidden_protein":"Pru p 3.0101",
+    "true_result":"positive",
+    "rank":143,
+    "n_candidates":1533,
+    "percentile":9.3281148076,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt08",
+    "hidden_protein":"Bet v 1.0101",
+    "true_result":"positive",
+    "rank":939,
+    "n_candidates":1533,
+    "percentile":61.252446184,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt08",
+    "hidden_protein":"Phl p 12.0101",
+    "true_result":"negative",
+    "rank":406,
+    "n_candidates":1533,
+    "percentile":26.4840182648,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt09",
+    "hidden_protein":"Pru p 3.0101",
+    "true_result":"positive",
+    "rank":143,
+    "n_candidates":1533,
+    "percentile":9.3281148076,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt09",
+    "hidden_protein":"Bet v 1.0101",
+    "true_result":"positive",
+    "rank":939,
+    "n_candidates":1533,
+    "percentile":61.252446184,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt09",
+    "hidden_protein":"Phl p 12.0101",
+    "true_result":"negative",
+    "rank":406,
+    "n_candidates":1533,
+    "percentile":26.4840182648,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt10",
+    "hidden_protein":"Bet v 1.0101",
+    "true_result":"negative",
+    "rank":939,
+    "n_candidates":1533,
+    "percentile":61.252446184,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt10",
+    "hidden_protein":"Phl p 12.0101",
+    "true_result":"negative",
+    "rank":207,
+    "n_candidates":1533,
+    "percentile":13.5029354207,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt11",
+    "hidden_protein":"Pru p 3.0101",
+    "true_result":"negative",
+    "rank":143,
+    "n_candidates":1533,
+    "percentile":9.3281148076,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt11",
+    "hidden_protein":"Phl p 12.0101",
+    "true_result":"negative",
+    "rank":734,
+    "n_candidates":1533,
+    "percentile":47.8799739074,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt12",
+    "hidden_protein":"Pru p 3.0101",
+    "true_result":"positive",
+    "rank":143,
+    "n_candidates":1533,
+    "percentile":9.3281148076,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt12",
+    "hidden_protein":"Bet v 1.0101",
+    "true_result":"positive",
+    "rank":939,
+    "n_candidates":1533,
+    "percentile":61.252446184,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt12",
+    "hidden_protein":"Phl p 12.0101",
+    "true_result":"negative",
+    "rank":406,
+    "n_candidates":1533,
+    "percentile":26.4840182648,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt13",
+    "hidden_protein":"Bet v 1.0101",
+    "true_result":"negative",
+    "rank":939,
+    "n_candidates":1533,
+    "percentile":61.252446184,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"motheslucksch2017_pt13",
+    "hidden_protein":"Phl p 12.0101",
+    "true_result":"negative",
+    "rank":207,
+    "n_candidates":1533,
+    "percentile":13.5029354207,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"pereira2009_case",
+    "hidden_protein":"Pru p 4.0101",
+    "true_result":"negative",
+    "rank":1203,
+    "n_candidates":1533,
+    "percentile":78.4735812133,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"pereira2009_case",
+    "hidden_protein":"Bet v 2.0101",
+    "true_result":"negative",
+    "rank":177,
+    "n_candidates":1533,
+    "percentile":11.5459882583,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"gomeztorrijos2021_pt1",
+    "hidden_protein":"Bet v 2.0101",
+    "true_result":"positive",
+    "rank":63,
+    "n_candidates":1532,
+    "percentile":4.1122715405,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"gomeztorrijos2021_pt1",
+    "hidden_protein":"Hev b 8.0101",
+    "true_result":"positive",
+    "rank":12,
+    "n_candidates":1532,
+    "percentile":0.7832898172,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"gomeztorrijos2021_pt1",
+    "hidden_protein":"Mer a 1.0101",
+    "true_result":"positive",
+    "rank":4,
+    "n_candidates":1532,
+    "percentile":0.2610966057,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"gomeztorrijos2021_pt1",
+    "hidden_protein":"Ole e 1.0101",
+    "true_result":"positive",
+    "rank":762,
+    "n_candidates":1532,
+    "percentile":49.7389033943,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"gomeztorrijos2021_pt2",
+    "hidden_protein":"Bet v 2.0101",
+    "true_result":"positive",
+    "rank":47,
+    "n_candidates":1533,
+    "percentile":3.0658838878,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"gomeztorrijos2021_pt2",
+    "hidden_protein":"Hev b 8.0101",
+    "true_result":"positive",
+    "rank":12,
+    "n_candidates":1533,
+    "percentile":0.782778865,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"gomeztorrijos2021_pt2",
+    "hidden_protein":"Mer a 1.0101",
+    "true_result":"positive",
+    "rank":4,
+    "n_candidates":1533,
+    "percentile":0.2609262883,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"uklejasokolowska2021_pt01",
+    "hidden_protein":"Der p 1.0101",
+    "true_result":"positive",
+    "rank":728,
+    "n_candidates":1533,
+    "percentile":47.4885844749,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"uklejasokolowska2021_pt01",
+    "hidden_protein":"Der p 2.0101",
+    "true_result":"positive",
+    "rank":1093,
+    "n_candidates":1533,
+    "percentile":71.2981082844,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"uklejasokolowska2021_pt01",
+    "hidden_protein":"Der p 10.0101",
+    "true_result":"positive",
+    "rank":990,
+    "n_candidates":1533,
+    "percentile":64.5792563601,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"uklejasokolowska2021_pt04",
+    "hidden_protein":"Der p 1.0101",
+    "true_result":"positive",
+    "rank":419,
+    "n_candidates":1533,
+    "percentile":27.3320287019,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"uklejasokolowska2021_pt04",
+    "hidden_protein":"Der p 2.0101",
+    "true_result":"positive",
+    "rank":999,
+    "n_candidates":1533,
+    "percentile":65.1663405088,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"uklejasokolowska2021_pt04",
+    "hidden_protein":"Der p 10.0101",
+    "true_result":"negative",
+    "rank":990,
+    "n_candidates":1533,
+    "percentile":64.5792563601,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"uklejasokolowska2021_pt05",
+    "hidden_protein":"Der p 1.0101",
+    "true_result":"positive",
+    "rank":419,
+    "n_candidates":1533,
+    "percentile":27.3320287019,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"uklejasokolowska2021_pt05",
+    "hidden_protein":"Der p 2.0101",
+    "true_result":"positive",
+    "rank":999,
+    "n_candidates":1533,
+    "percentile":65.1663405088,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"uklejasokolowska2021_pt05",
+    "hidden_protein":"Der p 10.0101",
+    "true_result":"negative",
+    "rank":990,
+    "n_candidates":1533,
+    "percentile":64.5792563601,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"uklejasokolowska2021_pt09",
+    "hidden_protein":"Der p 1.0101",
+    "true_result":"positive",
+    "rank":728,
+    "n_candidates":1533,
+    "percentile":47.4885844749,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"uklejasokolowska2021_pt09",
+    "hidden_protein":"Der p 2.0101",
+    "true_result":"positive",
+    "rank":1093,
+    "n_candidates":1533,
+    "percentile":71.2981082844,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"uklejasokolowska2021_pt09",
+    "hidden_protein":"Der p 10.0101",
+    "true_result":"positive",
+    "rank":990,
+    "n_candidates":1533,
+    "percentile":64.5792563601,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"uklejasokolowska2021_pt18",
+    "hidden_protein":"Der p 1.0101",
+    "true_result":"negative",
+    "rank":1240,
+    "n_candidates":1533,
+    "percentile":80.8871493803,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"uklejasokolowska2021_pt18",
+    "hidden_protein":"Der p 2.0101",
+    "true_result":"negative",
+    "rank":900,
+    "n_candidates":1533,
+    "percentile":58.7084148728,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"kim2020_case",
+    "hidden_protein":"Fel d 2.0101",
+    "true_result":"positive",
+    "rank":3,
+    "n_candidates":1534,
+    "percentile":0.1955671447,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"kim2020_case",
+    "hidden_protein":"Bos d 6.0101",
+    "true_result":"positive",
+    "rank":2,
+    "n_candidates":1534,
+    "percentile":0.1303780965,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"shiratsuki2020_case",
+    "hidden_protein":"Sus s 1.0101",
+    "true_result":"positive",
+    "rank":3,
+    "n_candidates":1533,
+    "percentile":0.1956947162,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"shiratsuki2020_case",
+    "hidden_protein":"Fel d 2.0101",
+    "true_result":"positive",
+    "rank":3,
+    "n_candidates":1533,
+    "percentile":0.1956947162,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"shiratsuki2020_case",
+    "hidden_protein":"Tri a 19.0101",
+    "true_result":"negative",
+    "rank":1481,
+    "n_candidates":1533,
+    "percentile":96.6079582518,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vando2005_pt01",
+    "hidden_protein":"Gad c 1.0101",
+    "true_result":"positive",
+    "rank":33,
+    "n_candidates":1534,
+    "percentile":2.1512385919,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vando2005_pt01",
+    "hidden_protein":"Sal s 1.0101",
+    "true_result":"positive",
+    "rank":25,
+    "n_candidates":1534,
+    "percentile":1.629726206,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vando2005_pt04",
+    "hidden_protein":"Sal s 1.0101",
+    "true_result":"negative",
+    "rank":25,
+    "n_candidates":1534,
+    "percentile":1.629726206,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vando2005_pt07",
+    "hidden_protein":"Gad c 1.0101",
+    "true_result":"positive",
+    "rank":33,
+    "n_candidates":1534,
+    "percentile":2.1512385919,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vando2005_pt07",
+    "hidden_protein":"Sal s 1.0101",
+    "true_result":"positive",
+    "rank":25,
+    "n_candidates":1534,
+    "percentile":1.629726206,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vando2005_pt12",
+    "hidden_protein":"Gad c 1.0101",
+    "true_result":"positive",
+    "rank":33,
+    "n_candidates":1534,
+    "percentile":2.1512385919,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vando2005_pt12",
+    "hidden_protein":"Sal s 1.0101",
+    "true_result":"positive",
+    "rank":25,
+    "n_candidates":1534,
+    "percentile":1.629726206,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"hayashi2020_case1",
+    "hidden_protein":"Gly m 4.0101",
+    "true_result":"positive",
+    "rank":1003,
+    "n_candidates":1529,
+    "percentile":65.5984303466,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"hayashi2020_case1",
+    "hidden_protein":"Gly m 5.0101",
+    "true_result":"positive",
+    "rank":13,
+    "n_candidates":1529,
+    "percentile":0.8502289078,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"hayashi2020_case1",
+    "hidden_protein":"Gly m 6.0101",
+    "true_result":"positive",
+    "rank":20,
+    "n_candidates":1529,
+    "percentile":1.3080444735,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"hayashi2020_case1",
+    "hidden_protein":"Ara h 1.0101",
+    "true_result":"positive",
+    "rank":18,
+    "n_candidates":1529,
+    "percentile":1.1772400262,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"hayashi2020_case1",
+    "hidden_protein":"Ara h 2.0101",
+    "true_result":"positive",
+    "rank":51,
+    "n_candidates":1529,
+    "percentile":3.3355134075,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"hayashi2020_case1",
+    "hidden_protein":"Ara h 3.0101",
+    "true_result":"positive",
+    "rank":18,
+    "n_candidates":1529,
+    "percentile":1.1772400262,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"hayashi2020_case1",
+    "hidden_protein":"Jug r 1.0101",
+    "true_result":"positive",
+    "rank":54,
+    "n_candidates":1529,
+    "percentile":3.5317200785,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"ciccarelli2014_case",
+    "hidden_protein":"Pru p 3.0101",
+    "true_result":"positive",
+    "rank":69,
+    "n_candidates":1533,
+    "percentile":4.5009784736,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ciccarelli2014_case",
+    "hidden_protein":"Ara h 1.0101",
+    "true_result":"positive",
+    "rank":529,
+    "n_candidates":1533,
+    "percentile":34.5075016308,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ciccarelli2014_case",
+    "hidden_protein":"Ara h 9.0101",
+    "true_result":"positive",
+    "rank":41,
+    "n_candidates":1533,
+    "percentile":2.6744944553,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"limao2023_case",
+    "hidden_protein":"Ara h 2.0101",
+    "true_result":"positive",
+    "rank":65,
+    "n_candidates":1533,
+    "percentile":4.2400521853,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"limao2023_case",
+    "hidden_protein":"Ana o 1.0101",
+    "true_result":"positive",
+    "rank":74,
+    "n_candidates":1533,
+    "percentile":4.827136334,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"limao2023_case",
+    "hidden_protein":"Ana o 2.0101",
+    "true_result":"positive",
+    "rank":47,
+    "n_candidates":1533,
+    "percentile":3.0658838878,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"nojo2026_case",
+    "hidden_protein":"Ara h 2.0101",
+    "true_result":"negative",
+    "rank":136,
+    "n_candidates":1530,
+    "percentile":8.8888888889,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"nojo2026_case",
+    "hidden_protein":"Jug r 1.0101",
+    "true_result":"negative",
+    "rank":126,
+    "n_candidates":1530,
+    "percentile":8.2352941176,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"nojo2026_case",
+    "hidden_protein":"Ana o 3.0101",
+    "true_result":"negative",
+    "rank":129,
+    "n_candidates":1530,
+    "percentile":8.431372549,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"nojo2026_case",
+    "hidden_protein":"Tri a 19.0101",
+    "true_result":"negative",
+    "rank":1218,
+    "n_candidates":1530,
+    "percentile":79.6078431373,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"nojo2026_case",
+    "hidden_protein":"Hev b 6.01",
+    "true_result":"negative",
+    "rank":285,
+    "n_candidates":1530,
+    "percentile":18.6274509804,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"saretta2014_case",
+    "hidden_protein":"Jug r 3.0101",
+    "true_result":"positive",
+    "rank":214,
+    "n_candidates":1530,
+    "percentile":13.9869281046,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"saretta2014_case",
+    "hidden_protein":"Cor a 1.0101",
+    "true_result":"positive",
+    "rank":434,
+    "n_candidates":1530,
+    "percentile":28.3660130719,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"saretta2014_case",
+    "hidden_protein":"Cor a 8.0101",
+    "true_result":"negative",
+    "rank":54,
+    "n_candidates":1530,
+    "percentile":3.5294117647,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"saretta2014_case",
+    "hidden_protein":"Cor a 9.0101",
+    "true_result":"negative",
+    "rank":230,
+    "n_candidates":1530,
+    "percentile":15.0326797386,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"saretta2014_case",
+    "hidden_protein":"Cor a 14.0101",
+    "true_result":"negative",
+    "rank":96,
+    "n_candidates":1530,
+    "percentile":6.2745098039,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"saretta2014_case",
+    "hidden_protein":"Ara h 2.0101",
+    "true_result":"negative",
+    "rank":164,
+    "n_candidates":1530,
+    "percentile":10.7189542484,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"chaudhry2013_pt1",
+    "hidden_protein":"Gly m 5.0101",
+    "true_result":"negative",
+    "rank":241,
+    "n_candidates":1533,
+    "percentile":15.7208088715,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"chaudhry2013_pt1",
+    "hidden_protein":"Gly m 6.0101",
+    "true_result":"negative",
+    "rank":226,
+    "n_candidates":1533,
+    "percentile":14.7423352903,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"chaudhry2013_pt2",
+    "hidden_protein":"Gly m 5.0101",
+    "true_result":"negative",
+    "rank":241,
+    "n_candidates":1533,
+    "percentile":15.7208088715,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"chaudhry2013_pt2",
+    "hidden_protein":"Gly m 6.0101",
+    "true_result":"negative",
+    "rank":226,
+    "n_candidates":1533,
+    "percentile":14.7423352903,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"chaudhry2013_pt3",
+    "hidden_protein":"Gly m 5.0101",
+    "true_result":"negative",
+    "rank":241,
+    "n_candidates":1533,
+    "percentile":15.7208088715,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"chaudhry2013_pt3",
+    "hidden_protein":"Gly m 6.0101",
+    "true_result":"negative",
+    "rank":226,
+    "n_candidates":1533,
+    "percentile":14.7423352903,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"chaudhry2013_pt4",
+    "hidden_protein":"Gly m 5.0101",
+    "true_result":"negative",
+    "rank":241,
+    "n_candidates":1533,
+    "percentile":15.7208088715,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"chaudhry2013_pt4",
+    "hidden_protein":"Gly m 6.0101",
+    "true_result":"negative",
+    "rank":226,
+    "n_candidates":1533,
+    "percentile":14.7423352903,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"chaudhry2013_pt5",
+    "hidden_protein":"Gly m 5.0101",
+    "true_result":"negative",
+    "rank":241,
+    "n_candidates":1533,
+    "percentile":15.7208088715,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"chaudhry2013_pt5",
+    "hidden_protein":"Gly m 6.0101",
+    "true_result":"negative",
+    "rank":226,
+    "n_candidates":1533,
+    "percentile":14.7423352903,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"chaudhry2013_pt6",
+    "hidden_protein":"Gly m 5.0101",
+    "true_result":"negative",
+    "rank":241,
+    "n_candidates":1533,
+    "percentile":15.7208088715,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"chaudhry2013_pt6",
+    "hidden_protein":"Gly m 6.0101",
+    "true_result":"negative",
+    "rank":226,
+    "n_candidates":1533,
+    "percentile":14.7423352903,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"kalickamath2025_P44",
+    "hidden_protein":"Cyp c 1.0101",
+    "true_result":"negative",
+    "rank":8,
+    "n_candidates":1534,
+    "percentile":0.5215123859,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"kalickamath2025_P38",
+    "hidden_protein":"Onc m 1.0101",
+    "true_result":"positive",
+    "rank":31,
+    "n_candidates":1534,
+    "percentile":2.0208604954,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"kalickamath2025_P38",
+    "hidden_protein":"Cyp c 1.0101",
+    "true_result":"positive",
+    "rank":8,
+    "n_candidates":1534,
+    "percentile":0.5215123859,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"kalickamath2025_P39",
+    "hidden_protein":"Onc m 1.0101",
+    "true_result":"positive",
+    "rank":31,
+    "n_candidates":1534,
+    "percentile":2.0208604954,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"kalickamath2025_P39",
+    "hidden_protein":"Cyp c 1.0101",
+    "true_result":"positive",
+    "rank":8,
+    "n_candidates":1534,
+    "percentile":0.5215123859,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"chaudhry2013_soy_pt_a",
+    "hidden_protein":"Gly m 5.0101",
+    "true_result":"negative",
+    "rank":241,
+    "n_candidates":1533,
+    "percentile":15.7208088715,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"chaudhry2013_soy_pt_a",
+    "hidden_protein":"Gly m 6.0101",
+    "true_result":"negative",
+    "rank":226,
+    "n_candidates":1533,
+    "percentile":14.7423352903,
+    "verification_status":"abstract_snippet_only"
+  },
+  {
+    "patient_id":"vieira2012_pt01",
+    "hidden_protein":"Pru p 3.0101",
+    "true_result":"positive",
+    "rank":41,
+    "n_candidates":1532,
+    "percentile":2.6762402089,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vieira2012_pt01",
+    "hidden_protein":"Cor a 8.0101",
+    "true_result":"positive",
+    "rank":35,
+    "n_candidates":1532,
+    "percentile":2.2845953003,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vieira2012_pt01",
+    "hidden_protein":"Pru p 4.0101",
+    "true_result":"negative",
+    "rank":1342,
+    "n_candidates":1532,
+    "percentile":87.5979112272,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vieira2012_pt01",
+    "hidden_protein":"Pru p 1.0101",
+    "true_result":"negative",
+    "rank":1295,
+    "n_candidates":1532,
+    "percentile":84.5300261097,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vieira2012_pt02",
+    "hidden_protein":"Bet v 2.0101",
+    "true_result":"positive",
+    "rank":45,
+    "n_candidates":1531,
+    "percentile":2.9392553886,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vieira2012_pt02",
+    "hidden_protein":"Phl p 12.0101",
+    "true_result":"positive",
+    "rank":49,
+    "n_candidates":1531,
+    "percentile":3.2005225343,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vieira2012_pt02",
+    "hidden_protein":"Hev b 8.0101",
+    "true_result":"positive",
+    "rank":16,
+    "n_candidates":1531,
+    "percentile":1.0450685826,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vieira2012_pt02",
+    "hidden_protein":"Ole e 2.0101",
+    "true_result":"positive",
+    "rank":28,
+    "n_candidates":1531,
+    "percentile":1.8288700196,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vieira2012_pt02",
+    "hidden_protein":"Bet v 1.0101",
+    "true_result":"positive",
+    "rank":1216,
+    "n_candidates":1531,
+    "percentile":79.4252122796,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vieira2012_pt03",
+    "hidden_protein":"Bet v 1.0101",
+    "true_result":"positive",
+    "rank":33,
+    "n_candidates":1531,
+    "percentile":2.1554539517,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vieira2012_pt03",
+    "hidden_protein":"Pru p 1.0101",
+    "true_result":"positive",
+    "rank":55,
+    "n_candidates":1531,
+    "percentile":3.5924232528,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vieira2012_pt03",
+    "hidden_protein":"Ara h 8.0101",
+    "true_result":"positive",
+    "rank":167,
+    "n_candidates":1531,
+    "percentile":10.9079033312,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vieira2012_pt03",
+    "hidden_protein":"Bet v 2.0101",
+    "true_result":"negative",
+    "rank":293,
+    "n_candidates":1531,
+    "percentile":19.1378184193,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vieira2012_pt03",
+    "hidden_protein":"Pru p 3.0101",
+    "true_result":"positive",
+    "rank":166,
+    "n_candidates":1531,
+    "percentile":10.8425865447,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vieira2012_pt04",
+    "hidden_protein":"Phl p 12.0101",
+    "true_result":"negative",
+    "rank":461,
+    "n_candidates":1533,
+    "percentile":30.0717547293,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"vieira2012_pt04",
+    "hidden_protein":"Hev b 8.0101",
+    "true_result":"negative",
+    "rank":393,
+    "n_candidates":1533,
+    "percentile":25.6360078278,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"kim2020_pt01",
+    "hidden_protein":"Fel d 2.0101",
+    "true_result":"positive",
+    "rank":3,
+    "n_candidates":1534,
+    "percentile":0.1955671447,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"kim2020_pt01",
+    "hidden_protein":"Bos d 6.0101",
+    "true_result":"positive",
+    "rank":2,
+    "n_candidates":1534,
+    "percentile":0.1303780965,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt15",
+    "hidden_protein":"Bos d 6.0101",
+    "true_result":"positive",
+    "rank":1,
+    "n_candidates":1530,
+    "percentile":0.0653594771,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt15",
+    "hidden_protein":"Sus s 1.0101",
+    "true_result":"positive",
+    "rank":1,
+    "n_candidates":1530,
+    "percentile":0.0653594771,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt15",
+    "hidden_protein":"Fel d 2.0101",
+    "true_result":"positive",
+    "rank":2,
+    "n_candidates":1530,
+    "percentile":0.1307189542,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt15",
+    "hidden_protein":"Gal d 5.0101",
+    "true_result":"negative",
+    "rank":2,
+    "n_candidates":1530,
+    "percentile":0.1307189542,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt15",
+    "hidden_protein":"Can f 3.0101",
+    "true_result":"negative",
+    "rank":1,
+    "n_candidates":1530,
+    "percentile":0.0653594771,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt15",
+    "hidden_protein":"Equ c 3.0101",
+    "true_result":"negative",
+    "rank":2,
+    "n_candidates":1530,
+    "percentile":0.1307189542,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt21",
+    "hidden_protein":"Bos d 6.0101",
+    "true_result":"positive",
+    "rank":1,
+    "n_candidates":1530,
+    "percentile":0.0653594771,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt21",
+    "hidden_protein":"Sus s 1.0101",
+    "true_result":"positive",
+    "rank":1,
+    "n_candidates":1530,
+    "percentile":0.0653594771,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt21",
+    "hidden_protein":"Gal d 5.0101",
+    "true_result":"negative",
+    "rank":2,
+    "n_candidates":1530,
+    "percentile":0.1307189542,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt21",
+    "hidden_protein":"Fel d 2.0101",
+    "true_result":"negative",
+    "rank":2,
+    "n_candidates":1530,
+    "percentile":0.1307189542,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt21",
+    "hidden_protein":"Can f 3.0101",
+    "true_result":"negative",
+    "rank":2,
+    "n_candidates":1530,
+    "percentile":0.1307189542,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt21",
+    "hidden_protein":"Equ c 3.0101",
+    "true_result":"negative",
+    "rank":2,
+    "n_candidates":1530,
+    "percentile":0.1307189542,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt23",
+    "hidden_protein":"Bos d 6.0101",
+    "true_result":"positive",
+    "rank":1,
+    "n_candidates":1530,
+    "percentile":0.0653594771,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt23",
+    "hidden_protein":"Sus s 1.0101",
+    "true_result":"positive",
+    "rank":1,
+    "n_candidates":1530,
+    "percentile":0.0653594771,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt23",
+    "hidden_protein":"Gal d 5.0101",
+    "true_result":"negative",
+    "rank":2,
+    "n_candidates":1530,
+    "percentile":0.1307189542,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt23",
+    "hidden_protein":"Fel d 2.0101",
+    "true_result":"negative",
+    "rank":2,
+    "n_candidates":1530,
+    "percentile":0.1307189542,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt23",
+    "hidden_protein":"Can f 3.0101",
+    "true_result":"negative",
+    "rank":2,
+    "n_candidates":1530,
+    "percentile":0.1307189542,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt23",
+    "hidden_protein":"Equ c 3.0101",
+    "true_result":"negative",
+    "rank":2,
+    "n_candidates":1530,
+    "percentile":0.1307189542,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt66",
+    "hidden_protein":"Bos d 6.0101",
+    "true_result":"positive",
+    "rank":2,
+    "n_candidates":1530,
+    "percentile":0.1307189542,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt66",
+    "hidden_protein":"Gal d 5.0101",
+    "true_result":"positive",
+    "rank":2,
+    "n_candidates":1530,
+    "percentile":0.1307189542,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt66",
+    "hidden_protein":"Equ c 3.0101",
+    "true_result":"positive",
+    "rank":2,
+    "n_candidates":1530,
+    "percentile":0.1307189542,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt66",
+    "hidden_protein":"Sus s 1.0101",
+    "true_result":"positive",
+    "rank":2,
+    "n_candidates":1530,
+    "percentile":0.1307189542,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt66",
+    "hidden_protein":"Fel d 2.0101",
+    "true_result":"negative",
+    "rank":2,
+    "n_candidates":1530,
+    "percentile":0.1307189542,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"ozdemiral2025_pt66",
+    "hidden_protein":"Can f 3.0101",
+    "true_result":"negative",
+    "rank":2,
+    "n_candidates":1530,
+    "percentile":0.1307189542,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P01",
+    "hidden_protein":"Pru p 3.0101",
+    "true_result":"positive",
+    "rank":31,
+    "n_candidates":1527,
+    "percentile":2.030124427,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P01",
+    "hidden_protein":"Cor a 8.0101",
+    "true_result":"positive",
+    "rank":31,
+    "n_candidates":1527,
+    "percentile":2.030124427,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P01",
+    "hidden_protein":"Ara h 9.0101",
+    "true_result":"positive",
+    "rank":32,
+    "n_candidates":1527,
+    "percentile":2.0956123117,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P01",
+    "hidden_protein":"Jug r 3.0101",
+    "true_result":"positive",
+    "rank":32,
+    "n_candidates":1527,
+    "percentile":2.0956123117,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P01",
+    "hidden_protein":"Pla a 3.0101",
+    "true_result":"positive",
+    "rank":29,
+    "n_candidates":1527,
+    "percentile":1.8991486575,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P01",
+    "hidden_protein":"Art v 3.0101",
+    "true_result":"positive",
+    "rank":65,
+    "n_candidates":1527,
+    "percentile":4.2567125082,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P01",
+    "hidden_protein":"Tri a 14.0201",
+    "true_result":"negative",
+    "rank":42,
+    "n_candidates":1527,
+    "percentile":2.7504911591,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P01",
+    "hidden_protein":"Mal d 1.0101",
+    "true_result":"negative",
+    "rank":1239,
+    "n_candidates":1527,
+    "percentile":81.1394891945,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P01",
+    "hidden_protein":"Pru p 1.0101",
+    "true_result":"negative",
+    "rank":1386,
+    "n_candidates":1527,
+    "percentile":90.7662082515,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P02",
+    "hidden_protein":"Pru p 3.0101",
+    "true_result":"positive",
+    "rank":31,
+    "n_candidates":1527,
+    "percentile":2.030124427,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P02",
+    "hidden_protein":"Cor a 8.0101",
+    "true_result":"positive",
+    "rank":31,
+    "n_candidates":1527,
+    "percentile":2.030124427,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P02",
+    "hidden_protein":"Ara h 9.0101",
+    "true_result":"positive",
+    "rank":32,
+    "n_candidates":1527,
+    "percentile":2.0956123117,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P02",
+    "hidden_protein":"Jug r 3.0101",
+    "true_result":"positive",
+    "rank":32,
+    "n_candidates":1527,
+    "percentile":2.0956123117,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P02",
+    "hidden_protein":"Pla a 3.0101",
+    "true_result":"positive",
+    "rank":29,
+    "n_candidates":1527,
+    "percentile":1.8991486575,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P02",
+    "hidden_protein":"Art v 3.0101",
+    "true_result":"positive",
+    "rank":65,
+    "n_candidates":1527,
+    "percentile":4.2567125082,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P02",
+    "hidden_protein":"Tri a 14.0201",
+    "true_result":"negative",
+    "rank":42,
+    "n_candidates":1527,
+    "percentile":2.7504911591,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P02",
+    "hidden_protein":"Mal d 1.0101",
+    "true_result":"negative",
+    "rank":1239,
+    "n_candidates":1527,
+    "percentile":81.1394891945,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P02",
+    "hidden_protein":"Pru p 1.0101",
+    "true_result":"negative",
+    "rank":1386,
+    "n_candidates":1527,
+    "percentile":90.7662082515,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P03",
+    "hidden_protein":"Pru p 3.0101",
+    "true_result":"positive",
+    "rank":30,
+    "n_candidates":1530,
+    "percentile":1.9607843137,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P03",
+    "hidden_protein":"Ara h 9.0101",
+    "true_result":"positive",
+    "rank":25,
+    "n_candidates":1530,
+    "percentile":1.6339869281,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P03",
+    "hidden_protein":"Jug r 3.0101",
+    "true_result":"positive",
+    "rank":37,
+    "n_candidates":1530,
+    "percentile":2.4183006536,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P03",
+    "hidden_protein":"Tri a 14.0201",
+    "true_result":"positive",
+    "rank":52,
+    "n_candidates":1530,
+    "percentile":3.3986928105,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P03",
+    "hidden_protein":"Mal d 1.0101",
+    "true_result":"negative",
+    "rank":1174,
+    "n_candidates":1530,
+    "percentile":76.7320261438,
+    "verification_status":"full_text_verified"
+  },
+  {
+    "patient_id":"daSilva2016_P03",
+    "hidden_protein":"Pru p 1.0101",
+    "true_result":"negative",
+    "rank":1256,
+    "n_candidates":1530,
+    "percentile":82.091503268,
+    "verification_status":"full_text_verified"
+  }
+]

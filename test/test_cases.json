@@ -3484,7 +3484,7 @@
     "sequential_protocol": null,
     "verification": {
       "status": "full_text_verified",
-      "notes": "Ozdemiral 2025, Table 3 (70-detetov CMA kohorta, samo 7 crveno-meso-reaktivnih pacijenata individualno tabelirano). Sve vrednosti direktno citirane iz clanka (full-text potvrdjen, open access CC-BY). OPREZ: Sus s 1=0.31 je TIK iznad cutoff-a od 0.30 (izvor ga eksplicitno oznacava kao granicnu vrednost) -- koriscen je paper-ov sopstveni cutoff, ne naknadno poo\u0161tren prag."
+      "notes": "Ozdemiral 2025, Table 3 (70-detetov CMA kohorta, samo 7 crveno-meso-reaktivnih pacijenata individualno tabelirano). Sve vrednosti direktno citirane iz clanka (full-text potvrdjen, open access CC-BY). OPREZ: Sus s 1=0.31 je TIK iznad cutoff-a od 0.30 (izvor ga eksplicitno oznacava kao granicnu vrednost) -- koriscen je paper-ov sopstveni cutoff, ne naknadno pooštren prag."
     }
   },
   {
@@ -3851,6 +3851,644 @@
     "verification": {
       "status": "full_text_verified",
       "notes": "Patient had wheat-associated FDEIA; Tri a 14 was the suspected culprit. Additional sensitization to Pru p 3, Ara h 9 and Jug r 3 was explicitly reported."
+    }
+  },
+  {
+    "patient_id": "giuffrida2014_pt01",
+    "source": {
+      "citation": "Giuffrida MG, Villalta D, Mistrello G, Amato S, Asero R. \"Shrimp allergy beyond Tropomyosin in Italy: clinical relevance of Arginine Kinase, Sarcoplasmic calcium binding protein and Hemocyanin.\" Eur Ann Allergy Clin Immunol. 2014;46(5):172-177.",
+      "doi": null,
+      "pmid": "25224947",
+      "url": "https://www.eurannallergyimm.com/wp-content/uploads/2014/09/volume-shrimp-allergy-beyond-tropomyosin-italy-866allasp1.pdf"
+    },
+    "protein_family": "Tropomyosin/Arginine kinase/SCBP (mixed shrimp panel)",
+    "patient_description": "Italian shrimp-allergic patient #1/40 (Giuffrida et al. 2014 cohort), clinical history: rhinitis/asthma. Tested on ImmunoCAP singleplex (Pen a 1, >0.1 kU/L cutoff) and ImmunoCAP ISAC 112 microarray (Pen m 1/2/4, >0.3 ISU/l cutoff).",
+    "components": [
+      {
+        "protein": "Pen a 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus aztecus)",
+        "method": "ImmunoCAP_singleplex",
+        "value": 3.92,
+        "value_unit": "kU/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": 10,
+        "value_unit": "ISU/l",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 2",
+        "protein_family": "Arginine kinase",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 4",
+        "protein_family": "SCBP",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Values transcribed verbatim from Table 1 of the publisher PDF (test/real_world_cases_5.md). Pen a 1 and Pen m 1 resolve to the same pool protein (Lit v 1.0101, identical sequence) -- see test/protein_resolution.py; leave-one-out trials between them self-skip automatically."
+    }
+  },
+  {
+    "patient_id": "giuffrida2014_pt02",
+    "source": {
+      "citation": "Giuffrida MG, Villalta D, Mistrello G, Amato S, Asero R. \"Shrimp allergy beyond Tropomyosin in Italy: clinical relevance of Arginine Kinase, Sarcoplasmic calcium binding protein and Hemocyanin.\" Eur Ann Allergy Clin Immunol. 2014;46(5):172-177.",
+      "doi": null,
+      "pmid": "25224947",
+      "url": "https://www.eurannallergyimm.com/wp-content/uploads/2014/09/volume-shrimp-allergy-beyond-tropomyosin-italy-866allasp1.pdf"
+    },
+    "protein_family": "Tropomyosin/Arginine kinase/SCBP (mixed shrimp panel)",
+    "patient_description": "Italian shrimp-allergic patient #2/40 (Giuffrida et al. 2014 cohort), clinical history: urticaria/OAS. Tested on ImmunoCAP singleplex (Pen a 1, >0.1 kU/L cutoff) and ImmunoCAP ISAC 112 microarray (Pen m 1/2/4, >0.3 ISU/l cutoff).",
+    "components": [
+      {
+        "protein": "Pen a 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus aztecus)",
+        "method": "ImmunoCAP_singleplex",
+        "value": 0.63,
+        "value_unit": "kU/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": 4.3,
+        "value_unit": "ISU/l",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 2",
+        "protein_family": "Arginine kinase",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 4",
+        "protein_family": "SCBP",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Values transcribed verbatim from Table 1 of the publisher PDF (test/real_world_cases_5.md). Pen a 1 and Pen m 1 resolve to the same pool protein (Lit v 1.0101, identical sequence) -- see test/protein_resolution.py; leave-one-out trials between them self-skip automatically."
+    }
+  },
+  {
+    "patient_id": "giuffrida2014_pt03",
+    "source": {
+      "citation": "Giuffrida MG, Villalta D, Mistrello G, Amato S, Asero R. \"Shrimp allergy beyond Tropomyosin in Italy: clinical relevance of Arginine Kinase, Sarcoplasmic calcium binding protein and Hemocyanin.\" Eur Ann Allergy Clin Immunol. 2014;46(5):172-177.",
+      "doi": null,
+      "pmid": "25224947",
+      "url": "https://www.eurannallergyimm.com/wp-content/uploads/2014/09/volume-shrimp-allergy-beyond-tropomyosin-italy-866allasp1.pdf"
+    },
+    "protein_family": "Tropomyosin/Arginine kinase/SCBP (mixed shrimp panel)",
+    "patient_description": "Italian shrimp-allergic patient #3/40 (Giuffrida et al. 2014 cohort), clinical history: anaphylaxis. Tested on ImmunoCAP singleplex (Pen a 1, >0.1 kU/L cutoff) and ImmunoCAP ISAC 112 microarray (Pen m 1/2/4, >0.3 ISU/l cutoff).",
+    "components": [
+      {
+        "protein": "Pen a 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus aztecus)",
+        "method": "ImmunoCAP_singleplex",
+        "value": null,
+        "value_unit": "kU/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 2",
+        "protein_family": "Arginine kinase",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": 4,
+        "value_unit": "ISU/l",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 4",
+        "protein_family": "SCBP",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": 4.2,
+        "value_unit": "ISU/l",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Values transcribed verbatim from Table 1 of the publisher PDF (test/real_world_cases_5.md). Pen a 1 and Pen m 1 resolve to the same pool protein (Lit v 1.0101, identical sequence) -- see test/protein_resolution.py; leave-one-out trials between them self-skip automatically."
+    }
+  },
+  {
+    "patient_id": "giuffrida2014_pt04",
+    "source": {
+      "citation": "Giuffrida MG, Villalta D, Mistrello G, Amato S, Asero R. \"Shrimp allergy beyond Tropomyosin in Italy: clinical relevance of Arginine Kinase, Sarcoplasmic calcium binding protein and Hemocyanin.\" Eur Ann Allergy Clin Immunol. 2014;46(5):172-177.",
+      "doi": null,
+      "pmid": "25224947",
+      "url": "https://www.eurannallergyimm.com/wp-content/uploads/2014/09/volume-shrimp-allergy-beyond-tropomyosin-italy-866allasp1.pdf"
+    },
+    "protein_family": "Tropomyosin/Arginine kinase/SCBP (mixed shrimp panel)",
+    "patient_description": "Italian shrimp-allergic patient #4/40 (Giuffrida et al. 2014 cohort), clinical history: urticaria/OAS. Tested on ImmunoCAP singleplex (Pen a 1, >0.1 kU/L cutoff) and ImmunoCAP ISAC 112 microarray (Pen m 1/2/4, >0.3 ISU/l cutoff).",
+    "components": [
+      {
+        "protein": "Pen a 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus aztecus)",
+        "method": "ImmunoCAP_singleplex",
+        "value": 0.24,
+        "value_unit": "kU/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": 0.7,
+        "value_unit": "ISU/l",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 2",
+        "protein_family": "Arginine kinase",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 4",
+        "protein_family": "SCBP",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Values transcribed verbatim from Table 1 of the publisher PDF (test/real_world_cases_5.md). Pen a 1 and Pen m 1 resolve to the same pool protein (Lit v 1.0101, identical sequence) -- see test/protein_resolution.py; leave-one-out trials between them self-skip automatically."
+    }
+  },
+  {
+    "patient_id": "giuffrida2014_pt06",
+    "source": {
+      "citation": "Giuffrida MG, Villalta D, Mistrello G, Amato S, Asero R. \"Shrimp allergy beyond Tropomyosin in Italy: clinical relevance of Arginine Kinase, Sarcoplasmic calcium binding protein and Hemocyanin.\" Eur Ann Allergy Clin Immunol. 2014;46(5):172-177.",
+      "doi": null,
+      "pmid": "25224947",
+      "url": "https://www.eurannallergyimm.com/wp-content/uploads/2014/09/volume-shrimp-allergy-beyond-tropomyosin-italy-866allasp1.pdf"
+    },
+    "protein_family": "Tropomyosin/Arginine kinase/SCBP (mixed shrimp panel)",
+    "patient_description": "Italian shrimp-allergic patient #6/40 (Giuffrida et al. 2014 cohort), clinical history: urticaria. Tested on ImmunoCAP singleplex (Pen a 1, >0.1 kU/L cutoff) and ImmunoCAP ISAC 112 microarray (Pen m 1/2/4, >0.3 ISU/l cutoff).",
+    "components": [
+      {
+        "protein": "Pen a 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus aztecus)",
+        "method": "ImmunoCAP_singleplex",
+        "value": 0.28,
+        "value_unit": "kU/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": 0.6,
+        "value_unit": "ISU/l",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 2",
+        "protein_family": "Arginine kinase",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 4",
+        "protein_family": "SCBP",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Values transcribed verbatim from Table 1 of the publisher PDF (test/real_world_cases_5.md). Pen a 1 and Pen m 1 resolve to the same pool protein (Lit v 1.0101, identical sequence) -- see test/protein_resolution.py; leave-one-out trials between them self-skip automatically."
+    }
+  },
+  {
+    "patient_id": "giuffrida2014_pt15",
+    "source": {
+      "citation": "Giuffrida MG, Villalta D, Mistrello G, Amato S, Asero R. \"Shrimp allergy beyond Tropomyosin in Italy: clinical relevance of Arginine Kinase, Sarcoplasmic calcium binding protein and Hemocyanin.\" Eur Ann Allergy Clin Immunol. 2014;46(5):172-177.",
+      "doi": null,
+      "pmid": "25224947",
+      "url": "https://www.eurannallergyimm.com/wp-content/uploads/2014/09/volume-shrimp-allergy-beyond-tropomyosin-italy-866allasp1.pdf"
+    },
+    "protein_family": "Tropomyosin/Arginine kinase/SCBP (mixed shrimp panel)",
+    "patient_description": "Italian shrimp-allergic patient #15/40 (Giuffrida et al. 2014 cohort), clinical history: urticaria. Tested on ImmunoCAP singleplex (Pen a 1, >0.1 kU/L cutoff) and ImmunoCAP ISAC 112 microarray (Pen m 1/2/4, >0.3 ISU/l cutoff).",
+    "components": [
+      {
+        "protein": "Pen a 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus aztecus)",
+        "method": "ImmunoCAP_singleplex",
+        "value": 0.75,
+        "value_unit": "kU/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": 2.6,
+        "value_unit": "ISU/l",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 2",
+        "protein_family": "Arginine kinase",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 4",
+        "protein_family": "SCBP",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Values transcribed verbatim from Table 1 of the publisher PDF (test/real_world_cases_5.md). Pen a 1 and Pen m 1 resolve to the same pool protein (Lit v 1.0101, identical sequence) -- see test/protein_resolution.py; leave-one-out trials between them self-skip automatically."
+    }
+  },
+  {
+    "patient_id": "giuffrida2014_pt16",
+    "source": {
+      "citation": "Giuffrida MG, Villalta D, Mistrello G, Amato S, Asero R. \"Shrimp allergy beyond Tropomyosin in Italy: clinical relevance of Arginine Kinase, Sarcoplasmic calcium binding protein and Hemocyanin.\" Eur Ann Allergy Clin Immunol. 2014;46(5):172-177.",
+      "doi": null,
+      "pmid": "25224947",
+      "url": "https://www.eurannallergyimm.com/wp-content/uploads/2014/09/volume-shrimp-allergy-beyond-tropomyosin-italy-866allasp1.pdf"
+    },
+    "protein_family": "Tropomyosin/Arginine kinase/SCBP (mixed shrimp panel)",
+    "patient_description": "Italian shrimp-allergic patient #16/40 (Giuffrida et al. 2014 cohort), clinical history: OAS. Tested on ImmunoCAP singleplex (Pen a 1, >0.1 kU/L cutoff) and ImmunoCAP ISAC 112 microarray (Pen m 1/2/4, >0.3 ISU/l cutoff).",
+    "components": [
+      {
+        "protein": "Pen a 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus aztecus)",
+        "method": "ImmunoCAP_singleplex",
+        "value": 0.55,
+        "value_unit": "kU/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": 3,
+        "value_unit": "ISU/l",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 2",
+        "protein_family": "Arginine kinase",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 4",
+        "protein_family": "SCBP",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Values transcribed verbatim from Table 1 of the publisher PDF (test/real_world_cases_5.md). Pen a 1 and Pen m 1 resolve to the same pool protein (Lit v 1.0101, identical sequence) -- see test/protein_resolution.py; leave-one-out trials between them self-skip automatically."
+    }
+  },
+  {
+    "patient_id": "giuffrida2014_pt20",
+    "source": {
+      "citation": "Giuffrida MG, Villalta D, Mistrello G, Amato S, Asero R. \"Shrimp allergy beyond Tropomyosin in Italy: clinical relevance of Arginine Kinase, Sarcoplasmic calcium binding protein and Hemocyanin.\" Eur Ann Allergy Clin Immunol. 2014;46(5):172-177.",
+      "doi": null,
+      "pmid": "25224947",
+      "url": "https://www.eurannallergyimm.com/wp-content/uploads/2014/09/volume-shrimp-allergy-beyond-tropomyosin-italy-866allasp1.pdf"
+    },
+    "protein_family": "Tropomyosin/Arginine kinase/SCBP (mixed shrimp panel)",
+    "patient_description": "Italian shrimp-allergic patient #20/40 (Giuffrida et al. 2014 cohort), clinical history: urticaria. Tested on ImmunoCAP singleplex (Pen a 1, >0.1 kU/L cutoff) and ImmunoCAP ISAC 112 microarray (Pen m 1/2/4, >0.3 ISU/l cutoff).",
+    "components": [
+      {
+        "protein": "Pen a 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus aztecus)",
+        "method": "ImmunoCAP_singleplex",
+        "value": 56.2,
+        "value_unit": "kU/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": 77,
+        "value_unit": "ISU/l",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 2",
+        "protein_family": "Arginine kinase",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 4",
+        "protein_family": "SCBP",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Values transcribed verbatim from Table 1 of the publisher PDF (test/real_world_cases_5.md). Pen a 1 and Pen m 1 resolve to the same pool protein (Lit v 1.0101, identical sequence) -- see test/protein_resolution.py; leave-one-out trials between them self-skip automatically."
+    }
+  },
+  {
+    "patient_id": "giuffrida2014_pt21",
+    "source": {
+      "citation": "Giuffrida MG, Villalta D, Mistrello G, Amato S, Asero R. \"Shrimp allergy beyond Tropomyosin in Italy: clinical relevance of Arginine Kinase, Sarcoplasmic calcium binding protein and Hemocyanin.\" Eur Ann Allergy Clin Immunol. 2014;46(5):172-177.",
+      "doi": null,
+      "pmid": "25224947",
+      "url": "https://www.eurannallergyimm.com/wp-content/uploads/2014/09/volume-shrimp-allergy-beyond-tropomyosin-italy-866allasp1.pdf"
+    },
+    "protein_family": "Tropomyosin/Arginine kinase/SCBP (mixed shrimp panel)",
+    "patient_description": "Italian shrimp-allergic patient #21/40 (Giuffrida et al. 2014 cohort), clinical history: OAS. Tested on ImmunoCAP singleplex (Pen a 1, >0.1 kU/L cutoff) and ImmunoCAP ISAC 112 microarray (Pen m 1/2/4, >0.3 ISU/l cutoff).",
+    "components": [
+      {
+        "protein": "Pen a 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus aztecus)",
+        "method": "ImmunoCAP_singleplex",
+        "value": 50.6,
+        "value_unit": "kU/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": 86,
+        "value_unit": "ISU/l",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 2",
+        "protein_family": "Arginine kinase",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 4",
+        "protein_family": "SCBP",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Values transcribed verbatim from Table 1 of the publisher PDF (test/real_world_cases_5.md). Pen a 1 and Pen m 1 resolve to the same pool protein (Lit v 1.0101, identical sequence) -- see test/protein_resolution.py; leave-one-out trials between them self-skip automatically."
+    }
+  },
+  {
+    "patient_id": "giuffrida2014_pt24",
+    "source": {
+      "citation": "Giuffrida MG, Villalta D, Mistrello G, Amato S, Asero R. \"Shrimp allergy beyond Tropomyosin in Italy: clinical relevance of Arginine Kinase, Sarcoplasmic calcium binding protein and Hemocyanin.\" Eur Ann Allergy Clin Immunol. 2014;46(5):172-177.",
+      "doi": null,
+      "pmid": "25224947",
+      "url": "https://www.eurannallergyimm.com/wp-content/uploads/2014/09/volume-shrimp-allergy-beyond-tropomyosin-italy-866allasp1.pdf"
+    },
+    "protein_family": "Tropomyosin/Arginine kinase/SCBP (mixed shrimp panel)",
+    "patient_description": "Italian shrimp-allergic patient #24/40 (Giuffrida et al. 2014 cohort), clinical history: urticaria. Tested on ImmunoCAP singleplex (Pen a 1, >0.1 kU/L cutoff) and ImmunoCAP ISAC 112 microarray (Pen m 1/2/4, >0.3 ISU/l cutoff).",
+    "components": [
+      {
+        "protein": "Pen a 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus aztecus)",
+        "method": "ImmunoCAP_singleplex",
+        "value": null,
+        "value_unit": "kU/L",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 2",
+        "protein_family": "Arginine kinase",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": 1.1,
+        "value_unit": "ISU/l",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 4",
+        "protein_family": "SCBP",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": 1.3,
+        "value_unit": "ISU/l",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Values transcribed verbatim from Table 1 of the publisher PDF (test/real_world_cases_5.md). Pen a 1 and Pen m 1 resolve to the same pool protein (Lit v 1.0101, identical sequence) -- see test/protein_resolution.py; leave-one-out trials between them self-skip automatically."
+    }
+  },
+  {
+    "patient_id": "giuffrida2014_pt35",
+    "source": {
+      "citation": "Giuffrida MG, Villalta D, Mistrello G, Amato S, Asero R. \"Shrimp allergy beyond Tropomyosin in Italy: clinical relevance of Arginine Kinase, Sarcoplasmic calcium binding protein and Hemocyanin.\" Eur Ann Allergy Clin Immunol. 2014;46(5):172-177.",
+      "doi": null,
+      "pmid": "25224947",
+      "url": "https://www.eurannallergyimm.com/wp-content/uploads/2014/09/volume-shrimp-allergy-beyond-tropomyosin-italy-866allasp1.pdf"
+    },
+    "protein_family": "Tropomyosin/Arginine kinase/SCBP (mixed shrimp panel)",
+    "patient_description": "Italian shrimp-allergic patient #35/40 (Giuffrida et al. 2014 cohort), clinical history: OAS. Tested on ImmunoCAP singleplex (Pen a 1, >0.1 kU/L cutoff) and ImmunoCAP ISAC 112 microarray (Pen m 1/2/4, >0.3 ISU/l cutoff).",
+    "components": [
+      {
+        "protein": "Pen a 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus aztecus)",
+        "method": "ImmunoCAP_singleplex",
+        "value": 0.14,
+        "value_unit": "kU/L",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 1",
+        "protein_family": "Tropomyosin",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 2",
+        "protein_family": "Arginine kinase",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": null,
+        "value_unit": "ISU/l",
+        "result": "negative",
+        "confirmed_by_challenge": false
+      },
+      {
+        "protein": "Pen m 4",
+        "protein_family": "SCBP",
+        "source_food_or_organism": "shrimp (Penaeus monodon)",
+        "method": "ISAC",
+        "value": 0.6,
+        "value_unit": "ISU/l",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      }
+    ],
+    "sequential_protocol": null,
+    "verification": {
+      "status": "full_text_verified",
+      "notes": "Values transcribed verbatim from Table 1 of the publisher PDF (test/real_world_cases_5.md). Pen a 1 and Pen m 1 resolve to the same pool protein (Lit v 1.0101, identical sequence) -- see test/protein_resolution.py; leave-one-out trials between them self-skip automatically."
     }
   }
 ]

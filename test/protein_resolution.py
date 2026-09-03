@@ -19,6 +19,22 @@ Provereno preko test_cases.json + clean_allergens.csv (avgust 2026):
      - "Sus s (pork albumin)" = Sus s 1 -- u nasem pool-u POSTOJI SAMO JEDAN
        "Sus s" protein (Sus s 1.0101, svinjski serumski albumin), pa je
        oznaka nedvosmislena, za razliku od "Gad m"/"Sal s"/"Thu a" (ispod).
+     - "Pen a 1" i "Pen m 1" (sirom tropomiozin, Penaeus aztecus / P. monodon)
+       -> "Lit v 1.0101" (belu-rep skampa tropomiozin, vec u pool-u). NIJE
+       nagadjanje: WHO/IUIS sirovi izvor (data/jointable.csv, PRE cistog
+       dedup koraka u data/finalclean_whoiuis.py) ima Pen a 1.0101 (UniProt
+       Q3Y8M6, allergen.org aid=474) i Pen m 1.0101 (UniProt A1KYZ2,
+       aid=490) sa FASTA sekvencom koja je bit-za-bit IDENTICNA vec
+       postojecem Lit v 1.0101 -- finalclean_whoiuis.py ih je zato ispravno
+       izbacio kao duplikate sekvence (drop_duplicates(subset=["fasta_
+       sequence"])), ne kao bug. Za bilo koji embedding/BLAST-baziran model
+       ova tri imena OPISUJU ISTI ulazni niz, pa je rezolucija na postojeci
+       pool-zapis tacna, ne aproksimacija -- dodavanje NOVOG reda u dataset
+       bi samo vestacki duplikovalo embedding (isti problem kao vec
+       dijagnostikovana nsLTP/profilin "crowding"). Proveri 2026-09-02.
+     - "Pen m 4" (skampa SCBP, P. monodon) -> "Lit v 4.0101" -- isti
+       mehanizam/dokaz kao gore (Pen m 4.0101, UniProt E7CGC4, aid=688,
+       sekvenca identicna Lit v 4.0101).
 
 3) NAMERNO OSTAJU NEREZOLVOVANI (proveril i potvrdjeno ambiguozni ili
    nepostojeci u pool-u, NE regex bug):
@@ -33,16 +49,19 @@ Provereno preko test_cases.json + clean_allergens.csv (avgust 2026):
        koja tacno, ne diramo.
      - "Sol so (sole parvalbumin marker)" -- STVARNA RUPA U PODACIMA, sole
        parvalbumin uopste NIJE u pool-u (0 poklapanja).
-     - "Pen m 1" -- STVARNA RUPA U PODACIMA: sirom (shrimp) tropomiozin
-       "Pen m 1" NIJE u clean_allergens.csv (pool ima samo Pen m 13/14,
-       razlicite proteine) -- pogadja 5 pacijenata (uklejasokolowska2021
-       pt01/04/05/09/18). Ovo NIJE regex bug, treba dodati protein u dataset
-       (van obima ovog fajla).
      - "rPhl p 1 + rPhl p 5b" -- KOMBINOVAN test dva proteina odjednom,
        jedan rezultat za oba -- ne moze se cisto svesti na JEDAN protein bez
        promene JSON strukture (deljenje u 2 zapisa), namerno ne diramo ovde.
      - Sve whole-extract/band/panel/CCD/alpha-gal oznake (nisu proteini u
        nasem smislu, ili izvor eksplicitno kaze "component not identified").
+
+NAPOMENA (Pen a 1/Pen m 1 rezolucija) -- posledica po leave-one-out: kad se
+i sakriveni I neki od "poznatih" proteina za istog pacijenta mapiraju na
+ISTI pool-zapis (npr. pacijent pozitivan i na Pen a 1 i na Pen m 1), ta
+proba se automatski i bezbedno PRESKACE u run_leave_one_out() (sakriveni
+protein zavrsi u exclude_idx pa ga rezultat ne sadrzi) -- ne baca gresku,
+ne daje pogresan broj, samo ne racuna tu jednu (trivijalno-kruznu) probu.
+Namerno, ne treba posebno zakrpiti.
 """
 
 import re
@@ -50,6 +69,9 @@ import re
 SYNONYMS = {
     "omega-5 gliadin": "Tri a 19",
     "Sus s (pork albumin)": "Sus s 1",
+    "Pen a 1": "Lit v 1.0101",
+    "Pen m 1": "Lit v 1.0101",
+    "Pen m 4": "Lit v 4.0101",
 }
 
 _R_N_PREFIX = re.compile(r"^[rn]([A-Z][a-z]{1,3} [a-z] )")

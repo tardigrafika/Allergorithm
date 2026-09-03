@@ -40,6 +40,7 @@
 | [LSE-pooling kao primarni ranker](#lse-pooling-kao-primarni-ranker--feasibility-check-odustalo-se-pre-punog-pokretanja) | — | — | — | — | ~3h projektovana cena — odloženo pre punog LOCO-a |
 | [LayerNorm ablacija](#layernorm-ablacija-za-mlphadamard--čist-značajan-negativan-rezultat) | 0.0804 | — | — | — | Značajno GORE od baseline-a (−0.0455, CI isključuje 0) — odbačeno |
 | [ESM-1b naspram ESM-2 backbone](#esm-1b-naspram-esm-2-backbone--mlphadamard-značajan-negativan-rezultat) | 0.1065 (ESM-1b) | — | — | — | Značajno GORE od ESM-2 (−0.0195, CI isključuje 0) — ne koristiti |
+| [ESM-2 3B naspram 650M backbone](#esm-2-3b-naspram-esm-2-650m-backbone--mlphadamard-fer-poredjenje-posle-uhvaćenog-confound-a) | 0.1131–0.1136 (3B, retunovano) | — | — | — | Retuning resio kolaps, i dalje značajno GORE od BLAST-a i 650M-a — ne koristiti |
 
 ---
 Trenutni broj gold-cross-reactive parova: 1922
@@ -724,6 +725,26 @@ Hot-spot provera: PR-10 hot-spotovi su DOSLEDNO lokalizovani blizu C-terminusa (
 
 ---
 
+## Cosine SAM na pacijentima — nedostajuća tačka poređenja, popunjena (2026-09-02)
+
+**Cilj** — od 2026-08-30 flagovano kao "not yet done": jedini signal koji NIKAD nije testiran kao samostalan pacijentski ranker bio je cosine (BLAST-sam i MLP-sam jesu). Bez ovoga, ne može se razlikovati da li "MLP(hadamard) bolji od BLAST-a" znači "ma koji embedding-signal bolji od BLAST-a" ili je specifično NAUČENA transformacija (Hadamard MLP) ta koja nosi prednost. `test/evaluate_cosine_only_patients_1548.py` — isti leave-one-out mehanizam, ESM-2 650M cosine sličnost bez ikakvog treninga, na identičnom (n=176, 54 pac.) skupu kao već objavljeni BLAST/MLP brojevi.
+
+**Napomena o metodologiji**: `protein_resolution.py` popravka istog dana (Pen a1/Pen m1 aliasi) retroaktivno otključava 6 dodatnih proba kod uklejasokolowska2021 pacijenata koje nisu postojale kad su stariji BLAST/MLP raw fajlovi računati — te probe su eksplicitno izbačene iz ovog poređenja (presek, ne unija) da ostane fer, isti-skup poređenje sa već objavljenim brojevima.
+
+**Rezultati**
+
+| Test | Cosine vs BLAST — svi upiti | Cosine vs BLAST — hard | Cosine vs MLP — svi upiti | Cosine vs MLP — hard |
+|---|---|---|---|---|
+| Patient-level Wilcoxon | p=0.7994 n.z. | p=0.4692 n.z. | **p=0.0172 ZNAČAJNO** | **p=0.0009 ZNAČAJNO** |
+| Cluster-permutacija | **p=0.0205 ZNAČAJNO** | **p=0.0057 ZNAČAJNO** | **p=0.0026 ZNAČAJNO** | **p=0.0002 ZNAČAJNO** |
+| Bootstrap CI | **[-0.0921,-0.0121] ZNAČAJNO** | **[-0.1105,-0.0166] ZNAČAJNO** | **[-0.1042,-0.0214] ZNAČAJNO** | **[-0.1248,-0.0301] ZNAČAJNO** |
+
+Sve razlike su u istom (negativnom za cosine) smeru — cosine je najslabiji od sva tri signala na pacijentima, značajno gori od MLP-a (sva 3 testa, oba podskupa) i značajno gori od BLAST-a (2/3 testa, oba podskupa, jedva ne-značajno na Wilcoxon-u).
+
+**Zaključak — precizira headline nalaz**: MLP(hadamard)-ova prednost nad BLAST-om na pacijentima NIJE prosto "embedding sličnost > sekvencijalno poravnanje" — sirov cosine u ISTOM embedding prostoru gubi od BLAST-a. Prednost dolazi SPECIFIČNO od naučene, nelinearne Hadamard-MLP transformacije trenirane na gold cross-reaktivne parove, ne od same reprezentacije. Kompletna rang lista na pacijentima: **MLP(hadamard) > BLAST > cosine**, sa MLP i BLAST oba značajno iznad cosine, i MLP značajno iznad BLAST-a.
+
+---
+
 ## OuterProductBilinear 
 **Cilj** — mentorova ideja: umesto Hadamard produkta (u⊙v, hvata SAMO interakcije iste dimenzije), koristiti outer product (u⊗v, hvata SVE parove dimenzija u_i·v_j) pomnožen matricom težina, pa MLP — "dobićeš delove koji su bitni za reakciju".
 
@@ -754,6 +775,41 @@ Hot-spot provera: PR-10 hot-spotovi su DOSLEDNO lokalizovani blizu C-terminusa (
 
 **Zaključak**
 - Dodavanjem 3 nova pacijenta, **sva tri testa su sada značajna na OBA podskupa** — pre toga je cluster-permutacija na "svim upitima" bila granična/neznačajna (p=0.079). Ovo zatvara jedinu slabu kariku iz prethodne METODOLOŠKE ISPRAVKE — glavni nalaz sesije je sada robustniji, ne samo ponovljen.
+
+---
+
+## Pen a1/Pen m1/Pen m4 gap zatvoren — 11 Giuffrida 2014 pacijenata dodato (57→68), 2026-09-02
+
+**Otkriće**: Pen a 1, Pen m 1, Pen m 4 NISU nedostajali iz sirovih WHO/IUIS podataka — `data/jointable.csv` (izvor PRE čišćenja) ih ima sa punim sekvencama, potvrđeno unakrsno protiv allergen.org (aid 474/490/688) i UniProt-a (Q3Y8M6/A1KYZ2/E7CGC4). `data/finalclean_whoiuis.py` ih je ispravno izbacio kao duplikate sekvence — Pen a 1.0101 i Pen m 1.0101 su bit-za-bit identični već postojećem **Lit v 1.0101**, Pen m 4.0101 identičan **Lit v 4.0101** (biološki očekivano — blisko srodne vrste škampa, tropomiozin/SCBP izrazito konzervisani). Rešeno dodavanjem 3 alias-a u `test/protein_resolution.py` (isti mehanizam kao postojeći "Sus s (pork albumin)"→"Sus s 1"), NE dodavanjem novih redova u dataset (izbegava veštačko duplikovanje embedding-a). Bonus: ovo automatski otključava i 5 već postojećih uklejasokolowska2021 pacijenata čiji Pen m 1 do sada nije bio rezolvovan.
+
+11 Giuffrida et al. 2014 pacijenata (Eur Ann Allergy Clin Immunol 46(5):172–7, PMID 25224947, pun tekst već transkribovan u `test/real_world_cases_5.md`) dodato u `test/test_cases.json` (57→68). **Napomena o leave-one-out mehanici**: 8/11 pacijenata ima OBA pozitivna kao tropomiozin (Pen a1+Pen m1) — pošto se oba mapiraju na isti pool-zapis, te dve probe se automatski i bezbedno preskaču (sakriveni protein bi bio identičan poznatom); validne probe ostaju za Pen m2/Pen m4 komponente. `test/evaluate_giuffrida2014_patients_1548.py`: **22 validne probe** (5 pozitivnih, 17 negativnih).
+
+| Model | Pozitivni (n=5), medijan percentil | Negativni (n=17), medijan percentil |
+|---|---|---|
+| MLP(hadamard)-650M | 16.2% | 24.9% |
+| BLAST | 15.9% | 17.4% |
+
+**Zaključak (preliminaran, mali n)**: modeli su uporedivi na rangiranju pravih pozitiva (~16%), ali **BLAST dosledno bolje potiskuje negativne** (17.4% vs 24.9%) — isti kvalitativni obrazac kao već dokumentovana MLP negative-suppression slabost (Pru p1/Pru p3, Phl p12 iz failure analysis-a ispod). Agregatna statistika (Wilcoxon/cluster-permutacija/bootstrap) za ceo 68-pacijentski suite NIJE još regenerisana — ovo su rezultati samo za novih 11 pacijenata, ne izmena glavnog headline nalaza (koji i dalje stoji na n=57 dok se ne uradi puni re-run).
+
+---
+
+## Weighted-evidence trening (Suspected*=0.5) — pokušaj popravke negative-suppression slabosti, negativan rezultat (2026-09-02)
+
+**Hipoteza korisnice**: MLP-ova slabost potiskivanja negativa u crowded familijama (nsLTP/Profilin/PR-10, vidi Failure analysis ispod) možda potiče od "Suspected*" evidence_level parova u treningu (~267/1922, homology/izoforma-izvedeni, NISU "Inferred" pa `training_eligible_pairs()` ih zadržava) — treniranje na njima možda uči model da prejako uopštava "ista familija = pozitivno". Test: umesto brisanja (rizik od data-starvation, presedan iz RRF-5 clean-train eksperimenta da čišćenje tier-a "barely moves anything"), **težinsko obaranje** — Suspected* parovi dobijaju težinu 0.5 u loss-u, ostalo (Strong/Confirmed) 1.0, isti pozitivni/negativni parovi kao baseline. Dodata `positive_weights` opcija u `MLPPairClassifier.fit()` (`ml/pipeline/models/classifiers/mlp.py`) — čisto aditivno, `None` (podrazumevano) matematički identično starom ponašanju.
+
+`test/evaluate_weighted_evidence_mlp_patients_1548.py` — baseline (težina 1.0 svuda) vs weighted (Suspected*=0.5) vs BLAST, leave-one-out na **svih 68 pacijenata** (prva puna regeneracija posle Giuffrida proširenja). best_val_auc gotovo identičan (0.9831 vs 0.9835) — nije problem treninga.
+
+**Rezultat: SUPROTNO od hipoteze.** Weighted varijanta potiskuje negative GORE, ne bolje, u sve tri ciljne familije:
+
+| Familija | Negativi: baseline → weighted | BLAST negativi |
+|---|---|---|
+| PR-10 | 48.7% → **31.3%** (gore) | 84.8% |
+| nsLTP | 23.7% → **19.1%** (gore) | 49.0% |
+| Profilin | 34.3% → **32.7%** (blago gore) | 66.9% |
+
+Agregatno (68 pacijenata, 204 trial-a): weighted **značajno gori od baseline-a** (cluster-permutacija p=0.0022, bootstrap CI[-0.0393,-0.0054], oba isključuju nulu) i **gubi značajnu prednost nad BLAST-om** koju baseline ima (CI[-0.0320,+0.0093], uključuje nulu).
+
+**Zaključak**: pridružuje se već postojećem obrascu (hard-negative trening avgust 2026, LayerNorm ablacija) — pokušaji da se ova specifična slabost popravi treniranjem su do sada UVEK dali negativan ili nulti rezultat. Nepotvrđena spekulacija zašto: obaranje težine Suspected* parova efektivno pomera trening masu ka Strong/Confirmed parovima, koji možda nisu ravnomerno raspoređeni baš u regionima gde je regularizacija najpotrebnija — Suspected parovi možda daju koristan regularizacioni signal uprkos slabijoj pojedinačnoj pouzdanosti. **Ne preporučuje se za produkciju.**
 
 ---
 
@@ -854,3 +910,67 @@ Direktno poređenje (isti upiti): ESM-1b vs ESM-2 delta = **−0.0195**, 95% CI 
 
 **Zaključak**
 - Prelazak na ESM-1b NE probija representation ceiling — čini ga gorim, ne izjednačenim. Očekivano s obzirom da je ESM-1b (2019) stariji/slabije treniran model od ESM-2 (2022), ali sada empirijski zatvoreno, ne pretpostavljeno. **Ne koristiti ESM-1b kao backbone.** AlphaFold-bazirani embeddinzi/feature-i eksplicitno odloženi za kasniju sesiju, nisu još probani.
+
+---
+
+## ESM-2 3B naspram ESM-2 650M backbone — MLP(hadamard), fer poredjenje posle uhvaćenog confound-a
+
+**Cilj** — skalirati NAGORE unutar ISTE ESM-2 familije (`facebook/esm2_t36_3B_UR50D`, dim 2560 vs 1280) — principijelnije od prelaska na ESM-1b, budući da arhitektura/training recipe ostaju isti, menja se samo skala.
+
+**Šta je urađeno** — prva generacija 3B embeddinga na klasteru je OOM-ovala (GPU samo 3.94 GiB VRAM, potvrđeno pravom `torch.OutOfMemoryError` porukom — 3B težine same traže ~6GB u FP16; nema zvaničnog ESM-2 checkpoint-a između 650M i 3B, potvrđeno direktno na HF hub-u). Posle veće GPU alokacije, čist run: 1535/1535 proteina, 2560-dim, 0 NaN.
+
+**Prvo poređenje je bilo METODOLOŠKI POGREŠNO, korisnica je to odmah primetila**: cosine (bez treninga) je pokazao 3B i 650M ISTINSKI izjednačene (delta −0.0007, CI uključuje 0) — ali MLP(hadamard) je koristio ISTE hiperparametre tunovane za 1280-dim ulaz (h32, lr=1e-2, standardize=False) na 2560-dim ulazu bez ikakvog retuninga, dajući katastrofalan kolaps (MRR=0.0395, delta −0.0848 vs BLAST). Brz single-split sweep (`analysis/mlp_hadamard_esm2_3b_sensitivity_1548.py`, 7 config-a) je pokazao uzrok: SVAKI `standardize=False` config na netunovanom LR kolabira; `standardize=True` (ili 10x manji LR) to potpuno rešava.
+
+**Rezultati (puna 40-fold LOCO potvrda dva najbolja retunovana kandidata)**
+
+| Config | MRR | Delta vs BLAST | Delta vs 650M |
+|---|---|---|---|
+| 650M (uspostavljen baseline) | 0.1259 | +0.0016 (n.z.) | — |
+| 3B, nefer (bez retuninga) | 0.0395 | **−0.0848 (kolaps)** | — |
+| 3B, h32+standardize=True | 0.1131 | **−0.0112, CI[−0.0183,−0.0040] ZNAČAJNO** | **−0.0128, CI[−0.0198,−0.0054] ZNAČAJNO** |
+| 3B, h64+standardize=True | 0.1136 | **−0.0107, CI[−0.0185,−0.0027] ZNAČAJNO** | **−0.0123, CI[−0.0191,−0.0051] ZNAČAJNO** |
+
+**Zaključak**
+- Retuning je potpuno rešio kolaps (0.0395→0.113), ali fer poređenje i dalje pokazuje da je 3B blago ali GENUINSKI značajno lošiji od BLAST-a I od 650M-a, dosledno kroz oba retunovana config-a (ne slučajnost jedne konfiguracije). **Skaliranje ESM-2 backbone-a nagore NE probija representation ceiling** — isti zaključak kao ESM-1b, ali sada potvrđen bez confound-a, pravim retuning-om, ne artefaktom neuskladjene arhitekture. Zajedno sa cosine nalazom (potpuno izjednačeno), ovo zatvara "veći embedding backbone" pravac čisto: ni promena ESM familije ni skaliranje unutar iste familije ne pomaže — plafon izgleda kao prava osobina onoga što ove sequence-only reprezentacije mogu da uhvate za ovaj zadatak, ne popravljiv izborom modela. **Ne koristiti ni ESM-2 3B kao backbone.**
+
+**Dodatak — isti retunovan 3B config testiran na 57 pacijenata** (`test/evaluate_mlp3b_patients_1548.py`, ista metodologija kao BLAST-vs-MLP(hadamard) pacijentski test): **MLP-3B značajno bolji od BLAST-a, sva 3 testa, oba podskupa** (mean diff +0.015 do +0.018, p<0.01 svuda) — čak nešto jače od 650M rezultata. Ali **MLP-3B naspram MLP-650M je mešovito, VEĆINOM neznačajno** (samo jedan od šest test/podskup kombinacija značajan) — 3B NIJE pouzdano bolji od 650M na pacijentima. Zaključak: model koji je gori od BLAST-a na gold-LOCO metrici i dalje pokazuje pravu prednost nad BLAST-om na pravim pacijentima — isti interno-vs-klinički gap kao za 650M, sada reprodukovan sa drugim modelom, ojačava taj nalaz kao pravi fenomen. Nije razlog za prelazak na 3B u produkciji — nema jasnu prednost nad 650M, a mnogo je skuplji.
+
+## Ablaciona studija: MLP(hadamard) 650M vs 3B — konsolidacija na pacijentima (2026-09-02)
+
+**Odluka o obimu (korisnica, 2026-09-02): cela ablaciona studija za MLP(hadamard)/MLP(richconcat) porodicu modela ide ISKLJUČIVO protiv 57-pacijentskog real-world suite-a, ne protiv gold-dataset LOCO-a.** Ovo je svesno odstupanje od uobičajene discipline projekta ("LOCO prvo, pacijenti tek za LOCO-potvrđene kandidate") — opravdano već dvaput dokumentovanim interno-vs-klinički gap-om (650M i 3B su oba gora/tie na gold-LOCO ali oba pobeđuju BLAST na pacijentima; ispod, richconcat pokazuje suprotan smer istog fenomena) — LOCO rangiranje kandidata se pokazalo kao nepouzdan prediktor pacijentskog ishoda za ovu porodicu modela, pa se dalja selekcija radi direktno na metrici koja je bitna za tezu.
+
+**Metodologija** — identična već uspostavljenom upareno-testiranom protokolu (`test/paired_test_mlp_vs_blast_1548.py` stil): za svaki kandidat, leave-one-out rangiranje na svih 57 pacijenata (176 upita / 54 pacijenta sa ≥1 pozitivnim i negativnim skrivenim proteinom), pa 3 uparena testa na identičnim (patient_id, hidden_protein) parovima — (1) patient-level Wilcoxon signed-rank, (2) cluster-permutacija (permutuje oznaku modela unutar pacijenta), (3) patient-level bootstrap CI (resample po pacijentu) — na "svi upiti" i "samo hard (full_text_verified)" podskupu. BLAST/650M-baseline rezultati REciklirani iz postojećih raw JSON fajlova gde god su isti trials, ne računati ponovo.
+
+### Konsolidovana tabela (samo već izvršeni pacijentski testovi, bez novog treninga)
+
+| Kandidat | Poređenje | Svi upiti (Wilcoxon / cluster-perm / bootstrap) | Hard subset (Wilcoxon / cluster-perm / bootstrap) |
+|---|---|---|---|
+| **MLP(hadamard)-650M** (baseline, standardize=False, h32) | vs BLAST | p=0.0116 ✓ / p=0.0304 ✓ / CI[+0.0019,+0.0237] ✓ — sve pozitivno, sve značajno | p=0.0042 ✓ / p=0.0080 ✓ / CI[+0.0043,+0.0295] ✓ — sve pozitivno, sve značajno |
+| **MLP(hadamard)-3B** (retuned, standardize=True, h32) | vs BLAST | p=0.0001 ✓ / p=0.0030 ✓ / CI[+0.0076,+0.0299] ✓ — sve pozitivno, sve značajno | p=0.0005 ✓ / p=0.0061 ✓ / CI[+0.0066,+0.0311] ✓ — sve pozitivno, sve značajno |
+| **MLP(hadamard)-3B** | vs MLP(hadamard)-650M | p=0.0046 ✓(+0.0015) / p=0.3413 ✗ / CI[−0.0074,+0.0192] ✗ — mešovito, 3B NIJE pouzdano bolji | p=0.1066 ✗ / p=0.7276 ✗ / CI[−0.0135,+0.0166] ✗ — sve neznačajno, praktično izjednačeno |
+| **MLP(richconcat)-3B, preL2=True** | vs BLAST | p=0.1373 ✗ / p=0.0751 ✗ / CI[−0.0743,−0.0051] ✓(negativno) | p=0.7704 ✗ / p=0.0111 ✓(negativno) / CI[−0.0912,−0.0101] ✓(negativno) |
+| **MLP(richconcat)-3B, preL2=True** | vs MLP(hadamard)-650M | p=0.7598 ✗ / p=0.0082 ✓(negativno) / CI[−0.0863,−0.0146] ✓(negativno) | p=0.4205 ✗ / p=0.0006 ✓(negativno) / CI[−0.1069,−0.0235] ✓(negativno) |
+| **MLP(richconcat)-3B, preL2=False** | vs BLAST | p=0.1026 ✗ / p=0.0780 ✗ / CI[−0.0663,−0.0016] ✓(negativno) | p=0.6573 ✗ / p=0.0018 ✓(negativno) / CI[−0.0828,−0.0100] ✓(negativno) |
+| **MLP(richconcat)-3B, preL2=False** | vs MLP(hadamard)-650M | p=0.4306 ✗ / p=0.0137 ✓(negativno) / CI[−0.0781,−0.0105] ✓(negativno) | p=0.0411 ✓(negativno) / p=0.0002 ✓(negativno) / CI[−0.0980,−0.0236] ✓(negativno) |
+
+Izvori: `output/paired_test_mlp_vs_blast_1548_summary.txt`, `output/evaluate_mlp3b_patients_1548_summary.txt`, `output/evaluate_mlp3b_richconcat_patients_1548_summary.txt`.
+
+### Zaključci (bez novog treninga)
+
+1. **Plain hadamard je bolji izbor encoding-a od richconcat-a na OBA nivoa** — ovo je nova informacija, richconcat nije bio pre ovoga uporedjen sa plain hadamard-om na pacijentima. Richconcat-3B je konzistentno GORI i od BLAST-a i od MLP(hadamard)-650M, sa najjačim signalom baš na hard (najpouzdanije verifikovanom) podskupu — obrnut smer od gold-LOCO nalaza, gde je richconcat brojčano BLIŽI BLAST-u (deltа −0.003/−0.004) nego plain hadamard-3B (delta −0.011). **Ovo je treći dokumentovan slučaj gde gold-LOCO rangiranje kandidata direktno pogrešno predviđa pacijentski ishod** — dodatna potvrda odluke da se ablacija vodi na pacijentima.
+2. **3B ne daje pouzdan upgrade nad 650M ni sa plain hadamard-om** (mešovito/tie) **ni sa richconcat-om** (isključivo gori) — trenutno nema nijedne konfiguracije u ovoj porodici gde 3B robustno pobeđuje 650M na pacijentima.
+3. **Trenutni najbolji kandidat ostaje plain MLP(hadamard)-650M** — jedini sa svih 6 test-podskup kombinacija značajnim i u pravom smeru; 3B plain hadamard je blizu drugi (isto tako sve značajno vs BLAST, ali bez dokazane prednosti nad 650M, i uz mnogo veći trošak).
+
+### Faktori BEZ pacijentskih podataka (postoji samo gold-LOCO/single-split rezultat — ne mogu ući u gornju tabelu bez novog treninga)
+
+| Faktor | Šta postoji | Nedostaje |
+|---|---|---|
+| richconcat na **650M** | ništa — richconcat testiran samo na 3B | trening + pacijentski test na 650M, za fer poređenje encoding-a nezavisno od backbone-a |
+| absdiff encoding | samo gold-LOCO (značajno gori od cosine, svaka arhitektura) | pacijentski test |
+| LayerNorm ablacija | samo gold-LOCO (značajno gori) | pacijentski test |
+| Targeted hard-negative trening | samo gold-LOCO (bez efekta) + direktna proba na Pru p 3 (gore) | pacijentski test |
+| Naučena projekcija (256/512, `projected_mlp.py`) | samo single-split screening (negativno) | LOCO ili direktno pacijentski test |
+| PCA redukcija (256/512) | samo single-split screening (negativno) | pacijentski test |
+| ESM-1b backbone | samo gold-LOCO (značajno gori) | pacijentski test |
+| Regularizacija (dropout/weight_decay/l2_lambda sweep) | nigde sistematski varirano | i trening i test |
+| Clean-trained (`training_eligible_pairs()`, Inferred isključen) — 3B varijanta | urađeno za 650M (kao deo RRF-6), NE za samostalni 3B single-signal | trening + pacijentski test |

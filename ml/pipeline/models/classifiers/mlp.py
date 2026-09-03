@@ -33,8 +33,10 @@ from sklearn.model_selection import train_test_split
 from ...common.features import (
     build_feature_matrix,
     build_hadamard_matrix,
+    build_richconcat_matrix,
     hadamard_batch_same_query,
     pairwise_features_batch_same_query,
+    richconcat_batch_same_query,
 )
 from .base import PairClassifier
 
@@ -106,37 +108,58 @@ class MLPPairClassifier(PairClassifier):
             return X
         return (X - self.feature_mean) / self.feature_std
 
-    def fit(self, positive_pairs, negative_pairs, embedding_matrix, id_to_index, **kwargs):
+    def fit(self, positive_pairs, negative_pairs, embedding_matrix, id_to_index,
+            positive_weights: np.ndarray | None = None, **kwargs):
+        """positive_weights: opcioni niz iste duzine kao positive_pairs, per-primer
+        tezina u loss-u (npr. manja tezina za slabije-pouzdane evidence_level tier-ove
+        -- test/evaluate_weighted_evidence_mlp_patients_1548.py, 2026-09-02). Negativni
+        parovi UVEK tezina 1.0 (nasumicno uzorkovani, nemaju evidence_level koncept).
+        Podrazumevano None -> svi 1.0, matematicki IDENTICNO ranijem ne-tezinskom
+        BCE-u (mean() tezinskog gubitka sa svim tezinama=1 jednak je obicnom mean()),
+        pa ne menja ponasanje nijednog postojeceg pozivaoca."""
         self.set_pool(embedding_matrix, id_to_index)
         p = self.params
 
         if p["input_encoding"] == "hadamard":
-            X, y = build_hadamard_matrix(positive_pairs, negative_pairs, embedding_matrix, id_to_index)
+            X, y = build_hadamard_matrix(positive_pairs, negative_pairs, embedding_matrix, id_to_index,
+                                           pre_l2_normalize=p.get("pre_l2_normalize", False))
         elif p["input_encoding"] == "absdiff":
             X, y = build_feature_matrix(positive_pairs, negative_pairs, embedding_matrix, id_to_index,
                                           blast_matrices=self.blast_matrices)
+        elif p["input_encoding"] == "richconcat":
+            X, y = build_richconcat_matrix(positive_pairs, negative_pairs, embedding_matrix, id_to_index,
+                                             pre_l2_normalize=p.get("pre_l2_normalize", False))
         else:
-            raise ValueError(f"Nepoznat input_encoding '{p['input_encoding']}' (ocekivano 'absdiff' ili 'hadamard')")
+            raise ValueError(f"Nepoznat input_encoding '{p['input_encoding']}' "
+                              f"(ocekivano 'absdiff', 'hadamard' ili 'richconcat')")
         y = y.astype(np.float32)
+
+        if positive_weights is None:
+            sample_weight = np.ones(len(y), dtype=np.float32)
+        else:
+            positive_weights = np.asarray(positive_weights, dtype=np.float32)
+            assert len(positive_weights) == len(positive_pairs), \
+                f"positive_weights duzine {len(positive_weights)} != {len(positive_pairs)} positive_pairs"
+            sample_weight = np.concatenate([positive_weights, np.ones(len(negative_pairs), dtype=np.float32)])
 
         self.feature_mean = X.mean(axis=0)
         self.feature_std = X.std(axis=0)
         self.feature_std[self.feature_std < 1e-8] = 1.0
         X_scaled = self._scale(X).astype(np.float32)
 
-        X_fit, X_val, y_fit, y_val = train_test_split(
-            X_scaled, y, test_size=p["val_fraction"], random_state=self.seed, stratify=y)
+        X_fit, X_val, y_fit, y_val, w_fit, w_val = train_test_split(
+            X_scaled, y, sample_weight, test_size=p["val_fraction"], random_state=self.seed, stratify=y)
 
         self.model = PairMLP(X.shape[1], p["hidden_dims"], p["dropout"], use_layernorm=p["use_layernorm"])
 
         n_pos_fit, n_neg_fit = float(y_fit.sum()), float((y_fit == 0).sum())
         pos_weight = torch.tensor(n_neg_fit / n_pos_fit, dtype=torch.float32)
-        criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
+        criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight, reduction="none")
         optimizer = torch.optim.AdamW(self.model.parameters(), lr=p["learning_rate"],
                                         weight_decay=p["weight_decay"])
 
-        X_fit_t, y_fit_t = torch.from_numpy(X_fit), torch.from_numpy(y_fit)
-        X_val_t, y_val_t = torch.from_numpy(X_val), torch.from_numpy(y_val)
+        X_fit_t, y_fit_t, w_fit_t = torch.from_numpy(X_fit), torch.from_numpy(y_fit), torch.from_numpy(w_fit)
+        X_val_t, y_val_t, w_val_t = torch.from_numpy(X_val), torch.from_numpy(y_val), torch.from_numpy(w_val)
 
         n_fit = X_fit_t.shape[0]
         batch_rng = np.random.default_rng(self.seed)
@@ -144,14 +167,23 @@ class MLPPairClassifier(PairClassifier):
         best_val_auc, best_state, no_improve = -np.inf, None, 0
         from sklearn.metrics import roc_auc_score
 
+        # Istorija po epohi (train/val loss + val AUC) -- UVEK se beleze (jeftino,
+        # samo append float-ova), da se moze VIZUELNO proveriti overfitting umesto
+        # verovati samo finalnom best_val_auc broju. Ranije se ovo NIGDE nije cuvalo
+        # (samo najbolja vrednost, ostatak trajektorije se gubio) -- korisnicki
+        # zahtev, 2026-09-01: "kako da znam da nije overfitovao... kako izgleda
+        # train i val loss".
+        self.history = {"epoch": [], "train_loss": [], "val_loss": [], "val_auc": []}
+
         for epoch in range(1, p["max_epochs"] + 1):
             self.model.train()
             permutation = batch_rng.permutation(n_fit)
+            batch_losses = []
             for start in range(0, n_fit, p["batch_size"]):
                 batch_idx = permutation[start:start + p["batch_size"]]
                 optimizer.zero_grad()
                 logits = self.model(X_fit_t[batch_idx])
-                bce_loss = criterion(logits, y_fit_t[batch_idx])
+                bce_loss = (criterion(logits, y_fit_t[batch_idx]) * w_fit_t[batch_idx]).mean()
                 if p["l2_lambda"] > 0:
                     l2_term = p["l2_lambda"] * sum((param ** 2).sum() for param in self.model.parameters())
                     loss = bce_loss + l2_term
@@ -159,11 +191,19 @@ class MLPPairClassifier(PairClassifier):
                     loss = bce_loss
                 loss.backward()
                 optimizer.step()
+                batch_losses.append(bce_loss.item())
 
             self.model.eval()
             with torch.no_grad():
-                val_probs = torch.sigmoid(self.model(X_val_t)).numpy()
+                val_logits = self.model(X_val_t)
+                val_loss = (criterion(val_logits, y_val_t) * w_val_t).mean().item()
+                val_probs = torch.sigmoid(val_logits).numpy()
             val_auc = roc_auc_score(y_val, val_probs)
+
+            self.history["epoch"].append(epoch)
+            self.history["train_loss"].append(float(np.mean(batch_losses)))
+            self.history["val_loss"].append(val_loss)
+            self.history["val_auc"].append(val_auc)
 
             if val_auc > best_val_auc:
                 best_val_auc = val_auc
@@ -183,7 +223,11 @@ class MLPPairClassifier(PairClassifier):
         query_vec = self.embedding_matrix[self.id_to_index[query_id]]
         p = self.params
         if p["input_encoding"] == "hadamard":
-            X_candidates = hadamard_batch_same_query(query_vec, self.embedding_matrix)
+            X_candidates = hadamard_batch_same_query(query_vec, self.embedding_matrix,
+                                                        pre_l2_normalize=p.get("pre_l2_normalize", False))
+        elif p["input_encoding"] == "richconcat":
+            X_candidates = richconcat_batch_same_query(query_vec, query_id, self.embedding_matrix, self.all_ids,
+                                                          pre_l2_normalize=p.get("pre_l2_normalize", False))
         else:
             X_candidates = pairwise_features_batch_same_query(
                 query_vec, query_id, self.embedding_matrix, self.all_ids, blast_matrices=self.blast_matrices)

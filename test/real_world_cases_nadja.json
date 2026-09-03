@@ -1,0 +1,57 @@
+{
+  "patient_id": "nadja_vuksanovic",
+
+  "source": {
+    "citation": "Clinical allergy testing records for Nadja Vuksanovic",
+    "doi": null,
+    "pmid": null,
+    "url": null
+  },
+
+  "patient_description": "Nadja  V. Allergy evaluation with inhalant allergen skin-prick testing; diagnosis recorded as allergic rhinitis and allergic conjunctivitis.",
+
+  "components": [
+
+    {
+      "protein": "Phl p 5",
+      "protein_family": "grass pollen",
+      "source_food_or_organism": "Phleum pratense",
+      "method": "skin_prick_test",
+      "value": null,
+      "value_unit": "mm",
+      "result": "positive",
+      "confirmed_by_challenge": false
+    },
+
+    {
+      "protein": "Bet v 1",
+      "protein_family": "tree pollen",
+      "source_food_or_organism": "Betula verrucosa",
+      "method": "skin_prick_test",
+      "value": null,
+      "value_unit": "mm",
+      "result": "positive",
+      "confirmed_by_challenge": false
+    },
+
+    {
+      "protein": "Amb a 1",
+      "protein_family": "weed pollen",
+      "source_food_or_organism": "Ambrosia artemisiifolia",
+      "method": "skin_prick_test",
+      "value": null,
+      "value_unit": "mm",
+      "result": "positive",
+      "confirmed_by_challenge": false
+    }
+
+  ],
+
+  "sequential_protocol": null,
+
+  "verification": {
+    "status": "image_verified",
+    "notes": "Clinical skin-prick test"
+  }
+
+}
