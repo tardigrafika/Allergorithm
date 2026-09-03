@@ -42,3 +42,6 @@ output/
 # Generated embeddings
 *.pkl
 *.parquet
+
+# Project instructions, kept local only
+CLAUDE.md

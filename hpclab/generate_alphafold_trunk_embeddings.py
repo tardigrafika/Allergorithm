@@ -28,12 +28,21 @@ znatno manje pouzdane nego sa pravom MSA).
 
 ===========================================================================
 STATUS OVOG SKRIPTA -- nije izvrsno-testiran (nema OpenFold/GPU/tezine u
-razvojnom okruzenju gde je pisan). Koristi REALNE, dokumentovane OpenFold
-API funkcije (data_pipeline.make_sequence_features/make_msa_features,
-feature_pipeline.FeaturePipeline, model.AlphaFold, config.model_config) --
-strukturno tacno, ali OBAVEZNO prvo pokreni SMOKE TEST (--smoke-test, ispod)
-na 1-2 kratke sekvence pre punog cluster run-a. Ako nesto ne odgovara tvojoj
-instaliranoj OpenFold verziji (checkpoint wrapping, recycling-dim, config
+razvojnom okruzenju gde je pisan), ALI ekstrakcija tacnog tenzora JESTE
+verifikovana protiv stvarnog OpenFold izvornog koda (aqlaboratory/openfold
+na GitHub-u, openfold/model/model.py + openfold/config.py, 2026-09-01) --
+NE pretpostavka. Potvrdjeno direktno iz izvora: OpenFold Evoformer trunk
+proizvodi "single" reprezentaciju VEC na c_s=384 (config.py linija ~311),
+i ona ulazi u Structure Module BEZ posredne projekcije koja bi se izgubila
+(za razliku od ESMFold-a, gde model.forward() vraca SIROVO 1024-dim stanje,
+a stvarni 384-dim ulaz u Structure Module postoji SAMO interno preko
+self.trunk.trunk2sm_s projekcije -- videti generate_af_trunk_embeddings.py
+za taj slucaj). Kod ispod (outputs["single"]) je zato VEC tacan, ne treba
+dodatnu rucnu projekciju. I dalje OBAVEZNO pokreni SMOKE TEST (--smoke-test,
+ispod) na 1-2 kratke sekvence pre punog cluster run-a -- ekstrakcija je
+verifikovana, ali ceo forward pass (feature pipeline, checkpoint loading)
+nije izvrsno testiran. Ako nesto ne odgovara tvojoj instaliranoj OpenFold
+verziji (checkpoint wrapping, recycling-dim, config
 preset ime), uporedi sa openfold/run_pretrained_openfold.py iz zvanicnog
 repo-a (aqlaboratory/openfold) -- tamo je referentni primer za TVOJU
 verziju.

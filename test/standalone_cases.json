@@ -1,0 +1,220 @@
+[
+  {
+    "patient_id": "nadja_vuksanovic",
+
+    "source": {
+      "citation": "Clinical allergy testing records for Nadja Vuksanovic",
+      "doi": null,
+      "pmid": null,
+      "url": null
+    },
+
+    "patient_description": "Nadja  V. Allergy evaluation with inhalant allergen skin-prick testing; diagnosis recorded as allergic rhinitis and allergic conjunctivitis.",
+
+    "components": [
+
+      {
+        "protein": "Phl p 5",
+        "protein_family": "grass pollen",
+        "source_food_or_organism": "Phleum pratense",
+        "method": "skin_prick_test",
+        "value": null,
+        "value_unit": "mm",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+
+      {
+        "protein": "Bet v 1",
+        "protein_family": "tree pollen",
+        "source_food_or_organism": "Betula verrucosa",
+        "method": "skin_prick_test",
+        "value": null,
+        "value_unit": "mm",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      },
+
+      {
+        "protein": "Amb a 1",
+        "protein_family": "weed pollen",
+        "source_food_or_organism": "Ambrosia artemisiifolia",
+        "method": "skin_prick_test",
+        "value": null,
+        "value_unit": "mm",
+        "result": "positive",
+        "confirmed_by_challenge": false
+      }
+
+    ],
+
+    "sequential_protocol": null,
+
+    "verification": {
+      "status": "image_verified",
+      "notes": "Clinical skin-prick test"
+    }
+  },
+  {
+  "patient_id": "lana_lejic",
+
+  "source": {
+    "citation": "Clinical allergy testing records for Lana Lejic",
+    "doi": null,
+    "pmid": null,
+    "url": null
+  },
+
+  "patient_description": "Lana Lejic. Allergy evaluation with skin-prick testing and specific IgE testing; recorded diagnoses include allergic rhinitis (J30) and atopic dermatitis (L20). Recreations to food and inhalant allergens.",
+
+  "components": [
+    {
+      "protein": "Gal d 1",
+      "protein_family": "ovomucoid",
+      "source_food_or_organism": "Gallus gallus",
+      "method": "specific_ige",
+      "value": 1.61,
+      "value_unit": "kUA/L",
+      "result": "positive",
+      "confirmed_by_challenge": false
+    },
+    {
+      "protein": "Gal d 2",
+      "protein_family": "ovalbumin",
+      "source_food_or_organism": "Gallus gallus",
+      "method": "specific_ige",
+      "value": 0.80,
+      "value_unit": "kUA/L",
+      "result": "positive",
+      "confirmed_by_challenge": false
+    },
+    {
+      "protein": "Bos d 5",
+      "protein_family": "beta-lactoglobulin",
+      "source_food_or_organism": "Bos taurus",
+      "method": "specific_ige",
+      "value": 1.06,
+      "value_unit": "kUA/L",
+      "result": "positive",
+      "confirmed_by_challenge": false
+    },
+    {
+      "protein": "Ara h 1",
+      "protein_family": "cupin (vicilin-like 7S globulin)",
+      "source_food_or_organism": "Arachis hypogaea",
+      "method": "skin_prick_test",
+      "value": 3.0,
+      "value_unit": "mm",
+      "result": "positive",
+      "confirmed_by_challenge": false
+    },
+    {
+      "protein": "Pru du 6",
+      "protein_family": "amandin (11S globulin)",
+      "source_food_or_organism": "Prunus dulcis",
+      "method": "skin_prick_test",
+      "value": 3.0,
+      "value_unit": "mm",
+      "result": "positive",
+      "confirmed_by_challenge": false
+    },
+    {
+      "protein": "Cor a 9",
+      "protein_family": "11S globulin (legumin-like)",
+      "source_food_or_organism": "Corylus avellana",
+      "method": "skin_prick_test",
+      "value": 3.0,
+      "value_unit": "mm",
+      "result": "positive",
+      "confirmed_by_challenge": false
+    },
+    {
+      "protein": "Jug r 1",
+      "protein_family": "2S albumin",
+      "source_food_or_organism": "Juglans regia",
+      "method": "specific_ige",
+      "value": 1.36,
+      "value_unit": "kUA/L",
+      "result": "positive",
+      "confirmed_by_challenge": false
+    },
+    {
+      "protein": "Amb a 1",
+      "protein_family": "pectate lyase (weed pollen)",
+      "source_food_or_organism": "Ambrosia artemisiifolia",
+      "method": "skin_prick_test",
+      "value": 14.0,
+      "value_unit": "mm",
+      "result": "positive",
+      "confirmed_by_challenge": false
+    },
+    {
+      "protein": "Der p 1",
+      "protein_family": "cysteine protease (house dust mite)",
+      "source_food_or_organism": "Dermatophagoides pteronyssinus",
+      "method": "skin_prick_test",
+      "value": null,
+      "value_unit": "mm",
+      "result": "positive",
+      "confirmed_by_challenge": false
+    },
+    {
+      "protein": "Gly m 5",
+      "protein_family": "cupin (beta-conglycinin)",
+      "source_food_or_organism": "Glycine max",
+      "method": "specific_ige",
+      "value": 0.39,
+      "value_unit": "kUA/L",
+      "result": "negative",
+      "confirmed_by_challenge": false
+    },
+    {
+      "protein": "Sina a 1",
+      "protein_family": "2S albumin",
+      "source_food_or_organism": "Sinapis alba",
+      "method": "specific_ige",
+      "value": 0.10,
+      "value_unit": "kUA/L",
+      "result": "negative",
+      "confirmed_by_challenge": false
+    },
+    {
+      "protein": "Tri a 14",
+      "protein_family": "LTP",
+      "source_food_or_organism": "Triticum aestivum",
+      "method": "specific_ige",
+      "value": 0.75,
+      "value_unit": "kUA/L",
+      "result": "negative",
+      "confirmed_by_challenge": false
+    },
+    {
+      "protein": "Phaseolus vulgaris (extract)",
+      "protein_family": "phaseolin / vicilin-like",
+      "source_food_or_organism": "Phaseolus vulgaris",
+      "method": "skin_prick_test",
+      "value": 0.0,
+      "value_unit": "mm",
+      "result": "negative",
+      "confirmed_by_challenge": false
+    },
+    {
+      "protein": "Pisum sativum (extract)",
+      "protein_family": "vicilin / legumin",
+      "source_food_or_organism": "Pisum sativum",
+      "method": "skin_prick_test",
+      "value": 0.0,
+      "value_unit": "mm",
+      "result": "negative",
+      "confirmed_by_challenge": false
+    }
+  ],
+
+  "sequential_protocol": null,
+
+  "verification": {
+    "status": "image_verified",
+    "notes": "Includes both positive and negative clinical skin-prick and specific IgE test results."
+  }
+  }
+]
