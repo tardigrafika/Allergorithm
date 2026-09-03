@@ -23,25 +23,11 @@ Razvoj proteinskih jezičkih modela (protein language models) otvorio je mogućn
 
 Rad razmatra dva srodna, ali metodološki različita zadatka rangiranja, koja se u literaturi i u praksi često ne razdvajaju eksplicitno:
 
-1. **Rangiranje unakrsno reaktivnih parova alergena (pair-level ranking).** Za dati alergen kao upit, zadatak je rangirati sve ostale proteine u referentnom skupu prema verovatnoći da čine unakrsno reaktivan par s upitom. Ovaj zadatak se evaluira direktno nad kurirano-verifikovanim skupom poznatih parova (poglavlje 2.1) i koristi se za treniranje i selekciju modela.
-2. **Rangiranje kandidata za konkretnog pacijenta (patient-level ranking).** Za pacijenta sa jednim ili više već poznatih (pozitivnih i/ili negativnih) alergijskih nalaza, zadatak je rangirati preostale alergene iz istog referentnog skupa prema prioritetu za dalje testiranje. Signal za ovaj zadatak dobija se agregacijom pair-level rangova preko svih poznatih pozitivnih nalaza istog pacijenta (poglavlje 2.3, protokol evaluacije u poglavlju 3).
+1. **Rangiranje unakrsno reaktivnih parova alergena (pair-level ranking).** Za dati alergen kao upit, zadatak je rangirati sve ostale proteine u referentnom skupu prema verovatnoći da čine unakrsno reaktivan par s upitom. Ovaj zadatak se evaluira direktno nad kurirano-verifikovanim skupom poznatih parova i koristi se za treniranje i selekciju modela.
+2. **Rangiranje kandidata za konkretnog pacijenta (patient-level ranking).** Za pacijenta sa jednim ili više već poznatih (pozitivnih i/ili negativnih) alergijskih nalaza, zadatak je rangirati preostale alergene iz istog referentnog skupa prema prioritetu za dalje testiranje. Signal za ovaj zadatak dobija se agregacijom pair-level rangova preko svih poznatih pozitivnih nalaza istog pacijenta , protokol.
 
-Razlikovanje ova dva zadatka je centralno za rad iz dva razloga. Prvo, prvi zadatak se evaluira nad skupom čija je konstrukcija (izvor dokaza, familijska struktura, gustina grafa) poznata i kontrolisana, dok se drugi zadatak evaluira nad nezavisnim, spolja pristiglim kliničkim slučajevima čija distribucija ne mora odgovarati distribuciji trening skupa. Drugo, kao što će pokazati poglavlje 4, model koji na prvom zadatku ne pokazuje prednost nad jednostavnijim baznim metodama može na drugom zadatku pokazati statistički značajnu prednost — nalaz koji bi ostao neprimećen da se ova dva zadatka ne razdvoje eksplicitno.
+Razlikovanje ova dva zadatka je centralno za rad iz dva razloga. Prvo, prvi zadatak se evaluira nad skupom čija je konstrukcija (izvor dokaza, familijska struktura, gustina grafa) poznata i kontrolisana, dok se drugi zadatak evaluira nad nezavisnim, spolja pristiglim kliničkim slučajevima čija distribucija ne mora odgovarati distribuciji trening skupa. Model koji na prvom zadatku ne pokazuje prednost nad jednostavnijim baznim metodama može na drugom zadatku pokazati statistički značajnu prednost, nalaz koji bi ostao neprimećen da se ova dva zadatka ne razdvoje eksplicitno.
 
-### 1.3 Istraživačka pitanja i hipoteze
-
-Rad testira četiri konkretne, unapred formulisane hipoteze, umesto da izveštava rezultate niza pojedinačno motivisanih eksperimenata:
-
-- **H1 (embedding signal):** Reprezentacije proteina dobijene proteinskim jezičkim modelom (ESM-2) nose diskriminativan signal za unakrsnu reaktivnost koji nije svodljiv na jednostavnu sekvencijalnu sličnost (BLAST).
-- **H2 (naučena kombinacija embeddinga):** Nadgledani model koji uči nelinearnu kombinaciju para embeddinga izvlači više diskriminativnog signala iz iste reprezentacije nego fiksna mera sličnosti (cosine) nad istom reprezentacijom.
-- **H3 (fuzija nezavisnih signala):** Kombinovanje više nezavisnih izvora sličnosti (sekvencijalne, strukturne, embedding-bazirane, topologije poznatog grafa reaktivnosti) poboljšava rangiranje u odnosu na bilo koji pojedinačni signal, pri čemu je veličina i pouzdanost ovog poboljšanja osetljiva na (ne)zavisnost primera u trening skupu.
-- **H4 (generalizacija na klinički kontekst):** Relativan poredak metoda dobijen validacijom nad kuriranim skupom podataka (zadatak 1) predstavlja pouzdan prediktor relativnog poretka istih metoda na nezavisnim, stvarnim pacijentskim slučajevima (zadatak 2).
-
-Rezultati u poglavlju 4 pokazuju da H1 i H2 važe u ograničenom, precizno definisanom obliku, da H3 važi delimično (deo dobitka fuzije ne opstaje pod strožom, study-level proverom nezavisnosti), i da **H4 ne važi** — ovo poslednje predstavlja centralni empirijski nalaz rada.
-
-### 1.4 Naučni doprinos
-
-Doprinos rada nije nov algoritam ili arhitektura, već **sistematska, statistički kontrolisana evaluacija postojećih izvora signala** (sekvencijalnog, strukturnog, embedding-baziranog i topološkog) za zadatak predikcije unakrsne reaktivnosti, sprovedena tako da se prividna poboljšanja koja ne opstaju pod strožom validacijom eksplicitno identifikuju i izveštavaju kao takva, umesto da se prećute. Poseban doprinos predstavlja direktno poređenje performansi na kuriranom skupu podataka i na nezavisnim pacijentskim slučajevima, koje pokazuje da ova dva konteksta evaluacije mogu dati suprotstavljene zaključke o istom modelu (poglavlje 4.5, 4.6).
 
 ## 2. Metodologija
 
@@ -49,7 +35,7 @@ Doprinos rada nije nov algoritam ili arhitektura, već **sistematska, statistič
 
 Skup podataka konstruisan je objedinjavanjem informacija iz više javno dostupnih baza proteinskih alergena (AllergenOnline, WHO/IUIS Allergen Nomenclature, SDAP) i objavljenih naučnih radova koji opisuju eksperimentalno potvrđene ili pretpostavljene slučajeve unakrsne alergijske reaktivnosti. Za svaki par zabeležen je izvor dokaza, tip potvrde i proteinska familija kada je bila dostupna.
 
-Referentni skup kandidata za rangiranje (poglavlje 1.2) obuhvata **1.536 proteinskih alergena**. Nad njima je definisano **1.922 poznata para** unakrsne reaktivnosti, koji pokrivaju 477 pojedinačnih alergena iz **74 proteinske familije**, izvedenih iz **317 nezavisnih literaturnih izvora**. Neravnomerna zastupljenost izvora — mali broj radova opisuje veliki broj parova (npr. populacione kohortne studije) — direktno motiviše potrebu za study-level bootstrap analizom (poglavlje 3).
+Referentni skup kandidata za rangiranje obuhvata **1.536 proteinskih alergena**. Nad njima je definisano **1.922 poznata para** unakrsne reaktivnosti, koji pokrivaju 477 pojedinačnih alergena iz **74 proteinske familije**, izvedenih iz **317 nezavisnih literaturnih izvora**. Neravnomerna zastupljenost izvora — mali broj radova opisuje veliki broj parova (npr. populacione kohortne studije) — direktno motiviše potrebu za study-level bootstrap analizom.
 
 Svaki par klasifikovan je prema pouzdanosti dokaza u jednu od četiri kategorije, sa brojem parova po kategoriji:
 
@@ -60,25 +46,25 @@ Svaki par klasifikovan je prema pouzdanosti dokaza u jednu od četiri kategorije
 | Suspected | Literatura ukazuje na moguću reaktivnost, dokaz nedovoljan za potvrdu | 277 (14,4%) |
 | Inferred | Izvedeno iz homologije/pripadnosti istoj familiji, bez direktnog testa konkretnog para | 1.093 (56,9%) |
 
-Parovi iz kategorije **Inferred** — više od polovine skupa — nisu korišćeni za treniranje nadgledanih modela, ali su zadržani kao evaluacioni ciljevi (poglavlje 3). Ova odluka odvaja pitanje "da li model dobro rangira i manje pouzdane parove" (evaluacija) od pitanja "da li model treba da uči iz njih kao iz pouzdanog signala" (trening).
+Parovi iz kategorije **Inferred** nisu korišćeni za treniranje nadgledanih modela, ali su zadržani kao evaluacioni ciljevi. Ova odluka odvaja pitanje "da li model dobro rangira i manje pouzdane parove" (evaluacija) od pitanja "da li model treba da uči iz njih kao iz pouzdanog signala" (trening).
 
 ### 2.2 Problem negativnih i nepoznatih parova
 
-Gold skup sadrži isključivo **pozitivne** primere — parove za koje postoji literaturni dokaz reaktivnosti. Odsustvo para iz skupa **ne znači potvrđenu odsutnost** unakrsne reaktivnosti, već samo odsustvo objavljenog dokaza; zadatak je time strukturno Positive-Unlabeled (PU), a ne standardna binarna klasifikacija. Negativni primeri korišćeni za treniranje generisani su nasumičnim uzorkovanjem parova van gold skupa, pod pretpostavkom da je verovatnoća da nasumično izabran par bude neotkriven pravi pozitiv niska.
+Gold skup sadrži isključivo **pozitivne** primere, parove za koje postoji literaturni dokaz reaktivnosti. Odsustvo para iz skupa **ne znači potvrđenu odsutnost** unakrsne reaktivnosti, već samo odsustvo objavljenog dokaza; zadatak je time strukturno Positive-Unlabeled (PU), a ne standardna binarna klasifikacija. Negativni primeri korišćeni za treniranje generisani su nasumičnim uzorkovanjem parova van gold skupa, pod pretpostavkom da je verovatnoća da nasumično izabran par bude neotkriven pravi pozitiv niska.
 
-Ova pretpostavka je proverena i za jedan konkretan slučaj eksplicitno odbačena: ciljano uzorkovanje "teških" negativa unutar iste proteinske familije nije korišćeno, jer su upravo neoznačeni parovi unutar familije mesto gde je najverovatnije da se kriju neotkriveni pravi pozitivi — isti razlog zbog kog je i sam gold skup rastao dodavanjem novih, ranije neobuhvaćenih parova unutar poznatih familija. Nasumično uzorkovanje iz celog pool-a je zbog toga zadržano kao podrazumevana, konzervativnija strategija u svim eksperimentima treniranja opisanim u ovom radu.
+Ova pretpostavka je proverena i za jedan konkretan slučaj eksplicitno odbačena: ciljano uzorkovanje "teških" negativa unutar iste proteinske familije nije korišćeno, jer su upravo neoznačeni parovi unutar familije mesto gde je najverovatnije da se kriju neotkriveni pravi pozitivi, isti razlog zbog kog je i sam gold skup rastao dodavanjem novih, ranije neobuhvaćenih parova unutar poznatih familija. Nasumično uzorkovanje iz celog pool-a je zbog toga zadržano kao podrazumevana, konzervativnija strategija u svim eksperimentima treniranja opisanim u ovom radu.
 
 ### 2.3 Formalizacija zadataka i metrike
 
-Za oba zadatka iz poglavlja 1.2 koristi se ista osnovna operacija: rangiranje kandidata prema skalarnom skoru. Kod **zadatka 1** (pair-level), skor kandidata $c$ za upit $q$ direktno je izlaz posmatranog signala — cosine sličnost, BLAST identitet, ili verovatnoća nadgledanog klasifikatora. Kod **zadatka 2** (patient-level), skor kandidata $c$ za pacijenta sa poznatim pozitivnim nalazima $P=\{p_1,\dots,p_n\}$ dobija se sabiranjem recipročnih rangova kandidata prema svakom poznatom pozitivu, istim funkcionalnim oblikom kao RRF fuzija signala (poglavlje 2.4):
+Za oba zadatka koristi se ista osnovna operacija: rangiranje kandidata prema skalarnom skoru. Kod **zadatka 1** (pair-level), skor kandidata $c$ za upit $q$ direktno je izlaz posmatranog signala cosine sličnost, BLAST identitet, ili verovatnoća nadgledanog klasifikatora. Kod **zadatka 2** (patient-level), skor kandidata $c$ za pacijenta sa poznatim pozitivnim nalazima $P=\{p_1,\dots,p_n\}$ dobija se sabiranjem recipročnih rangova kandidata prema svakom poznatom pozitivu, istim funkcionalnim oblikom kao RRF fuzija signala:
 
 $$
 \mathrm{score}(c \mid P) = \sum_{p \in P} \frac{1}{K + r_p(c)},
 $$
 
-gde je $r_p(c)$ rang kandidata $c$ u listi dobijenoj upitom $p$. Ovim se poznati pozitivi jednog pacijenta tretiraju kao više nezavisnih upita čiji se doprinosi sabiraju — isti mehanizam koji poglavlje 2.4 koristi za fuziju više *signala* ovde se koristi za fuziju više *upita*.
+gde je $r_p(c)$ rang kandidata $c$ u listi dobijenoj upitom $p$. Ovim se poznati pozitivi jednog pacijenta tretiraju kao više nezavisnih upita čiji se doprinosi sabiraju, isti mehanizam koji se koristi za fuziju više *signala* ovde se koristi za fuziju više *upita*.
 
-Performanse oba zadatka mere se pomoću **Mean Reciprocal Rank (MRR)** i **Hits@K** ($K\in\{1,5,10\}$) — udela upita kod kojih se tačan kandidat nalazi među $K$ najbolje rangiranih.
+Performanse oba zadatka mere se pomoću **Mean Reciprocal Rank (MRR)** i **Hits@K** ($K\in\{1,5,10\}$) udela upita kod kojih se tačan kandidat nalazi među $K$ najbolje rangiranih.
 
 ### 2.4 Reciprocal Rank Fusion (RRF)
 
@@ -193,26 +179,27 @@ Svi nadgledani modeli trenirani su i validirani protokolom opisanim u poglavlju 
 
 ### 3.1 Kontrola curenja informacija — LOCO i leave-one-edge-out
 
-Naivna slučajna podela parova na trening i test skup ne kontroliše zavisnost između povezanih primera: ako su alergeni $A$–$B$ i $A$–$C$ oba u gold skupu, a jedan završi u trening a drugi u test delu, model može posredno "videti" test par preko zajedničkog suseda $A$ već tokom treninga. Da bi se ovo sprečilo, gold parovi se posmatraju kao ivice grafa unakrsne reaktivnosti, a validacija se sprovodi na nivou **povezanih komponenti** tog grafa — maksimalnih podskupova alergena međusobno dostižnih preko lanca poznatih parova.
+Naivna slučajna podela parova na trening i test skup ne kontroliše zavisnost između povezanih primera: ako su alergeni $A$–$B$ i $A$–$C$ oba u gold skupu, a jedan završi u trening a drugi u test delu, model može posredno "videti" test par preko zajedničkog suseda $A$ već tokom treninga. Da bi se ovo sprečilo, gold parovi se posmatraju kao ivice grafa unakrsne reaktivnosti, a validacija se sprovodi na nivou **povezanih komponenti** tog grafa, maksimalnih podskupova alergena međusobno dostižnih preko lanca poznatih parova.
 
 Kod **Leave-One-Connected-Component-Out (LOCO)** validacije, u svakom foldu se jedna cela povezana komponenta u potpunosti izdvaja iz treninga (svi njeni čvorovi i sve njene ivice) i koristi isključivo za testiranje. Time je zagarantovano da nijedan test par, niti bilo koji njemu susedan trening primer iz iste komponente, nije video model tokom učenja. Ovo je stroži zahtev od uobičajene k-fold podele na nivou pojedinačnih parova, koja bi mogla ostaviti direktno povezan par na obe strane podele.
 
-Signal **graph propagation** (poglavlje 2.4.1) po definiciji koristi poznate susede upita — pod LOCO protokolom test komponenta nema nijednog vidljivog suseda u trening grafu, pa bi ovaj signal bio identički nula za svaki test upit. Za njega je zato korišćena **leave-one-edge-out** evaluacija: za svaki poznati par privremeno se uklanja samo ta jedna ivica, dok ostale ivice istog alergena (veze ka drugim poznatim partnerima) ostaju dostupne. Ovaj protokol modeluje realniju situaciju zadatka 2 (poglavlje 1.2): pacijentu je već poznata bar jedna reaktivnost, a cilj je predvideti sledeću.
+Signal **graph propagation** po definiciji koristi poznate susede upita pod LOCO protokolom test komponenta nema nijednog vidljivog suseda u trening grafu, pa bi ovaj signal bio identički nula za svaki test upit. Za njega je zato korišćena **leave-one-edge-out** evaluacija: za svaki poznati par privremeno se uklanja samo ta jedna ivica, dok ostale ivice istog alergena (veze ka drugim poznatim partnerima) ostaju dostupne. Ovaj protokol modeluje realniju situaciju zadatka 2 : pacijentu je već poznata bar jedna reaktivnost, a cilj je predvideti sledeću.
 
 ### 3.2 Statistička procena značajnosti
 
 Značajnost razlika između metoda procenjivana je bootstrap resamplovanjem, u dve varijante:
 
 - **pair-level bootstrap** — resamplovanje pojedinačnih parova; tretira svaki gold par kao nezavisan primer,
-- **study-level bootstrap** — resamplovanje po *literaturnom izvoru* (poglavlje 2.1) umesto po paru; kontroliše za slučaj da više parova potiče iz iste studije i time nije statistički nezavisno.
+- **study-level bootstrap** — resamplovanje po *literaturnom izvoru*
+umesto po paru; kontroliše za slučaj da više parova potiče iz iste studije i time nije statistički nezavisno.
 
-Kad god se ove dve metode razilaze, rad izveštava study-level rezultat kao merodavniji, a razliku eksplicitno komentariše (poglavlje 4.3) — pair-level bootstrap sam po sebi može precenjivati značajnost u prisustvu neravnomerno zastupljenih izvora.
+Kad god se ove dve metode razilaze, rad izveštava study-level rezultat kao merodavniji, a razliku eksplicitno komentariše. Pair-level bootstrap sam po sebi može precenjivati značajnost u prisustvu neravnomerno zastupljenih izvora.
 
 ### 3.3 Validacija na stvarnim pacijentima (zadatak 2)
 
-Nezavisno od LOCO validacije nad gold skupom, model se dodatno evaluira na literaturno dokumentovanim slučajevima stvarnih pacijenata, korišćenjem **leave-one-patient-out** protokola: za svakog pacijenta sa $n\geq 2$ poznata nalaza, svaki nalaz se redom privremeno sakriva, preostali poznati pozitivi koriste se kao upiti (formula u poglavlju 2.3), i beleži se rang sakrivenog alergena među svim kandidatima. Ovaj skup je potpuno odvojen od gold skupa korišćenog za trening — pacijentski slučajevi potiču iz drugih, nezavisno pronađenih literaturnih izvora i ne učestvuju ni u jednom treningu.
+Nezavisno od LOCO validacije nad gold skupom, model se dodatno evaluira na literaturno dokumentovanim slučajevima stvarnih pacijenata, korišćenjem **leave-one-patient-out** protokola: za svakog pacijenta sa $n\geq 2$ poznata nalaza, svaki nalaz se redom privremeno sakriva, preostali poznati pozitivi koriste se kao upiti, i beleži se rang sakrivenog alergena među svim kandidatima. Ovaj skup je potpuno odvojen od gold skupa korišćenog za trening — pacijentski slučajevi potiču iz drugih, nezavisno pronađenih literaturnih izvora i ne učestvuju ni u jednom treningu.
 
-Poređenja modela na ovom skupu izvode se **uparenim** testovima na identičnim (pacijent, sakriveni protein) upitima za oba modela — Wilcoxon signed-rank na razlici MRR po pacijentu, permutacioni test koji permutuje oznaku modela unutar pacijenta (ne ishod), i bootstrap sa resamplovanjem po pacijentu. Sva tri testa se izveštavaju zajedno; zaključak "model A bolji od B" se ne izvodi iz dva odvojena testa "iznad slučajnosti" za svaki model posebno, jer to ne dokazuje razliku između modela (poglavlje 4.5).
+Poređenja modela na ovom skupu izvode se **uparenim** testovima na identičnim (pacijent, sakriveni protein) upitima za oba modela. Wilcoxon signed-rank na razlici MRR po pacijentu, permutacioni test koji permutuje oznaku modela unutar pacijenta (ne ishod), i bootstrap sa resamplovanjem po pacijentu. Sva tri testa se izveštavaju zajedno; zaključak "model A bolji od B" se ne izvodi iz dva odvojena testa "iznad slučajnosti" za svaki model posebno, jer to ne dokazuje razliku između modela.
 
 ## 4. Rezultati
 
@@ -315,6 +302,22 @@ Cosine je najslabiji od sva tri signala na pacijentskom skupu — statistički z
 
 Najizraženija razlika između dve evaluacije javlja se kod MLP(Hadamard) modela. Na gold skupu podataka rezultat je statistički izjednačen sa BLAST-om, dok na nezavisnim slučajevima stvarnih pacijenata pokazuje statistički značajnu prednost.
 
+### 4.7 Ablaciona studija: koji deo modela zaista doprinosi
+
+Da bi se utvrdilo koja komponenta MLP(Hadamard) modela nosi najviše diskriminativnog signala, sprovedena je ablaciona studija na istom 57-pacijentskom skupu (176 upita, 54 pacijenta). Svaka komponenta zamenjena je pojednostavljenom alternativom, dok su ostale komponente ostale nepromenjene, i rezultat je poređen sa produkcionim baseline-om istom uparenom metodologijom kao u poglavlju 4.5.
+
+**Arhitektonske komponente.** Testirane su tri zamene: (1) ESM-2 reprezentacija zamenjena aminokiselinskim sastavom proteina (20-dimenzioni vektor frekvencija, bez informacije o rasporedu ili motivima), (2) Hadamard kombinovanje para zamenjeno apsolutnom razlikom, (3) MLP klasifikator zamenjen linearnim modelom (logistička regresija nad istim Hadamard ulazom, bez skrivenih slojeva).
+
+| Zamenjena komponenta | Δ MRR (bootstrap 95% CI) | Značajno? |
+|---|---|---|
+| ESM-2 reprezentacija → aminokiselinski sastav | −0,159 [−0,275, −0,059] | da, sva tri testa |
+| Hadamard kombinovanje → apsolutna razlika | −0,055 [−0,099, −0,016] | da, dva od tri testa |
+| MLP → linearni model | −0,009 [−0,020, +0,001] | ne, nijedan test |
+
+Rezultati pokazuju izrazito neravnomeran doprinos komponenti. Zamena proteinske reprezentacije trivijalnim aminokiselinskim sastavom uništava najveći deo performansi modela, i taj pad se vidi već i na sopstvenom trening skupu (validaciona AUC pada sa 0,983 na 0,733), što znači da problem nije samo slabija generalizacija nego suštinski siromašnija reprezentacija. Izbor kombinovanja para (Hadamard naspram apsolutne razlike) doprinosi umereno, u skladu sa ranije opisanim LOCO nalazom (poglavlje 4.2), sada potvrđenim i na pacijentima. Nelinearnost MLP klasifikatora doprinosi zanemarljivo: linearni model nad istim Hadamard ulazom postiže statistički identičan rezultat. Redosled važnosti komponenti je jasan: reprezentacija je daleko najvažnija, zatim način kombinovanja para, dok arhitektonska složenost klasifikatora gotovo da nije bitna.
+
+**Trening podaci: strože filtriranje nivoa dokaza.** Odvojeno je testirano da li ograničavanje trening skupa na najpouzdanije nivoe dokaza (Confirmed i Strong, ukupno 511 parova naspram 825 u produkcionom skupu, poglavlje 2.1) poboljšava rangiranje. Ovaj model (u daljem tekstu strict) nije se statistički razlikovao od baseline-a na celom skupu upita, ali je zadržao značajnu prednost nad BLAST-om (Wilcoxon p = 0,0012, cluster-permutacija p = 0,0310, bootstrap CI [+0,0022, +0,0295]). U familijama sa dijagnostikovanim zagušenjem (nsLTP, Profilin, PR-10, poglavlje 4.5) strict model je jedini kandidat sa robustnim, statistički značajnim poboljšanjem u odnosu na baseline (cluster-permutacija p = 0,0184, bootstrap CI [+0,0010, +0,0047]), pretežno zahvaljujući boljem potiskivanju negativa kod profilina (medijan percentil 34,3% naspram 66,2%, gotovo izjednačeno sa BLAST-ovih 66,9%) i nsLTP-a, dok se kod PR-10 rezultat pogoršao. Alternativni pristup, u kom su parovi iz kategorije Suspected zadržani u treningu ali sa smanjenom težinom u funkciji gubitka, dao je suprotan rezultat: model je bio statistički značajno lošiji od baseline-a i izgubio je prednost nad BLAST-om. Detaljni rezultati oba pristupa, uključujući raspad po proteinskoj familiji, dati su u zasebnom dokumentu (`rad/ablacioni_test.md`).
+
 ## 5. Diskusija
 
 ### 5.1 Ograničenje dostupnih podataka
@@ -337,4 +340,15 @@ Najvažniji pravci daljeg rada su proširenje gold skupa novim nezavisnim eksper
 Ukupno, rezultati pokazuju da proteinski embeddingi mogu sadržati signal relevantan za predikciju unakrsne reaktivnosti, ali da napredak verovatnije zavisi od kvaliteta podataka i načina reprezentacije odnosa između proteina nego od samog povećavanja modela.
 
 Krajnji cilj ovakvog sistema mogao bi biti razvoj asistivnog alata koji, na osnovu poznatih alergija pacijenta, rangira potencijalno unakrsno reaktivne alergene i predlaže prioritete za dalje alergološko testiranje. U proširenoj verziji sistem bi mogao da koristi poznate pozitivne i negativne nalaze za personalizovano rangiranje novih kandidata. Takav sistem ne bi zamenio kliničku procenu, već bi služio kao pomoć pri izboru prioriteta za dalje testiranje.
+
+
+
+### Zahvalnica
+
+Želim da se zahvalim svom mentoru Stefanu Nožiniću na stručnom vođstvu, savetima i kontinuiranoj podršci tokom razvoja ovog istraživanja.
+
+Posebnu zahvalnost dugujem Mariji Stefanović na pomoći u razumevanju biološke pozadine problema, savetima u vezi sa alergenima i korisnim komentarima tokom rada.
+
+Zahvaljujem se i svim osobama koje su ustupile svoje rezultate alergoloških testiranja, čime su omogućile nezavisnu validaciju modela na stvarnim slučajevima i značajno doprinele ovom istraživanju.
+
 
