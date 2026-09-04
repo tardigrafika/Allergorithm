@@ -2,7 +2,7 @@
 bibliography: references.bib
 ---
 
-# Predikcija unakrsne reaktivnosti proteinskih alergena korišćenjem proteinskih jezičkih modela i mašinskog učenja
+# Rangiranje potencijalno unakrsno reaktivnih proteinskih alergena korišćenjem proteinskih reprezentacija i mašinskog učenja
 
 Lana Lejić            
 mentor: Stefan Nožinić
@@ -25,31 +25,27 @@ Razvoj proteinskih jezičkih modela (protein language models) otvorio je mogućn
 Rad razmatra dva srodna, ali metodološki različita zadatka rangiranja, koja se u literaturi i u praksi često ne razdvajaju eksplicitno:
 
 1. **Rangiranje unakrsno reaktivnih parova alergena (pair-level ranking).** Za dati alergen kao upit, zadatak je rangirati sve ostale proteine u skupu kandidata prema verovatnoći da čine unakrsno reaktivan par s upitom. Ovaj zadatak se evaluira direktno nad kurirano-verifikovanim skupom poznatih parova i koristi se za treniranje i selekciju modela.
-2. **Rangiranje kandidata za konkretnog pacijenta (patient-level ranking).** Za pacijenta sa jednim ili više već poznatih (pozitivnih i/ili negativnih) alergijskih nalaza, zadatak je rangirati preostale alergene iz istog skupa kandidata prema prioritetu za dalje testiranje. Signal za ovaj zadatak dobija se agregacijom rangova na nivou para (pair-level) preko svih poznatih pozitivnih nalaza istog pacijenta (formalizacija u poglavlju 2.3, protokol evaluacije u poglavlju 3.3).
+2. **Rangiranje kandidata za konkretnog pacijenta (patient-level ranking).** Za pacijenta sa jednim ili više već poznatih (pozitivnih i/ili negativnih) alergijskih nalaza, zadatak je rangirati preostale alergene iz istog skupa kandidata prema prioritetu za dalje testiranje. Signal za ovaj zadatak dobija se agregacijom rangova na nivou para (pair-level) preko svih poznatih pozitivnih nalaza istog pacijenta.
 
-Razlikovanje ova dva zadatka je centralno za rad iz dva razloga. Prvo, prvi zadatak se evaluira nad skupom čija je konstrukcija (izvor dokaza, familijska struktura, gustina grafa) poznata i kontrolisana, dok se drugi zadatak evaluira nad nezavisnim, spolja pristiglim kliničkim slučajevima čija distribucija ne mora odgovarati distribuciji trening skupa. Model koji na prvom zadatku ne pokazuje prednost nad jednostavnijim baznim metodama može na drugom zadatku pokazati statistički značajnu prednost, nalaz koji bi ostao neprimećen da se ova dva zadatka ne razdvoje eksplicitno.
+Razlikovanje ova dva zadatka je centralno za rad iz jednog razloga: prvi zadatak se evaluira nad skupom čija je konstrukcija (izvor dokaza, familijska struktura, gustina grafa) poznata i kontrolisana, dok se drugi zadatak evaluira nad nezavisnim, spolja pristiglim kliničkim slučajevima čija distribucija ne mora odgovarati distribuciji trening skupa.
 
+### 1.3 Istraživačka pitanja
+
+Rad testira tri konkretna pitanja:
+
+**RQ1.** Da li proteinske reprezentacije dobijene ESM-2 modelom nose dodatni diskriminativni signal za rangiranje unakrsne reaktivnosti u odnosu na BLAST, pod strogim, curenje-otpornim protokolom validacije?
+
+**RQ2.** Da li kombinovanje sekvencijalnih, embedding i strukturnih signala (RRF fuzija) poboljšava rangiranje u odnosu na pojedinačne signale, i da li je to poboljšanje statistički pouzdano na nivou nezavisnih izvora dokaza, ne samo na nivou pojedinačnih parova?
+
+**RQ3.** Da li se zaključci dobijeni na kuriranom referentnom skupu podataka prenose na nezavisne, literaturno dokumentovane slučajeve stvarnih pacijenata?
 
 ## 2. Metodologija
 
 ### 2.1 Konstrukcija skupa podataka
 
-Skup kandidata za rangiranje (pool) izveden je iz zvanične WHO/IUIS Allergen Nomenclature baze, dopunjene sa 1.922 para unakrsne reaktivnosti prikupljena iz objavljenih naučnih radova. U nastavku je konstrukcija oba dela opisana korak po korak, radi reprodukovanja.
+Skup kandidata za rangiranje (pool) izveden je iz zvanične WHO/IUIS Allergen Nomenclature baze (1.638 polaznih zapisa: naziv alergena, izoforma, organizam, UniProt identifikator, FASTA sekvenca), dopunjene sa 1.922 para unakrsne reaktivnosti prikupljena iz objavljenih naučnih radova. Pool je obrađen standardnim koracima čišćenja (uklanjanje ne-aminokiselinskih karaktera, filtriranje sekvenci kraćih od 30 aminokiselina, uklanjanje potpunih duplikata, deterministička deduplikacija po identičnoj FASTA sekvenci); izoforme sa različitom sekvencom ostaju odvojeni kandidati. Rezultat je **1.536 proteinskih alergena** u konačnom pool-u. Puni koraci obrade, uključujući dva dokumentovana granična slučaja (kolizija imena pri deduplikaciji sekvence i poznat slučaj fragmenta umesto pune sekvence), dati su u Prilogu B radi reprodukovanja.
 
-**Pool kandidata: koraci obrade.** Polazni izvoz iz WHO/IUIS baze sadrži 1.638 zapisa, sa poljima za naziv alergena, izoformu, organizam, UniProt identifikator i FASTA sekvencu. Obrada se sastoji od sledećih koraka, primenjenih tim redosledom:
-
-1. **Čišćenje sekvence.** Iz svake FASTA sekvence uklanjaju se svi karakteri koji nisu jedno od 20 standardnih aminokiselinskih slova; rezultat se svodi na velika slova.
-2. **Filtriranje po dužini.** Zapisi sa očišćenom sekvencom kraćom od 30 aminokiselina se uklanjaju.
-3. **Uklanjanje potpuno dupliranih redova** (identični svi podaci).
-4. **Deduplikacija po sekvenci.** Zapisi sa identičnom FASTA sekvencom (posle koraka 1) se svode na jedan; kada više zapisa deli istu sekvencu, zadržava se onaj čiji je zvanični naziv alfabetski prvi. Ovo je proizvoljno, ne biološko pravilo, i ima konkretnu, dokumentovanu posledicu: tropomiozin škampa Pen a 1 i Pen m 1 imaju sekvencu identičnu već zadržanom Lit v 1 (drugi škamp iz iste porodice), pa su tokom ovog koraka uklonjeni iz pool-a kao "duplikati" iako nose sopstvenu WHO/IUIS registraciju. Za upite koji se oslanjaju na takva imena, rešenje usvojeno u ovom radu je eksplicitno mapiranje imena na zadržani pool-zapis iste sekvence (poglavlje 3.3), a ne ponovno uvođenje veštački dupliranog embeddinga u pool.
-
-Rezultat je **1.536 proteinskih alergena** u konačnom pool-u.
-
-**Izoforme.** Izoforme istog alergena (npr. Aca s 2.0101 i Aca s 2.0102) nisu kolabirane niti spojene u jedan zapis: ako se dve izoforme razlikuju u sekvenci, obe ostaju kao odvojeni, nezavisni kandidati u pool-u; kolabiraju samo ako im je sekvenca posle čišćenja identična (korak 4 iznad), po istom, ne-biološkom pravilu.
-
-**Fragmenti.** Van filtriranja po minimalnoj dužini, pool ne sadrži sistematsku proveru da li je zapisana sekvenca puna ili predstavlja fragment proteina. Ovo je poznato ograničenje: naknadna provera protiv UniProt zapisa (van glavnog pipeline-a, nije primenjena retroaktivno na pool) potvrdila je barem jedan slučaj (Gly m 1) gde je zapisana sekvenca UniProt-om označena kao fragment. Dalja diskusija u poglavlju 5.5.
-
-**Parovi unakrsne reaktivnosti.** Nad ovim pool-om definisano je **1.922 poznata para** unakrsne reaktivnosti, prikupljena iz objavljenih naučnih radova koji opisuju eksperimentalno potvrđene ili pretpostavljene slučajeve. Za svaki par zabeležen je izvor dokaza (literaturna referenca), tip potvrde i proteinska familija oba člana para kada je bila dostupna u izvoru. Ovih 1.922 para pokrivaju 477 pojedinačnih alergena iz pool-a, grupisanih (po sopstvenoj familijskoj oznaci iz izvora, ne iz pool-a) u 74 proteinske familije, izvedenih iz 317 nezavisnih literaturnih izvora. Neravnomerna zastupljenost izvora (mali broj radova opisuje veliki broj parova, npr. populacione kohortne studije) direktno motiviše potrebu za bootstrap analizom na nivou studije.
+Nad ovim pool-om definisano je **1.922 poznata para** unakrsne reaktivnosti, prikupljena iz objavljenih naučnih radova koji opisuju eksperimentalno potvrđene ili pretpostavljene slučajeve. Za svaki par zabeležen je izvor dokaza (literaturna referenca), tip potvrde i proteinska familija oba člana para kada je bila dostupna u izvoru. Ovih 1.922 para pokrivaju 477 pojedinačnih alergena iz pool-a, grupisanih (po sopstvenoj familijskoj oznaci iz izvora, ne iz pool-a) u 74 proteinske familije, izvedenih iz 317 nezavisnih literaturnih izvora. Neravnomerna zastupljenost izvora (mali broj radova opisuje veliki broj parova, npr. populacione kohortne studije) direktno motiviše potrebu za bootstrap analizom na nivou studije.
 
 #### 2.1.1 Klasifikacija nivoa dokaza
 
@@ -71,6 +67,8 @@ Referentni skup podataka sadrži isključivo **pozitivne** primere, parove za ko
 Ova pretpostavka je proverena i za jedan konkretan slučaj eksplicitno odbačena: ciljano uzorkovanje "teških" negativa unutar iste proteinske familije nije korišćeno, jer su upravo neoznačeni parovi unutar familije mesto gde je najverovatnije da se kriju neotkriveni pravi pozitivi, isti razlog zbog kog je i sam referentni skup podataka rastao dodavanjem novih, ranije neobuhvaćenih parova unutar poznatih familija. Nasumično uzorkovanje iz celog skupa kandidata je zbog toga zadržano kao podrazumevana, konzervativnija strategija u svim eksperimentima treniranja opisanim u ovom radu.
 
 U svim eksperimentima treniranja odnos negativnih naspram pozitivnih primera bio je fiksiran na 10:1, to jest za svaki pozitivan par iz trening dela referentnog skupa podataka nasumično se uzorkuje deset negativnih parova. Ovaj odnos je izabran empirijski, kao kompromis između dovoljno negativnih primera za stabilnu procenu granice odlučivanja i preteranog razblaživanja retkih pozitivnih primera unutar trening skupa; isti odnos korišćen je dosledno u svim modelima i svim protokolima validacije opisanim u ovom radu, radi uporedivosti rezultata.
+
+Uzorkovanje negativa je striktno ograničeno na trening deo podele: u svakom LOCO foldu, negativni parovi se biraju isključivo iz proteina koji pripadaju trening skupu tog folda, nikad iz test komponente. Ovim se osigurava da izbor negativa ni posredno ne koristi informaciju o tome koji su proteini u test delu, i da se uzorkovanje ponavlja nezavisno za svaki fold, ne jednom za ceo skup.
 
 ### 2.3 Formalizacija zadataka i metrike
 
@@ -122,9 +120,9 @@ Konstanta $K$ nije odabrana proizvoljno. Testirano je više vrednosti parametra 
 
 Prednost RRF algoritma je što kombinuje rangove umesto sirovih skorova, pa nije potrebno normalizovati vrednosti različitih metoda niti pretpostaviti da su njihovi skorovi međusobno uporedivi. Time se omogućava spajanje heterogenih izvora informacija bez dodatnog treniranja modela.
 
-#### 2.4.1 Graph propagation kao dodatni signal
+#### 2.4.1 Graph propagation kao dodatni, eksploratorni signal
 
-Pored tri osnovna signala, testirana je i proširena varijanta RRF-a u kojoj je dodat četvrti signal zasnovan na poznatim vezama u grafu unakrsne reaktivnosti.
+Pored tri osnovna signala, testirana je i proširena varijanta RRF-a u kojoj je dodat četvrti, eksploratorni signal zasnovan na poznatim vezama u grafu unakrsne reaktivnosti. Ovaj signal je eksploratoran u strogom smislu: kao što je objašnjeno u nastavku, ne može se evaluirati pod istim LOCO protokolom kao ostala tri signala, pa njegov rezultat (RRF-4) nije direktno uporediv sa glavnim LOCO nalazima i ne treba ga čitati kao "najbolji model rada".
 
 Za dati upit, ako je poznato da je alergen već unakrsno reaktivan sa jednim ili više drugih alergena, kandidat dobija dodatni skor ukoliko je povezan sa tim susedima u grafu poznatih interakcija. Ovaj signal predstavlja propagaciju informacija kroz mrežu poznatih unakrsnih reaktivnosti i koristi isključivo veze dostupne u trening delu validacije.
 
@@ -183,13 +181,13 @@ Model je treniran korišćenjem funkcije gubitka **Binary Cross-Entropy with Log
 
 Za modele koji koriste reprezentaciju apsolutne razlike ulazne karakteristike standardizovane su korišćenjem z-score normalizacije izračunate isključivo na trening podacima svakog LOCO folda; za Hadamard produkt standardizacija se ne primenjuje,zadržava mali broj parametara u odnosu na dimenzionalnost referentnog skupa podataka i pokazala se kao najuspešnija neuronska varijanta.
 
-### 2.5.4 Bilinearni model (kratko, detalji u Prilogu A)
+### 2.5.4 Bilinearni model (detalji u Prilogu A)
 
 Kao izražajnija alternativa Hadamard produktu, ispitan je i bilinearni model $s=u^TWv$ nad niskorangnom (low-rank) faktorizacijom parova reprezentacija. Model nije uključen u završnu konfiguraciju: veći broj parametara doneo je veći rizik od preprilagođavanja na relativno malom broju nezavisnih trening primera, bez poboljšanja u odnosu na Hadamard produkt (detaljni rezultati, formulacija i diskusija u Prilogu A).
 
 ### 2.5.5 Trening modela
 
-Svi nadgledani modeli trenirani su i validirani protokolom opisanim u poglavlju 3 (LOCO). Negativni primeri uzorkovani su strategijom opisanom u poglavlju 2.2; tokom razvoja ispitane su i alternativne strategije (teški negativni primeri, hard-negative uzorkovanje, i pozitivno-neoznačeni, Positive-Unlabeled, bagging), evaluirane odvojeno od osnovnog MLP modela i diskutovane u poglavlju 5.
+Svi nadgledani modeli trenirani su i validirani LOCO protokolom. Negativni primeri uzorkovani su već opisanom strategijom; tokom razvoja ispitane su i alternativne strategije (teški negativni primeri, hard-negative uzorkovanje, i pozitivno-neoznačeni, Positive-Unlabeled, bagging), evaluirane odvojeno od osnovnog MLP modela i diskutovane dalje u Diskusiji.
 
 ## 3. Eksperimentalni protokol
 
@@ -209,7 +207,7 @@ Značajnost razlika između metoda procenjivana je bootstrap resamplovanjem, u d
 - bootstrap na nivou studije (**study-level**), resamplovanje po *literaturnom izvoru*
 umesto po paru; kontroliše za slučaj da više parova potiče iz iste studije i time nije statistički nezavisno.
 
-### 3.3 Validacija na stvarnim pacijentima (zadatak 2)
+### 3.3 Validacija na stvarnim pacijentima 
 
 Nezavisno od LOCO validacije nad referentnim skupom podataka, model se dodatno evaluira na literaturno dokumentovanim slučajevima stvarnih pacijenata, korišćenjem **leave-one-patient-out** protokola: za svakog pacijenta sa $n\geq 2$ poznata nalaza, svaki nalaz se redom privremeno sakriva, preostali poznati pozitivi koriste se kao upiti, i beleži se rang sakrivenog alergena među svim kandidatima. Ovaj skup je potpuno odvojen od referentnog skupa podataka korišćenog za trening. Pacijentski slučajevi potiču iz drugih, nezavisno pronađenih literaturnih izvora i ne učestvuju ni u jednom treningu.
 
@@ -238,7 +236,7 @@ Nijedan klasičan model zasnovan na ručno konstruisanim obeležjima nije pod LO
 | MLP, apsolutna razlika$^{A.2}$ | 0,1060 do 0,1737 | LOCO, sensitivity sweep (svaka konfiguracija poređena sa sopstvenim polaznim modelom na istoj podeli) | dosledno negativno | lošije od polaznog modela u svih osam testiranih konfiguracija |
 | Bilinearni model$^{A.3}$ | 0,1004 | LOCO | −0,0205 | statistički značajno lošije |
 
-Nijedna od ove dve alternativne reprezentacije para ne dostiže polazni model. MLP(Hadamard), konačna konfiguracija korišćena u ostatku rada, testiran je direktno naspram BLAST-a (umesto naspram cosine polaznog modela) pod metodološki finalnim LOCO protokolom (čist trening, referentni skup podataka bez Inferred parova, poglavlje 2.1), zajedno sa proverom veličine ESM-2 baznog modela (backbone):
+Nijedna od ove dve alternativne reprezentacije para ne dostiže polazni model. MLP(Hadamard), konačna konfiguracija korišćena u ostatku rada, testiran je direktno naspram BLAST-a (umesto naspram cosine polaznog modela) pod metodološki finalnim LOCO protokolom (čist trening, referentni skup podataka bez Inferred parova), zajedno sa proverom veličine ESM-2 baznog modela (backbone):
 
 | Model | MRR | Protokol | Δ vs. BLAST | Δ vs. MLP(Hadamard) 650M | Statistička provera |
 |---|---:|---|---:|---:|---|
@@ -247,7 +245,7 @@ Nijedna od ove dve alternativne reprezentacije para ne dostiže polazni model. M
 | MLP(Hadamard), ESM-2 3B | 0,1131 do 0,1136 | LOCO, čist trening | −0,0107 do −0,0112 | −0,0123 do −0,0128 | statistički značajno lošije i od BLAST-a i od 650M varijante |
 | Cosine, ESM-2 3B prostor (bez treninga) | - | LOCO | nije primenjivo | −0,0007 (naspram cosine u 650M prostoru) | CI uključuje nulu, nije statistički značajno drugačije od 650M prostora |
 
-MLP(Hadamard) na ESM-2 650M je jedini neuronski model u radu koji dostiže performanse BLAST-a; ova vrednost (MRR = 0,1259) koristi se u ostatku rada kao referentna za MLP(Hadamard) (poglavlja 4.3, 4.5, 4.6, 4.7).
+MLP(Hadamard) na ESM-2 650M je jedini neuronski model u radu koji dostiže performanse BLAST-a; ova vrednost (MRR = 0,1259) koristi se u ostatku rada kao referentna za MLP(Hadamard).
 
 ### 4.3 Fuzija nezavisnih signala
 
@@ -260,7 +258,7 @@ MLP(Hadamard) na ESM-2 650M je jedini neuronski model u radu koji dostiže perfo
 | RRF + MLP(Hadamard) | 0,1322 | opisno: bez statistički značajne dodatne koristi u odnosu na RRF-3 | nije izračunato | nije izračunato | ne |
 | Weighted RRF (naučene težine signala) | 0,1309 do 0,1332 | ne prevazilazi RRF-4 sa uniformnim težinama | nije izračunato | nije izračunato | ne |
 
-RRF-4 je model sa najvišim MRR na referentnom skupu podataka pod LOCO protokolom. Pouzdanost fuzionih dobitaka je, međutim, neravnomerna: dobitak RRF-3 naspram polaznog modela ostaje značajan i na nivou studije, dok dobici RRF-3 naspram BLAST-a i RRF-4 naspram RRF-3 (graph propagation) gube značajnost kada se nezavisnost proveri na nivou literaturnog izvora umesto na nivou pojedinačnog para. Tačke procene ostaju pozitivne u sva tri slučaja, ali gubitak značajnosti na nivou studije pokazuje da je pouzdanost fuzionog dobitka manja nego što bi ukazivao bootstrap na nivou para.
+RRF-4 ima najviši point-estimate MRR na referentnom skupu podataka pod LOCO protokolom, ali njegova superiornost nad BLAST-om i nad RRF-3 nije potvrđena na nivou nezavisnih izvora dokaza: dobitak RRF-3 naspram polaznog (cosine) modela ostaje značajan i na nivou studije, ali dobici RRF-3 naspram BLAST-a i RRF-4 naspram RRF-3 gube značajnost čim se nezavisnost proveri na nivou literaturnog izvora umesto na nivou pojedinačnog para. Fuzija signala je time najbolje opisana kao eksperiment sa najvišim point-estimate rezultatom, ne kao dokazano superioran model.
 
 ### 4.4 Lokalna i strukturna reprezentacija
 
@@ -280,15 +278,15 @@ Attention-MIL, izražajniji model od LSE poolinga, nije pokazao doslednu prednos
 
 ### 4.5 Validacija na stvarnim pacijentima
 
-Nezavisna validacija izvršena je na literaturno dokumentovanim slučajevima stvarnih pacijenata korišćenjem leave-one-patient-out protokola (poglavlje 3.3).
+Nezavisna validacija izvršena je na literaturno dokumentovanim slučajevima stvarnih pacijenata korišćenjem leave-one-patient-out protokola.
 
 | Model | Svi pacijenti, cluster-permutacija p | Podgrupa bez dominantne kohorte, cluster-permutacija p | Podgrupa, Wilcoxon p |
 |---|---:|---:|---:|
 | RRF-4 | 0,517 (n.z.) | 0,044 (značajno) | 0,047 (značajno) |
-| RRF-5 (+ LSE signal, poglavlje 4.4) | nije poboljšano naspram RRF-4 | 0,131 (n.z.) | 0,156 (n.z.) |
+| RRF-5 (+ LSE signal) | nije poboljšano naspram RRF-4 | 0,131 (n.z.) | 0,156 (n.z.) |
 | RRF-6 (+ MLP(Hadamard) signal) | 0,168 (n.z., ali bliže značajnosti) | 0,009 (značajno) | nije izračunato |
 
-Dodavanje LSE signala (interno LOCO-potvrđenog dobitka za nsLTP/Profilin, poglavlje 4.4) u RRF-5 pogoršalo je rezultat na pacijentima; dodavanje MLP(Hadamard) signala u RRF-6 ga je poboljšalo. Ovaj kontrast je sam po sebi nalaz: interni (LOCO) dobitak signala ne predviđa pouzdano njegov doprinos na pacijentskom skupu, dalje razmotreno u poglavlju 5.3.
+Dodavanje LSE signala (interno LOCO-potvrđenog dobitka za nsLTP/Profilin) u RRF-5 pogoršalo je rezultat na pacijentima; dodavanje MLP(Hadamard) signala u RRF-6 ga je poboljšalo. Ovaj kontrast je sam po sebi nalaz: interni (LOCO) dobitak signala ne predviđa pouzdano njegov doprinos na pacijentskom skupu, dalje razmotreno u Diskusiji.
 
 Direktno poređenje MLP(Hadamard) i BLAST signala, svaki samostalno bez RRF fuzije, izvršeno je na identičnim pacijentskim upitima korišćenjem Wilcoxon testa, cluster-permutacije i patient-level bootstrap-a.
 
@@ -308,7 +306,17 @@ MLP(Hadamard) je ostvario statistički značajno bolji rezultat od BLAST-a na ob
 | Cosine vs. MLP(Hadamard) | Svi upiti | **0,0172** | **0,0026** | **[−0,1042, −0,0214]** |
 | Cosine vs. MLP(Hadamard) | Hard | **0,0009** | **0,0002** | **[−0,1248, −0,0301]** |
 
-Cosine je najslabiji od sva tri signala na pacijentskom skupu, statistički značajno lošiji od MLP(Hadamard)-a (sva tri testa, oba podskupa) i značajno lošiji od BLAST-a (dva od tri testa). Ovim se precizira centralni nalaz rada: prednost nad BLAST-om ne potiče iz same ESM-2 reprezentacije, već specifično iz naučene, nelinearne Hadamard-MLP transformacije te reprezentacije. Kompletno rangiranje samostalnih signala na pacijentskom skupu je **MLP(Hadamard) > BLAST > cosine**.
+Cosine je najslabiji od sva tri signala na pacijentskom skupu, statistički značajno lošiji od MLP(Hadamard)-a (sva tri testa, oba podskupa) i značajno lošiji od BLAST-a (dva od tri testa). Ovim se precizira centralni nalaz rada: prednost nad BLAST-om ne potiče iz same ESM-2 reprezentacije, već iz nadgledane transformacije te reprezentacije (Hadamard kombinovanje para); ablaciona studija dalje pokazuje da je ta transformacija bitna zbog *načina kombinovanja* para, ne zbog nelinearnosti klasifikatora nad njim. Kompletno rangiranje samostalnih signala na pacijentskom skupu je **MLP(Hadamard) > BLAST > cosine**.
+
+**Da li prednost zavisi od sekvencijalne sličnosti para?** Da bi se proverila hipoteza da MLP(Hadamard) prednjači baš kod parova sa niskom sekvencijalnom sličnošću (dalje razmotreno u Diskusiji), 176 proba je stratifikovano u tercile prema BLAST % identitetu između sakrivenog proteina i njegovog najbližeg poznatog pozitiva istog pacijenta:
+
+| Tercil (BLAST % identitet) | n proba / pacijenata | Δ MRR (MLP−BLAST) | Bootstrap 95% CI | Značajno? |
+|---|---:|---:|---|---|
+| Nizak (19,7%–40,0%) | 60 / 33 | +0,0004 | [+0,0000, +0,0007] | da, ali zanemarljive veličine |
+| Srednji (41,2%–59,8%) | 60 / 33 | +0,0105 | [−0,0056, +0,0287] | ne |
+| Visok (60,2%–100,0%) | 56 / 18 | +0,0290 | [−0,0038, +0,0734] | ne |
+
+Rezultat ide u **suprotnom smeru** od hipoteze: point-estimate prednost MLP(Hadamard)-a raste, ne opada, sa porastom sekvencijalne sličnosti, i praktično je zanemarljiva baš u tercilu najniže sličnosti. Nijedan pojedinačan tercil sem najnižeg (gde je efekat sam po sebi zanemarljive veličine) nije statistički značajan na ovom uzorku, pa se iz ovoga ne može izvesti čvrst zaključak, ali nalaz ne pruža potporu prvobitnoj hipotezi i naveden je ovde radi transparentnosti, ne da bi potvrdio unapred očekivan rezultat.
 
 ### 4.6 Sažetak glavnih rezultata
 
@@ -320,11 +328,9 @@ Cosine je najslabiji od sva tri signala na pacijentskom skupu, statistički zna�
 | MLP(Hadamard), 3B       | MRR = 0,1131 do 0,1136, značajno lošiji od BLAST-a | Značajno bolji od BLAST-a     |
 | RRF-4                   | MRR = 0,1304                                       | Primarni test nije značajan   |
 
-Najizraženija razlika između dve evaluacije javlja se kod MLP(Hadamard) modela. Na referentnom skupu podataka rezultat je statistički izjednačen sa BLAST-om, dok na nezavisnim slučajevima stvarnih pacijenata pokazuje statistički značajnu prednost.
-
 ### 4.7 Ablaciona studija: koji deo modela zaista doprinosi
 
-Da bi se utvrdilo koja komponenta MLP(Hadamard) modela nosi najviše diskriminativnog signala, sprovedena je ablaciona studija na istom 57-pacijentskom skupu (176 upita, 54 pacijenta). Svaka komponenta zamenjena je pojednostavljenom alternativom, dok su ostale komponente ostale nepromenjene, i rezultat je poređen sa produkcionim polaznim modelom istom uparenom metodologijom kao u poglavlju 4.5.
+Da bi se utvrdilo koja komponenta MLP(Hadamard) modela nosi najviše diskriminativnog signala, sprovedena je ablaciona studija na istom 57-pacijentskom skupu (176 upita, 54 pacijenta). Svaka komponenta zamenjena je pojednostavljenom alternativom, dok su ostale komponente ostale nepromenjene, i rezultat je poređen sa produkcionim polaznim modelom istom uparenom metodologijom kao ranije.
 
 **Arhitektonske komponente.** Testirane su tri zamene: (1) ESM-2 reprezentacija zamenjena aminokiselinskim sastavom proteina (20-dimenzioni vektor frekvencija, bez informacije o rasporedu ili motivima), (2) Hadamard kombinovanje para zamenjeno apsolutnom razlikom, (3) MLP klasifikator zamenjen linearnim modelom (logistička regresija nad istim Hadamard ulazom, bez skrivenih slojeva).
 
@@ -334,21 +340,21 @@ Da bi se utvrdilo koja komponenta MLP(Hadamard) modela nosi najviše diskriminat
 | Hadamard kombinovanje → apsolutna razlika | −0,055 [−0,099, −0,016] | da, dva od tri testa |
 | MLP → linearni model | −0,009 [−0,020, +0,001] | ne, nijedan test |
 
-Rezultati pokazuju izrazito neravnomeran doprinos komponenti. Zamena proteinske reprezentacije trivijalnim aminokiselinskim sastavom uništava najveći deo performansi modela, i taj pad se vidi već i na sopstvenom trening skupu (validaciona AUC pada sa 0,983 na 0,733), što znači da problem nije samo slabija generalizacija nego suštinski siromašnija reprezentacija. Izbor kombinovanja para (Hadamard naspram apsolutne razlike) doprinosi umereno, u skladu sa ranije opisanim LOCO nalazom (poglavlje 4.2), sada potvrđenim i na pacijentima. Nelinearnost MLP klasifikatora doprinosi zanemarljivo: linearni model nad istim Hadamard ulazom postiže statistički identičan rezultat. Redosled važnosti komponenti je jasan: reprezentacija je daleko najvažnija, zatim način kombinovanja para, dok arhitektonska složenost klasifikatora gotovo da nije bitna.
+Rezultati pokazuju izrazito neravnomeran doprinos komponenti. Zamena proteinske reprezentacije trivijalnim aminokiselinskim sastavom uništava najveći deo performansi modela, i taj pad se vidi već i na sopstvenom trening skupu (validaciona AUC pada sa 0,983 na 0,733), što znači da problem nije samo slabija generalizacija nego suštinski siromašnija reprezentacija. Izbor kombinovanja para (Hadamard naspram apsolutne razlike) doprinosi umereno, u skladu sa ranije opisanim LOCO nalazom, sada potvrđenim i na pacijentima. Nelinearnost MLP klasifikatora doprinosi zanemarljivo: linearni model nad istim Hadamard ulazom postiže statistički identičan rezultat. Redosled važnosti komponenti je jasan: reprezentacija je daleko najvažnija, zatim način kombinovanja para, dok arhitektonska složenost klasifikatora gotovo da nije bitna.
 
-**Trening podaci: strože filtriranje nivoa dokaza.** Odvojeno je testirano da li ograničavanje trening skupa na najpouzdanije nivoe dokaza (Confirmed i Strong, ukupno 511 parova naspram 825 u produkcionom skupu, poglavlje 2.1) poboljšava rangiranje. Ovaj model (u daljem tekstu strict) nije se statistički razlikovao od polaznog modela na celom skupu upita, ali je zadržao značajnu prednost nad BLAST-om (Wilcoxon p = 0,0012, cluster-permutacija p = 0,0310, bootstrap CI [+0,0022, +0,0295]). U familijama sa dijagnostikovanim zagušenjem (nsLTP, Profilin, PR-10, poglavlje 4.5) strict model je jedini kandidat sa robustnim, statistički značajnim poboljšanjem u odnosu na polazni model (cluster-permutacija p = 0,0184, bootstrap CI [+0,0010, +0,0047]), pretežno zahvaljujući boljem potiskivanju negativa kod profilina (medijan percentil 34,3% naspram 66,2%, gotovo izjednačeno sa BLAST-ovih 66,9%) i nsLTP-a, dok se kod PR-10 rezultat pogoršao. Alternativni pristup, u kom su parovi iz kategorije Suspected zadržani u treningu ali sa smanjenom težinom u funkciji gubitka, dao je suprotan rezultat: model je bio statistički značajno lošiji od polaznog modela i izgubio je prednost nad BLAST-om. Detaljni rezultati oba pristupa, uključujući raspad po proteinskoj familiji, dati su u zasebnom dokumentu (`rad/ablacioni_test.md`).
+**Trening podaci: strože filtriranje nivoa dokaza.** Odvojeno je testirano da li ograničavanje trening skupa na najpouzdanije nivoe dokaza (Confirmed i Strong, ukupno 511 parova naspram 825 u produkcionom skupu) poboljšava rangiranje. Ovaj model (u daljem tekstu strict) nije se statistički razlikovao od polaznog modela na celom skupu upita, ali je zadržao značajnu prednost nad BLAST-om (Wilcoxon p = 0,0012, cluster-permutacija p = 0,0310, bootstrap CI [+0,0022, +0,0295]). U familijama sa dijagnostikovanim zagušenjem (nsLTP, Profilin, PR-10) strict model je jedini kandidat sa robustnim, statistički značajnim poboljšanjem u odnosu na polazni model (cluster-permutacija p = 0,0184, bootstrap CI [+0,0010, +0,0047]), pretežno zahvaljujući boljem potiskivanju negativa kod profilina (medijan percentil 34,3% naspram 66,2%, gotovo izjednačeno sa BLAST-ovih 66,9%) i nsLTP-a, dok se kod PR-10 rezultat pogoršao. Alternativni pristup, u kom su parovi iz kategorije Suspected zadržani u treningu ali sa smanjenom težinom u funkciji gubitka, dao je suprotan rezultat: model je bio statistički značajno lošiji od polaznog modela i izgubio je prednost nad BLAST-om. Detaljni rezultati oba pristupa, uključujući raspad po proteinskoj familiji, dati su u zasebnom dokumentu (`rad/ablacioni_test.md`).
 
 ## 5. Diskusija
 
 ### 5.1 Ograničenje dostupnih podataka
 
-Rezultati u poglavlju 4 ukazuju da je veličina i struktura dostupnog referentnog skupa podataka jedan od glavnih ograničavajućih faktora za ceo zadatak, ne samo za pojedinačne modele. Ukupan broj poznatih parova (1.922) deluje relativno velikim, ali broj *nezavisnih* primera je znatno manji zbog dva efekta koja se preklapaju: povezanosti proteina unutar familija (mali broj proteina učestvuje u velikom broju parova, poglavlje 3.1) i koncentracije dokaza u malom broju literaturnih izvora (317 izvora za 1.922 para, poglavlje 2.1). Study-level bootstrap analiza direktno kvantifikuje posledicu ove strukture: dva od tri fuziona dobitka koja izgledaju značajno kada se parovi tretiraju kao nezavisni gube značajnost čim se nezavisnost proveri na nivou izvora (poglavlje 4.3). Ovo nije dokaz da su ti dobici lažni, tačke procene ostaju pozitivne, ali pokazuje da trenutni skup podataka nosi manje statističke snage nego što njegova nominalna veličina sugeriše.
+Rezultati ukazuju da je veličina i struktura dostupnog referentnog skupa podataka jedan od glavnih ograničavajućih faktora za ceo zadatak, ne samo za pojedinačne modele. Ukupan broj poznatih parova (1.922) deluje relativno velikim, ali broj *nezavisnih* primera je znatno manji zbog dva efekta koja se preklapaju: povezanosti proteina unutar familija (mali broj proteina učestvuje u velikom broju parova) i koncentracije dokaza u malom broju literaturnih izvora (317 izvora za 1.922 para). Study-level bootstrap analiza direktno kvantifikuje posledicu ove strukture: dva od tri fuziona dobitka koja izgledaju značajno kada se parovi tretiraju kao nezavisni gube značajnost čim se nezavisnost proveri na nivou izvora. Ovo nije dokaz da su ti dobici lažni, tačke procene ostaju pozitivne, ali pokazuje da trenutni skup podataka nosi manje statističke snage nego što njegova nominalna veličina sugeriše.
 
 Ovo ograničenje ima direktnu posledicu za dizajn budućih proširenja referentnog skupa podataka: dodavanje još parova iz već dobro zastupljenih izvora (npr. još jedna kohorta iz iste populacione studije) donosi manje nove statističke snage nego dodavanje jednog para iz potpuno novog, nezavisnog izvora. Prioritet bi trebalo da bude dodavanje eksperimentalno potvrđenih parova iz trenutno slabije zastupljenih proteinskih familija i parova sa manjom sekvencijskom sličnošću, ne prosto uvećanje broja parova.
 
 ### 5.2 Očekivanja od strukturnih reprezentacija
 
-Rezultati u poglavlju 4.7 (komponentna ablacija) direktno informišu ovo pitanje: kada je ESM-2 reprezentacija zamenjena znatno siromašnijom (aminokiselinski sastav), pad performansi je bio drastičan; obrnuto pitanje, da li bogatija reprezentacija (npr. strukturna, dobijena iz AlphaFold ili OpenFold predikcije) donosi dodatni napredak.Foldseek TM-score, strukturni signal uključen u RRF fuziju, nije samostalno testiran kao jedini signal u ovom radu, ali njegovo prisustvo u RRF-3 nije bilo dovoljno da RRF-3 naspram BLAST-a ostane značajno na nivou studije (poglavlje 4.3), što ukazuje da strukturna sličnost, bar u obliku globalnog TM-score poravnanja ne nosi snažan nezavisan signal za ovaj zadatak.
+Rezultati komponentne ablacije direktno informišu ovo pitanje: kada je ESM-2 reprezentacija zamenjena znatno siromašnijom (aminokiselinski sastav), pad performansi je bio drastičan; obrnuto pitanje, da li bogatija reprezentacija (npr. strukturna, dobijena iz AlphaFold ili OpenFold predikcije) donosi dodatni napredak.Foldseek TM-score, strukturni signal uključen u RRF fuziju, nije samostalno testiran kao jedini signal u ovom radu, ali njegovo prisustvo u RRF-3 nije bilo dovoljno da RRF-3 naspram BLAST-a ostane značajno na nivou studije, što ukazuje da strukturna sličnost, bar u obliku globalnog TM-score poravnanja ne nosi snažan nezavisan signal za ovaj zadatak.
 
 Ovo je značajno zbog toga što je unakrsna reaktivnost fenomen koji zavisi od lokalnih, ne globalnih, strukturnih osobina: dostupnosti i konformacije konkretnih epitopa, ne ukupnog oblika proteina. Globalni TM-score, kao i globalni cosine nad mean-pooled reprezentacijom agregira informaciju preko cele sekvence i time potencijalno razblažuje baš onaj lokalni signal koji bi bio najrelevantniji. LSE pooling nad lokalnim prozorima delimično podržava ovo tumačenje, pokazuje realan dobitak za dve od tri testirane familije, ali ne za sve. To znači da "lokalnija" reprezentacija nije univerzalno rešenje. Na osnovu ovoga, veći potencijal bi verovatno imalo kombinovanje strukturnih reprezentacija sa eksplicitnom informacijom o epitopima i površinskoj dostupnosti aminokiselinskih ostataka, a ne prosta zamena jednog globalnog modela reprezentacije drugim, globalnim ali strukturnim modelom.
 
@@ -356,44 +362,47 @@ Ovo je značajno zbog toga što je unakrsna reaktivnost fenomen koji zavisi od l
 
 Ovo je centralni empirijski nalaz rada i zaslužuje detaljnije razmatranje mogućih objašnjenja, ne samo konstataciju da razlika postoji.
 
-**Prvo moguće objašnjenje, razlika u distribuciji.** Referentni skup podataka sastavljen je od već poznatih, literaturno dokumentovanih parova, čiji je proces otkrića i publikovanja sam po sebi selektivan (poglavlje 2.1: parovi iz porodica sa dužom istorijom istraživanja su nadzastupljeni). Pacijentski slučajevi predstavljaju širi, manje selektovan uzorak stvarne kliničke reaktivnosti, uključujući kombinacije alergena koje možda nikada nisu bile predmet posvećene naučne studije. Ako model uči obrasce specifične za to KAKO je referentni skup podataka konstruisan (npr. koje familije su dobro istražene), a ne obrasce same biologije unakrsne reaktivnosti, očekivano je da će se njegova relativna prednost promeniti kada se pređe na drugačije distribuiran skup upita.
+**Prvo moguće objašnjenje, razlika u distribuciji.** Referentni skup podataka sastavljen je od već poznatih, literaturno dokumentovanih parova, čiji je proces otkrića i publikovanja sam po sebi selektivan (parovi iz porodica sa dužom istorijom istraživanja su nadzastupljeni). Pacijentski slučajevi predstavljaju širi, manje selektovan uzorak stvarne kliničke reaktivnosti, uključujući kombinacije alergena koje možda nikada nisu bile predmet posvećene naučne studije. Ako model uči obrasce specifične za to KAKO je referentni skup podataka konstruisan (npr. koje familije su dobro istražene), a ne obrasce same biologije unakrsne reaktivnosti, očekivano je da će se njegova relativna prednost promeniti kada se pređe na drugačije distribuiran skup upita.
 
-**Drugo moguće objašnjenje, mehanizam signala.** BLAST po definiciji meri sekvencijalnu homologiju; njegova korisnost je direktno uslovljena time da li sekvencijalna sličnost prati unakrsnu reaktivnost za dati par. Ovo ne mora važiti za proteine koji dele relevantne lokalne ili strukturne osobine bez visoke globalne sekvencijalne sličnosti, upravo onaj slučaj panalergena pomenut u poglavlju 1.1. MLP(Hadamard) uči nelinearnu kombinaciju latentnih osobina ESM-2 reprezentacije (poglavlje 2.5.2), koja teorijski može kodirati takve odnose bez eksplicitnog poravnanja sekvenci. Ovo bi objasnilo zašto MLP(Hadamard) prednjači baš na pacijentskim slučajevima, koji verovatno sadrže veći udeo "netipičnih" (niska sekvencijalna sličnost, visoka klinička reaktivnost) parova nego kurirani referentni skup podataka.
+**Drugo moguće objašnjenje, mehanizam signala.** BLAST po definiciji meri sekvencijalnu homologiju; njegova korisnost je direktno uslovljena time da li sekvencijalna sličnost prati unakrsnu reaktivnost za dati par. Ovo ne mora važiti za proteine koji dele relevantne lokalne ili strukturne osobine bez visoke globalne sekvencijalne sličnosti, upravo onaj slučaj panalergena pomenut ranije. Hipoteza da bi MLP(Hadamard) prednost trebalo da bude izraženija baš kod parova sa niskom sekvencijalnom sličnošću je direktno testirana stratifikacijom po BLAST identitetu; izmeren rezultat ide u suprotnom smeru (point-estimate prednost raste, ne opada, sa porastom sličnosti, i zanemarljiva je u tercilu najniže sličnosti), pa ovo objašnjenje nije podržano dostupnim podacima na ovom uzorku. Mehanizam kojim MLP(Hadamard) ostvaruje prednost nad BLAST-om na pacijentskom skupu time ostaje otvoreno pitanje.
 
-**Treće, dokazano objašnjenje koje isključuje jednu alternativu.** Poglavlje 4.5 direktno testira da li je prednost MLP(Hadamard)-a nad BLAST-om posledica same ESM-2 reprezentacije (u kom slučaju bi i cosine, koji koristi istu reprezentaciju bez treniranja, morao pokazati sličnu prednost) ili posledica naučene transformacije. Cosine je na istom pacijentskom skupu bio najslabiji od sva tri signala, ne najbolji. Ovim se isključuje objašnjenje "ESM-2 reprezentacija sama po sebi bolje odgovara pacijentskim slučajevima"; prednost je specifično vezana za MLP-ovu naučenu, nelinearnu kombinaciju te reprezentacije, ne za reprezentaciju samu.
+**Treće, nalaz koji isključuje jednu alternativu.** Direktno je testirano da li je prednost MLP(Hadamard)-a nad BLAST-om posledica same ESM-2 reprezentacije (u kom slučaju bi i cosine, koji koristi istu reprezentaciju bez treniranja, morao pokazati sličnu prednost) ili posledica nadgledane transformacije te reprezentacije. Cosine je na istom pacijentskom skupu bio najslabiji od sva tri signala, ne najbolji. Ovim se isključuje objašnjenje "ESM-2 reprezentacija sama po sebi bolje odgovara pacijentskim slučajevima"; prednost je vezana za način na koji se reprezentacije dva proteina kombinuju i koriste u nadgledanom modelu. Ovo se ne sme čitati kao dokaz da je specifično *nelinearnost* MLP klasifikatora ključna: ablaciona studija pokazuje da zamena MLP-a linearnim modelom nad istim Hadamard ulazom ne menja rezultat značajno (Δ MRR CI uključuje nulu), dok zamena Hadamard kombinovanja apsolutnom razlikom rezultat pogoršava značajno. Doprinos je time preciznije lociran u *načinu kombinovanja para* (Hadamard produkt), ne u dubini ili nelinearnosti klasifikatora nad tim kombinovanjem.
 
 **Napomena o smeru efekta kod alternativnih enkodiranja.** Vredi eksplicitno primetiti da se ovaj obrazac (razlika između referentnog skupa podataka i pacijenata) ne kreće uvek u istom, "pacijenti su blagonakloniji" smeru. U ablacionoj studiji opisanoj u `rad/ablacioni_test.md`, kombinovanje para bogatijom reprezentacijom (spajanje sirovih vektora i njihove razlike, umesto Hadamard produkta) na ESM-2 3B reprezentaciji dalo je rezultat *bliži* BLAST-u na referentnom skupu podataka nego standardni Hadamard pristup, ali je na pacijentima bilo dosledno *lošije* i od BLAST-a i od produkcionog MLP(Hadamard) modela, suprotan smer od glavnog nalaza. Ovo pokazuje da razlika između dva konteksta evaluacije nije jednosmerna "pacijenti uvek nagrađuju composniju reprezentaciju" pravilnost, već da je svaka kombinacija (reprezentacija, enkodiranje, model) potrebno nezavisno proveriti na oba nivoa pre nego što se izvede zaključak o generalizaciji.
 
 ### 5.4 Metodološke implikacije fuzije signala i nezavisnosti uzoraka
 
-Nalaz iz poglavlja 4.3, da RRF-3 naspram BLAST-a i RRF-4 naspram RRF-3 gube statističku značajnost pod study-level bootstrap-om, ima implikacije šire od ovog konkretnog skupa podataka. U mnogim biomedicinskim zadacima rangiranja i klasifikacije, "nezavisni" primeri u kuriranom skupu podataka zapravo dele zajednički izvor (istu kliničku studiju, istu kohortu, isti laboratorijski protokol), što krši pretpostavku nezavisnosti na kojoj se zasniva standardni bootstrap ili unakrsna validacija na nivou pojedinačnog primera. Kada se ta zavisnost ne kontroliše, prividna statistička značajnost može biti artefakt strukture skupa podataka, a ne stvarnog efekta modela. Praktična preporuka koja sledi iz ovog nalaza jeste da se svaka tvrdnja o poboljšanju u ovakvom kontekstu prijavljuje sa obe procene (na nivou primera i na nivou izvora), a ne samo sa onom koja daje povoljniji rezultat.
+Nalaz da RRF-3 naspram BLAST-a i RRF-4 naspram RRF-3 gube statističku značajnost pod study-level bootstrap-om, ima implikacije šire od ovog konkretnog skupa podataka. U mnogim biomedicinskim zadacima rangiranja i klasifikacije, "nezavisni" primeri u kuriranom skupu podataka zapravo dele zajednički izvor (istu kliničku studiju, istu kohortu, isti laboratorijski protokol), što krši pretpostavku nezavisnosti na kojoj se zasniva standardni bootstrap ili unakrsna validacija na nivou pojedinačnog primera. Kada se ta zavisnost ne kontroliše, prividna statistička značajnost može biti artefakt strukture skupa podataka, a ne stvarnog efekta modela. Praktična preporuka koja sledi iz ovog nalaza jeste da se svaka tvrdnja o poboljšanju u ovakvom kontekstu prijavljuje sa obe procene (na nivou primera i na nivou izvora), a ne samo sa onom koja daje povoljniji rezultat.
 
-Sličan metodološki nalaz odnosi se i na poređenje modela na pacijentskom skupu (poglavlje 3.3, 4.5): dva odvojena testa "model iznad slučajnosti" nisu zamena za jedan pravi upareni test na istim primerima. Ova greška je lako napraviti, jer oba pojedinačna testa mogu izgledati ubedljivo kada se prijave jedan pored drugog, a ne dokazuju razliku između modela dok se ne sprovede pravo upareno poređenje.
+Sličan metodološki nalaz odnosi se i na poređenje modela na pacijentskom skupu: dva odvojena testa "model iznad slučajnosti" nisu zamena za jedan pravi upareni test na istim primerima. Ova greška je lako napraviti, jer oba pojedinačna testa mogu izgledati ubedljivo kada se prijave jedan pored drugog, a ne dokazuju razliku između modela dok se ne sprovede pravo upareno poređenje.
 
 ### 5.5 Ograničenja
 
 Rad ima nekoliko ograničenja koja utiču na to koliko se dobijeni nalazi mogu generalizovati.
 
-**Proizvoljnost u konstrukciji pool-a kandidata.** Kao što je opisano u poglavlju 2.1, deduplikacija pool-a kandidata po identičnoj FASTA sekvenci koristi proizvoljno (alfabetsko) pravilo za biranje koji zapis preživljava kada više njih deli istu sekvencu; ovo je uklonilo, na primer, dva zvanično registrovana alergena (Pen a 1, Pen m 1) čija je sekvenca identična već zadržanom Lit v 1. Iako je posledica ovog konkretnog slučaja ublažena eksplicitnim mapiranjem imena, ne može se isključiti da postoje slični, još neotkriveni slučajevi koji utiču na broj dostupnih kandidata za retke familije. Pool takođe ne sadrži sistematsku proveru fragmenata (poglavlje 2.1); bar jedan potvrđen slučaj (Gly m 1) pokazuje da se u pool-u mogu naći nepotpune sekvence.
+**Proizvoljnost u konstrukciji pool-a kandidata.** Kao što je ranije opisano, deduplikacija pool-a kandidata po identičnoj FASTA sekvenci koristi proizvoljno (alfabetsko) pravilo za biranje koji zapis preživljava kada više njih deli istu sekvencu; ovo je uklonilo, na primer, dva zvanično registrovana alergena (Pen a 1, Pen m 1) čija je sekvenca identična već zadržanom Lit v 1. Iako je posledica ovog konkretnog slučaja ublažena eksplicitnim mapiranjem imena, ne može se isključiti da postoje slični, još neotkriveni slučajevi koji utiču na broj dostupnih kandidata za retke familije. Pool takođe ne sadrži sistematsku proveru fragmenata; bar jedan potvrđen slučaj (Gly m 1) pokazuje da se u pool-u mogu naći nepotpune sekvence.
 
-**Problem nepoznatih negativa.** Kao što je detaljno opisano u poglavlju 2.2, odsustvo para iz referentnog skupa podataka ne znači potvrđenu odsutnost unakrsne reaktivnosti. Nasumično uzorkovani "negativni" primeri korišćeni za treniranje mogu sadržati neotkrivene prave pozitive, posebno unutar gusto povezanih proteinskih familija. Ovo strukturno ograničenje ne može se u potpunosti otkloniti bez dodatnih eksperimentalnih podataka, i primenjuje se podjednako na sve nadgledane modele opisane u ovom radu, ne samo na MLP(Hadamard).
+**Problem nepoznatih negativa.** Kao što je detaljno ranije opisano, odsustvo para iz referentnog skupa podataka ne znači potvrđenu odsutnost unakrsne reaktivnosti. Nasumično uzorkovani "negativni" primeri korišćeni za treniranje mogu sadržati neotkrivene prave pozitive, posebno unutar gusto povezanih proteinskih familija. Ovo strukturno ograničenje ne može se u potpunosti otkloniti bez dodatnih eksperimentalnih podataka, i primenjuje se podjednako na sve nadgledane modele opisane u ovom radu, ne samo na MLP(Hadamard).
 
-**Neravnomerna zastupljenost proteinskih familija.** I referentni skup podataka i pacijentski skup pokazuju veliku neravnomernost u zastupljenosti proteinskih familija (poglavlje 4.5: familije poput nsLTP i Profilina su brojno dobro zastupljene ali sistemski teže za rangiranje, dok su druge familije zastupljene sa premalo primera da bi se o njima moglo pouzdano zaključivati). Nalazi specifični za pojedinačne familije treba čitati kao ilustrativne, ne kao definitivne za tu familiju u opštem slučaju.
+**Neravnomerna zastupljenost proteinskih familija.** I referentni skup podataka i pacijentski skup pokazuju veliku neravnomernost u zastupljenosti proteinskih familija (familije poput nsLTP i Profilina su brojno dobro zastupljene ali sistemski teže za rangiranje, dok su druge familije zastupljene sa premalo primera da bi se o njima moglo pouzdano zaključivati). Nalazi specifični za pojedinačne familije treba čitati kao ilustrativne, ne kao definitivne za tu familiju u opštem slučaju.
 
 **Domet zaključaka o kliničkoj primeni.** Rezultati ovog rada pokazuju da predloženi pristup može korisno *rangirati* i *prioritizovati* kandidate za dalje alergološko testiranje, ne da može *dijagnostikovati* unakrsnu reaktivnost. Nijedan model opisan u ovom radu nije validiran kao dijagnostičko sredstvo, niti je za to dizajniran; sva izveštavanja o "prednosti" ili "tačnosti" odnose se isključivo na relativni kvalitet rangiranja kandidata, ne na apsolutnu kliničku pouzdanost pojedinačne predikcije. Svaka buduća primena ovakvog sistema u kliničkom kontekstu zahtevala bi odvojenu validaciju koja izlazi iz okvira ovog rada.
 
-### 5.6 Da li proteinske reprezentacije imaju budućnost u ovom zadatku?
+### 5.6 Kapacitet modela naspram kvaliteta reprezentacije
 
-Rezultati podržavaju korišćenje proteinskih reprezentacija (poglavlje 4.7: uklanjanje ESM-2 reprezentacije ima daleko najveći negativan efekat od svih testiranih izmena), ali ne podržavaju pretpostavku da veći ili izražajniji model automatski daje bolju predikciju. ESM-2 3B nije doneo poboljšanje u odnosu na 650M (poglavlje 4.2), jednostavnija Hadamard kombinacija para bila je korisnija od izražajnijeg bilinearnog modela (poglavlje 4.2, Prilog A), a čak i unutar same MLP(Hadamard) arhitekture, nelinearnost skrivenih slojeva doprinosi zanemarljivo u odnosu na linearni model (poglavlje 4.7).
-
-Ovaj obrazac, doslednog izostanka koristi od povećanja kapaciteta modela ili reprezentacije, ponavlja se na tri nezavisna nivoa (veličina proteinskog jezičkog modela, izražajnost kombinovanja para, dubina klasifikatora) i sugeriše da za ovaj konkretan zadatak, sa ovom veličinom referentnog skupa podataka, način poređenja dve proteinske reprezentacije nosi više informacije nego sirovi kapacitet bilo kog pojedinačnog dela sistema. Ovo je u skladu sa opštim nalazom rada (poglavlje 1.4) da je doprinos sistematska evaluacija izvora signala, ne nov algoritam: rezultati sugerišu da bi dalji napredak pre trebalo tražiti u kvalitetu i strukturi podataka (poglavlje 5.1, 5.5) i u načinu na koji se predstavlja odnos između dva proteina (poglavlje 5.2), nego u zameni ESM-2 nekim većim ili složenijim proteinskim jezičkim modelom.
+Isti obrazac, izostanak koristi od povećanja kapaciteta, ponavlja se na tri nezavisna nivoa: veličina proteinskog jezičkog modela (ESM-2 3B naspram 650M), izražajnost kombinovanja para (bilinearni model naspram Hadamard produkta) i dubina klasifikatora (MLP naspram linearnog modela nad istim ulazom). Ni u jednom od ova tri slučaja veći kapacitet nije doneo merljivo poboljšanje. Ovo sugeriše da za ovaj konkretan zadatak, sa ovom veličinom referentnog skupa podataka, dalji napredak verovatnije leži u kvalitetu i strukturi podataka i u načinu na koji se predstavlja odnos između dva proteina, nego u zameni ESM-2 nekim većim ili složenijim proteinskim jezičkim modelom.
 
 ## 6. Budući rad
 
-Najvažniji pravci daljeg rada su proširenje referentnog skupa podataka novim nezavisnim eksperimentalnim dokazima, povećanje broja nezavisnih pacijentskih slučajeva i uključivanje biološki relevantnih informacija o epitopima i strukturi. Posebno bi bilo važno proveriti da li se prednost MLP(Hadamard) modela održava na većem i raznovrsnijem skupu pacijenata.
-Ukupno, rezultati pokazuju da proteinske reprezentacije mogu sadržati signal relevantan za predikciju unakrsne reaktivnosti, ali da napredak verovatnije zavisi od kvaliteta podataka i načina reprezentacije odnosa između proteina nego od samog povećavanja modela.
+Najvažniji pravci daljeg rada proizlaze direktno iz nalaza ovog rada:
 
-Krajnji cilj ovakvog sistema mogao bi biti razvoj asistivnog alata koji, na osnovu poznatih alergija pacijenta, rangira potencijalno unakrsno reaktivne alergene i predlaže prioritete za dalje alergološko testiranje (poglavlje 5.5, domet ovakve primene ograničen je na rangiranje i prioritizaciju, ne dijagnozu). U proširenoj verziji sistem bi mogao da koristi poznate pozitivne i negativne nalaze za personalizovano rangiranje novih kandidata. Takav sistem ne bi zamenio kliničku procenu, već bi služio kao pomoć pri izboru prioriteta za dalje testiranje.
+1. **Više nezavisnih pacijentskih slučajeva**, po mogućnosti iz izvora koji nisu već zastupljeni u trening skupu, da bi se proverilo da li se prednost MLP(Hadamard) modela nad BLAST-om održava na većem i raznovrsnijem uzorku.
+2. **Eksperimentalno potvrđeni parovi iz trenutno slabije zastupljenih proteinskih familija i nezavisnih literaturnih izvora**, ne prosto uvećanje broja parova iz već dobro zastupljenih izvora.
+3. **Ponoviti stratifikaciju po BLAST sličnosti na većem uzorku.** Trenutna stratifikacija (176 proba, 54 pacijenta) pokazuje da prednost MLP(Hadamard)-a ne opada sa niskom sekvencijalnom sličnošću, suprotno početnoj hipotezi, ali su pojedinačni tercili (18–33 pacijenta) premali za pouzdan zaključak o pravom mehanizmu prednosti.
+4. **Eksterna validacija na potpuno nezavisnoj kohorti pacijenata**, odvojenoj i od trening skupa i od skupa korišćenog u ovom radu.
+5. **Kombinovanje strukturne reprezentacije sa eksplicitnom informacijom o površinskoj dostupnosti epitopa**, a ne prosta zamena jednog globalnog modela reprezentacije drugim globalnim, strukturnim modelom.
+
+Krajnji cilj ovakvog sistema mogao bi biti razvoj asistivnog alata koji, na osnovu poznatih alergija pacijenta, rangira potencijalno unakrsno reaktivne alergene i predlaže prioritete za dalje alergološko testiranje (domet ovakve primene ograničen je na rangiranje i prioritizaciju, ne dijagnozu). U proširenoj verziji sistem bi mogao da koristi poznate pozitivne i negativne nalaze za personalizovano rangiranje novih kandidata. Takav sistem ne bi zamenio kliničku procenu, već bi služio kao pomoć pri izboru prioriteta za dalje testiranje.
 
 ## Prilog A: Dodatni eksperimenti i detalji
 
@@ -401,13 +410,13 @@ Ovaj prilog sadrži modele i konfiguracije koje nisu ušle u završnu konfigurac
 
 ### A.1 PU Bagging i XGBoost
 
-**PU Bagging (Random Forest + BLAST).** Ansambl Random Forest klasifikatora treniranih u Positive-Unlabeled bagging režimu (poglavlje 2.2) nad istim BLAST + reprezentacija obeležjima kao osnovni Random Forest model. Na ranijoj, jednostrukoj podeli podataka (pre uvođenja LOCO protokola u ovaj rad) ostvario je MRR = 0,2038, viši od svih ostalih klasičnih metoda, ali ovaj rezultat nije potvrđen pod LOCO protokolom (poglavlje 3.1); ponovljena provera pod LOCO dala je mešovite, nekonzistentne rezultate po komponenti, zbog čega broj nije uključen u glavnu tabelu poređenja (tabela u poglavlju 4.1) kao direktno uporediv.
+**PU Bagging (Random Forest + BLAST).** Ansambl Random Forest klasifikatora treniranih u Positive-Unlabeled bagging režimu nad istim BLAST + reprezentacija obeležjima kao osnovni Random Forest model. Na ranijoj, jednostrukoj podeli podataka (pre uvođenja LOCO protokola u ovaj rad) ostvario je MRR = 0,2038, viši od svih ostalih klasičnih metoda, ali ovaj rezultat nije potvrđen pod LOCO protokolom; ponovljena provera pod LOCO dala je mešovite, nekonzistentne rezultate po komponenti, zbog čega broj nije uključen u glavnu tabelu poređenja kao direktno uporediv.
 
 **XGBoost + BLAST.** Model gradijentno pojačanih stabala odluke (gradient boosting) nad istim skupom obeležja kao Random Forest + BLAST. Pod LOCO protokolom ostvario je MRR = 0,1139, dosledno lošije od Random Forest varijante sa istim obeležjima, bez dodatnih podešavanja hiperparametara van podrazumevanih vrednosti biblioteke.
 
 ### A.2 Sensitivity sweep: MLP nad apsolutnom razlikom
 
-Osam konfiguracija MLP klasifikatora nad apsolutnom razlikom reprezentacija (poglavlje 2.5.2), sa različitim kombinacijama veličine skrivenih slojeva, dropout regularizacije i prisustva/odsustva dodatne cosine karakteristike, testirano je pod LOCO protokolom. MRR se kretao u opsegu 0,1060 do 0,1737 u zavisnosti od konfiguracije; u svih osam slučajeva, rezultat je bio lošiji od polaznog modela na istoj podeli podataka. Nijedna kombinacija hiperparametara nije promenila ovaj kvalitativni zaključak, što je motivisalo prelazak na Hadamard produkt kao alternativnu reprezentaciju para (poglavlje 2.5.2).
+Osam konfiguracija MLP klasifikatora nad apsolutnom razlikom reprezentacija, sa različitim kombinacijama veličine skrivenih slojeva, dropout regularizacije i prisustva/odsustva dodatne cosine karakteristike, testirano je pod LOCO protokolom. MRR se kretao u opsegu 0,1060 do 0,1737 u zavisnosti od konfiguracije; u svih osam slučajeva, rezultat je bio lošiji od polaznog modela na istoj podeli podataka. Nijedna kombinacija hiperparametara nije promenila ovaj kvalitativni zaključak, što je motivisalo prelazak na Hadamard produkt kao alternativnu reprezentaciju para.
 
 ### A.3 Bilinearni model, pun izvod
 
@@ -417,9 +426,29 @@ $$
 s = u^T W v,
 $$
 
-gde je $W\in\mathbb{R}^{d\times d}$ naučena matrica parametara, $d$ dimenzionalnost reprezentacije. Zbog veličine ESM-2 reprezentacije ($d=1280$ za 650M model), puna matrica $W$ bi imala preko 1,6 miliona parametara, znatno više od broja nezavisnih trening primera (poglavlje 2.1); zbog toga je korišćena niskorangna (low-rank) faktorizacija koja prvo projektuje $u$ i $v$ u prostor manje dimenzionalnosti, pa tek onda računa bilinearnu interakciju u tom manjem prostoru.
+gde je $W\in\mathbb{R}^{d\times d}$ naučena matrica parametara, $d$ dimenzionalnost reprezentacije. Zbog veličine ESM-2 reprezentacije ($d=1280$ za 650M model), puna matrica $W$ bi imala preko 1,6 miliona parametara, znatno više od broja nezavisnih trening primera; zbog toga je korišćena niskorangna (low-rank) faktorizacija koja prvo projektuje $u$ i $v$ u prostor manje dimenzionalnosti, pa tek onda računa bilinearnu interakciju u tom manjem prostoru.
 
-Pod LOCO protokolom, ovaj model je ostvario MRR = 0,1004, statistički značajno lošije od polaznog modela (poglavlje 4.2), i lošije od MLP(Hadamard) uz veći broj parametara i veći rizik od preprilagođavanja. Zaključak je da veća izražajnost modela interakcije para, sama po sebi, ne nadoknađuje ograničenu veličinu referentnog skupa podataka, nalaz konzistentan sa opštim obrascem opisanim u poglavlju 5.6.
+Pod LOCO protokolom, ovaj model je ostvario MRR = 0,1004, statistički značajno lošije od polaznog modela, i lošije od MLP(Hadamard) uz veći broj parametara i veći rizik od preprilagođavanja. Zaključak je da veća izražajnost modela interakcije para, sama po sebi, ne nadoknađuje ograničenu veličinu referentnog skupa podataka, nalaz konzistentan sa opštim obrascem opisanim ranije.
+
+## Prilog B: Detalji konstrukcije pool-a kandidata
+
+Ovaj prilog sadrži pun opis koraka obrade pool-a kandidata i dva dokumentovana granična slučaja, radi reprodukovanja.
+
+**Koraci obrade, tim redosledom:**
+
+1. **Čišćenje sekvence.** Iz svake FASTA sekvence uklanjaju se svi karakteri koji nisu jedno od 20 standardnih aminokiselinskih slova; rezultat se svodi na velika slova.
+2. **Filtriranje po dužini.** Zapisi sa očišćenom sekvencom kraćom od 30 aminokiselina se uklanjaju.
+3. **Uklanjanje potpuno dupliranih redova** (identični svi podaci).
+4. **Deduplikacija po sekvenci.** Zapisi sa identičnom FASTA sekvencom (posle koraka 1) se svode na jedan; kada više zapisa deli istu sekvencu, zadržava se onaj čiji je zvanični naziv alfabetski prvi. Ovo je proizvoljno, ne biološko pravilo.
+
+**Granični slučaj: kolizija imena pri deduplikaciji.** Tropomiozin škampa Pen a 1 i Pen m 1 imaju sekvencu identičnu već zadržanom Lit v 1 (drugi škamp iz iste porodice), pa su tokom koraka 4 uklonjeni iz pool-a kao "duplikati" iako nose sopstvenu WHO/IUIS registraciju. Za upite koji se oslanjaju na takva imena, rešenje usvojeno u ovom radu je eksplicitno mapiranje imena na zadržani pool-zapis iste sekvence, a ne ponovno uvođenje veštački dupliranog embeddinga u pool.
+
+**Izoforme.** Izoforme istog alergena (npr. Aca s 2.0101 i Aca s 2.0102) nisu kolabirane niti spojene u jedan zapis: ako se dve izoforme razlikuju u sekvenci, obe ostaju kao odvojeni, nezavisni kandidati u pool-u; kolabiraju samo ako im je sekvenca posle čišćenja identična (korak 4 iznad), po istom, ne-biološkom pravilu.
+
+**Granični slučaj: fragment umesto pune sekvence.** Van filtriranja po minimalnoj dužini, pool ne sadrži sistematsku proveru da li je zapisana sekvenca puna ili predstavlja fragment proteina. Ovo je poznato ograničenje: naknadna provera protiv UniProt zapisa (van glavnog pipeline-a, nije primenjena retroaktivno na pool) potvrdila je barem jedan slučaj (Gly m 1) gde je zapisana sekvenca UniProt-om označena kao fragment. Dalja diskusija u Ograničenjima.
+
+# Zakljucak
+
 
 ### Zahvalnica
 
