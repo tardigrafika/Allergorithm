@@ -4,12 +4,15 @@ Lana Lejić
 
 Mentor: Stefan Nožinić
 
+<!-- RECENZIJA (peer review, 2026-09): (1) Naslov je pitanje — neki časopisi to ne vole, a rad daje samo delimičan odgovor; razmotriti deklarativni naslov. (2) Autorstvo: mentor je za časopis gotovo sigurno koautor; definisati doprinose po CRediT taksonomiji. (3) VAŽNO: rad/RAD.md i rad/MLP_RAD.md se preklapaju ~70% — odlučiti koji je "taj" rad; slanje oba nosi rizik od salami-slicing / duple publikacije. Preporuka: konsolidovati u jedan rad. -->
+
 ---
 
 ## Apstrakt
 
 nwsto smort
 
+<!-- RECENZIJA: Apstrakt i ključne reči su placeholderi. Za časopis: strukturisan apstrakt (~200-250 reči: pozadina / metode / rezultati / zaključak). Glavna poruka mora biti "komplementarnost", ne "MLP bolji od BLAST-a" (v. §3.8.1). Ključne reči: cross-reactivity, protein language models, ESM-2, allergens, link prediction, pairwise representation, LOCO validation. -->
 
 ### Ključne reči ?
 
@@ -45,6 +48,8 @@ Rad ispituje četiri istraživačka pitanja:
 * **RQ3.** Da li poboljšanje performansi potiče prvenstveno od nelinearnog klasifikatora ili od izbora reprezentacije i pairwise encoding-a?
 * **RQ4.** Koje osobine naučenog embedding prostora objašnjavaju ponašanje modela i kada embedding pruža informacije komplementarne sekvencijalnim metodama poput BLAST-a?
 
+<!-- RECENZIJA: RQ3 pretpostavlja da "poboljšanje performansi" postoji — a na LOCO-u je MLP ≈ BLAST (Δ +0,0016, n.z., §3.3.1), na pacijentima je ishod podeljen (§3.8.1). Preformulisati neutralno: "Da li eventualna razlika u performansama potiče od nelinearnog klasifikatora ili od izbora reprezentacije i pairwise enkodiranja?". RQ1/RQ4 formulacije koje impliciraju "prednost nad BLAST-om" takođe kvalifikovati. -->
+
 ---
 # 2. Metodologija
 
@@ -52,6 +57,8 @@ Rad ispituje četiri istraživačka pitanja:
 ### 2.1.1. Skup kandidata proteina
 
 Skup kandidata formiran je iz WHO/IUIS Allergen Nomenclature baze i obuhvata proteinske alergene za koje su bile dostupne odgovarajuće aminokiselinske sekvence. Nakon uklanjanja nevalidnih sekvenci, sekvenci kraćih od 30 aminokiselina i potpunih duplikata, konačni skup sadrži 1.536 proteinskih alergena. Izoforme sa različitim aminokiselinskim sekvencama tretirane su kao zasebni kandidati.
+
+<!-- RECENZIJA: "1.536" ovde vs "~1535 proteina" u §3.5 — uskladiti tačan broj. Deduplikacija po FASTA sekvenci koristi proizvoljno alfabetsko pravilo (uklonilo npr. Pen a 1, Pen m 1 kao "duplikate" Lit v 1 — v. RAD.md Prilog B); to je ograničenje, mora u Supplementary + Ograničenja. -->
 
 Detaljni koraci čišćenja i dokumentovani granični slučajevi opisani su u Supplementary Material-u.
 
@@ -61,11 +68,17 @@ Poznati odnosi unakrsne reaktivnosti prikupljeni su iz objavljene naučne litera
 
 Parovi su klasifikovani u četiri nivoa dokaza: Confirmed (138), Strong (377), Suspected (277) i Inferred (1.093). Kategorija Inferred obuhvata parove čija je unakrsna reaktivnost izvedena iz homologije ili pripadnosti istoj proteinskoj familiji bez direktnog eksperimentalnog dokaza. Ovi parovi nisu korišćeni kao pozitivni primeri tokom treniranja nadgledanih modela, ali su zadržani u evaluacionom skupu.
 
+<!-- RECENZIJA: 138+377+277+1.093 = 1.885, a gore piše "1.922 jedinstvena para" — manjak 37 (ista greška u RAD.md §2.1.1). Ili nedostaje kategorija, ili 37 parova nema dodeljen nivo — objasniti. Propagira se u RAD.md §4.7 (511 vs 138+377=515; 825 vs 1922−1093=829 vs zbir-bez-Inferred 792). Predlog: nivoe dokaza iskoristiti kao gradiranu relevantnost za nDCG (v. komentar u §2.5). -->
+
+
 ### 2.1.3. Pozitivno-neobeleženo okruženje i uzorkovanje negativa
 
 Skup podataka ima karakteristike positive-unlabeled (PU) problema: činjenica da određeni par nije zabeležen u literaturi ne znači da je eksperimentalno potvrđeno da između proteina ne postoji unakrsna reaktivnost. Zbog toga se odsustvo para iz kuriranog skupa ne može direktno interpretirati kao negativna klasa.
 
 Za treniranje modela negativni primeri su stoga uzorkovani iz parova koji nisu prisutni u kuriranoj pozitivnoj relaciji. Negativno uzorkovanje vršeno je nezavisno od oznaka proteinskih familija kako bi se izbeglo uvođenje eksplicitne familijske pretpostavke u sam problem predikcije. Odnos pozitivnih i negativnih primera i konkretna procedura uzorkovanja navedeni su uz odgovarajuće eksperimente radi potpune reproduktivnosti.
+
+<!-- RECENZIJA: Odnos pozitiva:negativa (10:1 u RAD.md) i procedura uzorkovanja se ovde odlažu, ali se nigde u MLP_RAD.md ne navode. Navesti eksplicitno u Metodologiji: odnos, resampling po foldu, iz kog skupa proteina (samo trening deo folda, nikad test komponenta). -->
+
 
 ## 2.2. ESM-2 vektorske reprezentacije (embeddings) proteina
 
@@ -92,6 +105,9 @@ u = \frac{1}{L}\sum_{i=1}^{L} h_i.
 $$
 
 Na ovaj način svaka proteinska sekvenca predstavljena je jednim vektorom $u$. Za ESM-2 650M korišćeni su vektori dimenzionalnosti **1280**, dok je ESM-2 3B korišćen sa svojom odgovarajućom izlaznom dimenzionalnošću.
+
+<!-- RECENZIJA: Navesti tačnu dimenzionalnost ESM-2 3B (2560), sloj sa kog se uzima reprezentacija i da li je isti pooling. Mean pooling globalno agregira signal — relevantno za diskusiju o lokalnim epitopima (RAD.md §5.2); razmotriti napomenu ovde. -->
+
 
 ## 2.3. Reprezentacija parova dva proteina
 
@@ -154,6 +170,9 @@ Model je treniran minimizacijom binarne unakrsne entropije (binary cross-entropy
 
 Finalna arhitektura MLP-a sastoji se od dva skrivena sloja sa nelinearnom aktivacionom funkcijom i dropout regularizacijom. Broj neurona po slojevima i ostali hiperparametri određeni su na razvojnom skupu i zatim fiksirani pre završne evaluacije.
 
+<!-- RECENZIJA: Navesti finalne vrednosti (neurona po sloju, dropout, weight decay, lr, batch size, early-stopping kriterijum, veličina ulaza = 1280 za Hadamard). Opisati "razvojni skup" i proceduru izbora (grid? koliko konfiguracija?). Bez ovoga rad nije reproducibilan. -->
+
+
 ### 2.4.2. Kontrola linearnim klasifikatorom
 
 Da bi se odvojio doprinos nelinearnosti klasifikatora od informacije sadržane u samoj reprezentaciji para, kao kontrolni model korišćena je logistička regresija.
@@ -170,6 +189,15 @@ Poređenjem ova dva modela uz isti ulaz može se ispitati da li dodatna predikti
 
 ## 2.5. Protokol validacije
 
+<!-- RECENZIJA — METRIKE (nedostaje ceo pododeljak): MLP_RAD.md nema definiciju evaluacionih metrika. Dodati §2.5.x "Metrike rangiranja":
+  1. Ovo je formalno predikcija veza u grafu (link prediction). Koristiti FILTERED rang skrivene ivice (q,t) — pri skorovanju ukloniti iz liste ostale POZNATE prave partnere čvora q. Nefiltriran rang je pesimistički i neravnomerno pristrasan: kažnjava gusto povezane familije (nsLTP, profilin) — verovatno deo efekta "zagušenja" iz §3.7.
+  2. Definisati jedinicu: MRR po skrivenoj ivici (leave-one-edge-out / leave-one-finding-out), MIKRO i MAKRO prosek (makro = po upitu-proteinu, pa po familiji). "Mikro-prosečan MRR" preteže gusto povezane familije.
+  3. MRR zadržati kao osetljivu meru, ali dodati: Hits@{1,5,10} (klinička interpretacija; vraćeno iz RAD.md), nDCG@10 sa gain=f(nivo dokaza) (jedina metrika koja koristi Confirmed/Strong/Suspected/Inferred i više partnera po upitu), medijalni rang + IQR (robustan; MRR maskira rep).
+  4. Za pacijentski zadatak: recall@k kriva / površina do klinički realnog k (~20), ili "work-saved over BLAST" — direktno meri čemu alat služi.
+  5. PU: NIKAD ne računati precision@k / FPR / AUPRC protiv neoznačenih parova kao da su negativi — meriti samo gde padne poznati pozitiv. AUROC/AUC samo kao interni dijagnostički signal (kao u §3.1).
+  6. Male MRR razlike (0,001-0,01) sa CI preko nule sugerišu slabu rezoluciju metrike na 40 komponenti / 34 pacijenta — komplementarne metrike čine efekat merljivijim.
+-->
+
 ### 2.5.1. Validacija izostavljanjem povezane komponente (Leave-One-Connected-Component-Out — LOCO)
 
 Random podela parova na trening i test skup nije odgovarajuća za ovaj problem zbog povezanosti proteina kroz mrežu unakrsne reaktivnosti. Ako su dva proteina povezana u istoj komponenti, njihovo razdvajanje između treninga i testa može omogućiti modelu da indirektno iskoristi informacije iz test komponente.
@@ -178,11 +206,18 @@ Zbog toga je evaluacija sprovedena metodom **Leave-One-Connected-Component-Out (
 
 Ovakva podela omogućava procenu sposobnosti modela da generalizuje na proteinske odnose koji nisu povezani sa primerima dostupnim tokom treniranja.
 
+<!-- RECENZIJA: Navesti broj i raspodelu veličina povezanih komponenti (broj folda — "40 folda" se pominje tek u §3.4.3 i pripada ovde). Kako se tretiraju izolovani čvorovi / komponente veličine 2? Kako se uzorkuju negativi po foldu? -->
+
+
 ### 2.5.2. Nezavisna evaluacija na nivou pacijenata
 
 Pored evaluacije na kuriranom skupu, generalizacija modela ispitana je na nezavisnim podacima prikupljenim iz dokumentovanih slučajeva pacijenata. Ovi podaci nisu korišćeni za treniranje modela.
 
 Za svakog pacijenta model rangira kandidate na osnovu dostupnih pozitivnih nalaza. Rezultati se zatim procenjuju na kandidatima čiji status nije korišćen za formiranje datog upita. Time se proverava da li naučeni odnos između proteinskih reprezentacija može da se prenese na podatke nezavisne od kuriranog skupa za treniranje.
+
+<!-- RECENZIJA: (1) PROVENIJENCIJA PODATAKA — nejasno i etički kritično: ovde "prikupljenim iz dokumentovanih slučajeva pacijenata", RAD.md §3.3 kaže "literaturno dokumentovani slučajevi", a Zahvalnice (obe verzije) kažu "osobe koje su ustupile svoje rezultate alergoloških testiranja". Ako su realni pacijenti: OBAVEZNO odobrenje etičke komisije / IRB + izjava o informisanom pristanku + anonimizacija — inače većina časopisa neće poslati rad u recenziju. Ako je literatura: navesti sve izvore (PMID) u Supplementary i izjaviti da odobrenje nije potrebno.
+(2) PROTOKOL NEPOTPUN: konkretan protokol (leave-one-finding-out, skrivanje pozitivnog ILI negativnog nalaza, metrike svesne smera MRR+ i NR-) prvi put se pojavljuje tek u §3.8.1 — preneti ceo taj opis ovde. Navesti: broj pacijenata, raspodelu broja nalaza po pacijentu, udeo pozitivnih/negativnih, kriterijum n>=2. -->
+
 
 ### 2.5.3. Statističko testiranje i bootstrap intervali poverenja
 
@@ -191,6 +226,9 @@ Poređenja modela sprovedena su na istim upitima kako bi se razlike u rangiranju
 Intervali poverenja za razlike u performansama procenjivani su bootstrap postupkom. Kada je struktura podataka to zahtevala, resampling je vršen na nivou literaturnog izvora umesto na nivou pojedinačnih parova, čime se izbegava tretiranje više parova iz iste studije kao potpuno nezavisnih opažanja.
 
 Statistička značajnost i intervali poverenja interpretirani su zajedno sa veličinom uočene razlike, a ne samo na osnovu p-vrednosti.
+
+<!-- RECENZIJA: (1) Rezultati (§3.8.1) izveštavaju "cluster-permutacija p" — permutacioni/cluster-permutacioni test nije opisan ovde; dodati. (2) Study-level (po izvoru) i patient-level (po pacijentu) klasterisanje dosledno primeniti na SVE tvrdnje o razlici i izveštavati OBE procene (nivo primera i nivo klastera), ne samo povoljniju — to je jak metodološki doprinos (RAD.md §5.4), zadržati eksplicitno. (3) Višestruka poređenja: §3.5 (42 × ~21 korelacija) i §3.6 (861 par) — navesti FDR korekciju ili obrazložiti da je §3.6 nekorigovan jer je nalaz negativan. -->
+
 
 ## 2.6. Mehanističke analize
 
@@ -226,6 +264,9 @@ Modeli trenirani nad ovim podskupovima poređeni su sa modelom koji koristi punu
 
 Da bi se direktno ispitalo da li model koristi interakcije između različitih dimenzija embeddinga, analizirano je **861 par dimenzija** identifikovanih kao relevantne dimenzije reprezentacije.
 
+<!-- RECENZIJA: Formulacija zbunjuje — nije 861 nezavisno identifikovanih parova, već svih C(42,2)=861 parova među 42 stabilne dimenzije iz §3.4.1. Preformulisati. Obrazložiti izbor praga "42" (iz top-50, a ne top-20) kao "relevantnog skupa". -->
+
+
 Upoređena su dva modela. Prvi koristi samo aditivne efekte odabranih dimenzija. Drugi, pored aditivnih efekata, uključuje eksplicitne proizvode između odabranih parova dimenzija.
 
 Ovim poređenjem testira se da li dodatno modelovanje međudimenzionalnih interakcija pruža informaciju koja nije sadržana u pojedinačnim dimenzijama posmatranim nezavisno.
@@ -258,6 +299,9 @@ Da bi se ispitalo da li doprinos MLP-a zavisi od dostupnosti sekvencijalnog sign
 
 Za svaku grupu analiziran je MLP gain definisan razlikom recipročnih rangova. Posebna pažnja posvećena je upitima kod kojih BLAST ne obezbeđuje snažan signal.
 
+<!-- RECENZIJA: Precizirati podelu — §3.7.2 koristi kvartile BLAST rr, §3.7.3 medijanu; opisati oba. Definisati OPERATIVNO "zagušenje/crowding" familije (koristi se u §3.7.2-3.7.3, §4.6-4.7 kao "dijagnostikovano", a kriterijum nigde nije dat — npr. broj kandidata iznad praga sličnosti u pool-u). Razjasniti "crowded upit" naspram "upit koji dodiruje crowded familiju" (§3.7.3). -->
+
+
 Ova analiza omogućava da se utvrdi da li MLP predstavlja alternativni signal kada je sekvencijalna sličnost informativna ili prvenstveno dopunjuje BLAST u slučajevima u kojima je sekvencijalni signal slab.
 
 ### 2.7.4. Analiza upita sa slabim BLAST rezultatom (BLAST-weak queries)
@@ -279,6 +323,11 @@ Motivacija iza analize je da se utvrdi da li postoje sistematske karakteristike 
 
 Zamena ESM-2 reprezentacije aminokiselinskim sastavom uništava najveći deo performansi modela; pad je vidljiv i na sopstvenom trening skupu (validaciona AUC 0,983→0,733), što isključuje objašnjenje da je reč samo o slabijoj generalizaciji — reprezentacija je suštinski siromašnija. Ovo je najveći pojedinačni efekat izmeren u celom radu.
 
+<!-- RECENZIJA: (1) Δ MRR na pacijentima je po STAROJ, konflatirajućoj metrici (kombinovani MRR za pozitive+negative), prenetoj iz RAD.md — a §3.8.1 argumentuje da je ta metrika pogrešna za pacijentski skup. Preračunati po MRR+/NR- ili eksplicitno obrazložiti zašto je za ablacije kombinovana metrika prihvatljiva. Isto važi za §3.2 i §3.3.3.
+(2) Tabela sa jednim redom — spojiti §3.1 + §3.2 + §3.3.3 u jednu ablacionu tabelu sa jasno označenim protokolom po redu.
+(3) Δ = -0,159: MRR ne može ispod 0, pa je bazni MRR MLP(Hadamard) na pacijentima >= ~0,16-0,20 — a taj apsolutni broj se nigde ne navodi. Dati baznu vrednost. -->
+
+
 ## 3.2. Enkodiranje parova: Hadamard nadmašuje apsolutnu razliku
 
 | Enkodiranje | Protokol | MRR / Δ MRR | Značajno? |
@@ -287,6 +336,9 @@ Zamena ESM-2 reprezentacije aminokiselinskim sastavom uništava najveći deo per
 | Hadamard → apsolutna razlika (ista arhitektura) | Pacijenti (176/54) | Δ = −0,055 [−0,099, −0,016] | da, 2 od 3 testa |
 
 Nijedna testirana konfiguracija apsolutne razlike nije dostigla polazni model pod LOCO-om; ovaj nalaz je motivisao prelazak na Hadamard produkt. Prednost Hadamard enkodiranja potvrđena je nezavisno i na pacijentskom skupu.
+
+<!-- RECENZIJA: Raspon "MRR 0,1060–0,1737" zbunjuje: gornja granica je IZNAD BLAST-a (0,1243) i finalnog MLP(Hadamard) (0,1259), a tekst kaže "dosledno negativno". Razlog (svaka konfiguracija naspram sopstvenog baseline-a na svojoj podeli) je tačan, ali sirovi MRR ne sme u istu tabelu bez upozorenja. Izvestiti UPARENI Δ (raspon), ne sirovi MRR raspon; ili oba, uz jasnu napomenu da sirovi MRR nije uporediv sa ostalim tabelama. -->
+
 
 ## 3.3. Povećanje kapaciteta modela ne poboljšava performanse
 
@@ -299,11 +351,16 @@ Nijedna testirana konfiguracija apsolutne razlike nije dostigla polazni model po
 | MLP(Hadamard), ESM-2 3B | 0,1131–0,1136 | LOCO, čist trening | −0,0107 do −0,0112 | da, značajno lošije |
 | Cosine, ESM-2 3B prostor (bez treninga) | – | LOCO | −0,0007 vs. cosine 650M | ne |
 
+<!-- RECENZIJA §3.3.1: (1) Prikazati stvarne CI (tabela kaže "CI uključuje nulu" ali CI se ne vidi) i Hits@k uz MRR. (2) "čist trening" — nedefinisan termin (nasleđen iz RAD.md); objasniti šta kontrastira. Ako znači "bez Inferred u treningu", protivreči §2.1.2 ("Inferred nisu korišćeni za trening") — razjasniti da li su raniji eksperimenti ipak koristili Inferred. (3) "cosine" kao ranker se koristi ovde, u §3.3.2 i §3.8.2, ali NIJE opisan u Metodologiji (§2 opisuje samo MLP i logističku regresiju, §2.7 samo BLAST) — dodati odeljak o baznim modelima (cosine ESM-2, BLAST, i bar jedan domenski prediktor: AllerCatPro / AlgPred / SDAP). (4) 3B na pacijentima: RAD.md je tvrdio da je 3B značajno BOLJI od BLAST-a na pacijentima — taj rezultat ovde nedostaje; ako je izostavljen, reći zašto. -->
+
 ### 3.3.2. Veći kapacitet interakcije parova ne poboljšava model
 
 | Model | MRR | Protokol | Δ vs. cosine (0,1209) | Značajno? |
 |---|---:|---|---:|---|
 | Bilinearni model (low-rank outer product) | 0,1004 | LOCO | −0,0205 | da, značajno lošije |
+
+<!-- RECENZIJA: Δ se ovde meri naspram cosine (0,1209), a u §3.3.1 naspram BLAST (0,1243) — uskladiti referentnu tačku kroz sve tabele (predlog: uvek naspram BLAST-a). Navesti dimenziju low-rank projekcije i broj parametara bilinearnog modela. -->
+
 
 ### 3.3.3. Nelinearna MLP klasifikacija donosi malo u odnosu na linearni klasifikator
 
@@ -313,9 +370,15 @@ Nijedna testirana konfiguracija apsolutne razlike nije dostigla polazni model po
 
 Nijedan od tri nezavisna oblika povećanja kapaciteta — veći jezički model, izražajnija reprezentacija para, dublji klasifikator — nije doneo merljivo poboljšanje; kod backbone-a i interakcije para efekat je značajno negativan. Redosled važnosti komponenti: kvalitet reprezentacije ≫ način kombinovanja para > dubina klasifikatora.
 
+<!-- RECENZIJA: (1) Δ na pacijentima ponovo po konflatirajućoj metrici — v. komentar u §3.1. (2) Dodati eksplicitan zaključak koji rad izbegava: MLP SAMOSTALNO ne prevazilazi BLAST u agregatu (LOCO 0,1259 vs 0,1243, n.z.; dobici u Q1-Q3 iz §3.7.2 se poništavaju sa gubitkom -0,196 u Q4). Vrednost je isključivo u KOMPLEMENTARNOSTI / fuziji — reći to ovde i u zaključku. -->
+
+
 ## 3.4. Model se oslanja na stabilan podskup dimenzija embeddinga
 
 Sve analize u ovom odeljku sprovedene su na linearnom Hadamard modelu treniranom nad celim trening skupom (bez LOCO/pacijentskog holdout-a), preko 5 nezavisnih semena (42, 137, 271, 314, 500).
+
+<!-- RECENZIJA: Kontradikcija — preambula kaže "bez LOCO/pacijentskog holdout-a", ali §3.4.3 koristi "LOCO (40 folda)". Uskladiti (verovatno: analize stabilnosti/interpretacije na celom skupu, orezivanje 3.4.3 pod LOCO — to eksplicitno reći). -->
+
 
 ### 3.4.1. Stabilnost najbolje rangiranih dimenzija kroz slučajna semena (cross-seed stability)
 
@@ -325,6 +388,9 @@ Sve analize u ovom odeljku sprovedene su na linearnom Hadamard modelu treniranom
 | Top-50 dimenzija po \|težini\| | 0,77 |
 
 17/20, odnosno 42/50 dimenzija pojavljuje se u top-skupu kod ≥4 od 5 semena — model dosledno koristi skoro isti mali podskup dimenzija, ne nasumičan izbor pri svakom treningu.
+
+<!-- RECENZIJA: Dodati null-model: očekivani slučajni Jaccard za top-20 od 1280 je ~1,6%, za top-50 ~4%. Jaccard 0,80/0,77 je jasno iznad slučajnog, ali to treba pokazati (permutacioni test ili analitički bazni nivo). Obrazložiti zašto se baš top-50 (→ 42 stabilne dimenzije) uzima kao "relevantni skup" za §3.5-3.6, a ne top-20. -->
+
 
 ### 3.4.2. Pojedinačna diskriminativnost ne objašnjava u potpunosti upotrebu dimenzija u modelu
 
@@ -338,9 +404,15 @@ Preklapanje top-20/top-50 dimenzija po \|težini\| sa top-20/top-50 dimenzija po
 
 Prosečna razlika je blizu nule, ali to nije "nema efekta" — u 4 od 5 semena je odsecanje blago pogoršalo rezultat; jedino seme u kome je "pobedilo" imalo je neobično nizak baseline u tom konkretnom semenu (regresija ka sredini, ne sistematsko poboljšanje). Odsecanje po Cohen's $d$ uklanja i deo dimenzija koje model stvarno koristi (3.4.2), pa ne uspeva da odvoji šum od signala.
 
+<!-- RECENZIJA: Sa n=5 semena i std 0,0037, mean Δ=+0,0003 je prosto "nema detektabilnog efekta". Post-hoc objašnjenje da je 1 "pobedničko" seme imalo nizak baseline deluje kao odbacivanje neugodnog rezultata — pošteniji iskaz: efekat nije detektabilan pri ovoj snazi. Za jaču tvrdnju: više semena ili formalni test ekvivalencije (TOST). -->
+
+
 ## 3.5. Većina ključnih dimenzija prati merljiva svojstva proteina
 
 Za svih ~1535 proteina u pool-u izračunata su realna biofizička i strukturna svojstva direktno iz FASTA sekvenci (dužina, GRAVY hidrofobnost, naboj na pH 7, aromatičnost, izoelektrična tačka, indeks nestabilnosti, udeo sekundarne strukture, pun aminokiselinski sastav), i korelisana (Spearman) sa vrednošću svake od 42 dimenzije (3.4.1) preko celog pool-a.
+
+<!-- RECENZIJA: "~1535" vs 1.536 u §2.1.1 — navesti tačan broj. §3.5.3 kaže "21 deskriptor", ali ovde nabrojano: 6 biohemijskih + sekundarna struktura (1 ili 3?) + 20 AA frekvencija >> 21 — uskladiti tačan broj i listu. Dodati FDR korekciju (42 dim × broj deskriptora) i korigovane p-vrednosti. -->
+
 
 ### 3.5.1. Povezanost sa biohemijskim svojstvima
 
@@ -360,9 +432,15 @@ Preostalih 18 dimenzija (bez korelata u 3.5.1) testirano je protiv udela sekunda
 
 Ukupno **40/42 (95%) relevantnih dimenzija** korelira sa bar jednim od 21 testiranih realnih deskriptora. Preostale dve (nazvane po formalnom indeksu dimenzije) ne prate nijedno kontinuirano svojstvo, ali formalna provera (Mann–Whitney) pokazuje da svaka kodira kategorijsku pripadnost proteinskoj familiji (PR-10, p=1,4×10⁻¹⁷; Tropomyosin, p=4,1×10⁻⁹) — objašnjenje zašto ih korelacija sa kontinuiranim svojstvima nije uhvatila. Nijedna dimenzija ne prelazi \|r\|=0,5; ni jedna nije "čist" enkoder jedne osobine. Ovo su korelacione, ne uzročne asocijacije — ne dokazuju da navedena svojstva pokreću prediktivni signal modela.
 
+<!-- RECENZIJA: "Nijedna dimenzija ne prelazi |r|=0,5" vs tabela §3.5.1 koja navodi raspon "0,33–0,50" — granični slučaj, preformulisati u "|r| <= 0,5". Mann–Whitney za familijsku pripadnost: koliko familija je testirano? Ako sve, navesti korekciju (p=1,4e-17 preživljava). Kauzalni disklejmer je dobar i konzistentan sa §2.6.2 i §4.8. -->
+
+
 ## 3.6. Eksplicitne međudimenzionalne interakcije ne pružaju merljiv dodatni signal
 
 Za svih $\binom{42}{2}=861$ parova relevantnih dimenzija, poređen je aditivni logistički model (dve dimenzije) sa modelom koji dodaje eksplicitan proizvod (interakcioni član), 5-strukom unakrsnom validacijom nad celim trening skupom (jedno seme, 42).
+
+<!-- RECENZIJA: Samo 1 seme ovde, a §3.4 koristi 5 — nedosledna strogost; proširiti na 5 ili obrazložiti. Nalaz je negativan (max ΔAUC 0,0006), pa nekorigovano višestruko testiranje ide u prilog robusnosti — reći to eksplicitno. ΔAUC je možda pogrešna mera za mali interakcioni efekat u rangiranju; razmotriti ΔMRR/Δrecall@k na held-out foldu. -->
+
 
 | Mera | Vrednost preko 861 parova |
 |---|---:|
@@ -372,6 +450,8 @@ Za svih $\binom{42}{2}=861$ parova relevantnih dimenzija, poređen je aditivni l
 Nijedan par ne pokazuje merljiv dobitak od eksplicitne interakcije — aditivna kombinacija dve dimenzije već sadrži skoro svu njihovu zajedničku prediktivnu informaciju. Ovo je nezavisna potvrda nalaza iz 3.3.3: interakcija koju Hadamard produkt nosi je ona ugrađena po konstrukciji (ista dimenzija, dva proteina), ne interakcija između različitih dimenzija unutar predstave.
 
 ## 3.7. MLP 
+
+<!-- RECENZIJA: Naslov odeljka 3.7 je nedovršen ("## 3.7. MLP ") — dopuniti, npr. "MLP naspram BLAST-a: gde nastaje razlika". -->
 
 ### 3.7.1. Ukupno LOCO poređenje sa BLAST-om
 
@@ -388,6 +468,9 @@ Videti tabelu u 3.3.1: MLP(Hadamard) 650M i BLAST su statistički izjednačeni p
 
 Spearman(BLAST rr, Δ) = −0,404 (p=1,5×10⁻⁷⁶). MLP nadmašuje BLAST u donja tri kvartila (75% upita); u gornjem kvartilu, gde je BLAST već blizu maksimuma, MLP zaostaje. Familije sa dijagnostikovanim "zagušenjem" kandidata (nsLTP/Profilin/PR-10) imaju sistemski nizak BLAST rr (mean 0,052 naspram 0,193 za ostale familije) — crowding je najekstremniji, ne poseban, slučaj ovog istog obrasca.
 
+<!-- RECENZIJA: (1) Naslov preuveličava monotonost: nije monotono — Q1=+0,029, Q2=+0,061 (MAKSIMUM), Q3=+0,025, Q4=−0,196. Preciznije: "MLP dobija u donja tri kvartila, gubi izrazito u gornjem". (2) Nema CI ni testova po kvartilu — dodati. (3) n=1928: jedinice — proteini-upiti ili (upit, partner) probe? Uskladiti sa definicijom LOCO evaluacije. (4) Gubitak −0,196 u Q4 je VEĆI od svakog pojedinačnog dobitka — istaći i povezati sa agregatom (MLP sam ≈ BLAST). (5) "zagušenje" još nedefinisano operativno (v. §2.7.3). (6) Obrazac je bar delom artefakt NEFILTRIRANOG ranga — gusto povezani čvorovi imaju mnogo poznatih partnera koji se međusobno guraju naniže; proveriti sa FILTERED rangom. -->
+
+
 ### 3.7.3. Upitima sa slabim BLAST-om dominira konkurencija kandidata, a ne nužno nizak identitet sekvence
 
 | Grupa (LOCO) | mean sequence identity % | % upita koji dodiruju crowded familiju |
@@ -397,6 +480,9 @@ Spearman(BLAST rr, Δ) = −0,404 (p=1,5×10⁻⁷⁶). MLP nadmašuje BLAST u d
 
 BLAST_slab populacija ima umeren, ne nizak, sirov identitet — pada u srednji tercil sekvencijalne sličnosti definisan u 3.7.4/pacijentskoj stratifikaciji, ne u niski. Nizak *rang* BLAST-a je posledica konkurencije mnogo sličnih kandidata unutar iste familije, ne odsustva homologije.
 
+<!-- RECENZIJA: Rasponi ("60–62%", "15,6–27,1%") — verovatno preko semena/foldova; označiti šta raspon predstavlja. Ako je §3.7.2 isključio "crowded upite" (n=1928 "ne-crowded"), kako BLAST_slab ovde ima 73–82% upita "koji dodiruju crowded familiju"? Razjasniti "crowded upit" vs "upit koji dodiruje crowded familiju". Referenca "tercil ... definisan u 3.7.4" — §3.7.4 ne definiše tercile (pacijentska stratifikacija po tercilima je u RAD.md §4.5); popraviti unakrsnu referencu. -->
+
+
 ### 3.7.4. Nijedan jednostavan biohemijski potpis ne razlikuje pobede MLP-a od njegovih poraza
 
 | Svojstvo (unutar BLAST_slab, n=1086 pobeda MLP-a / 714 poraza) | p (Mann–Whitney) | Rank-biserial efekat |
@@ -405,6 +491,9 @@ BLAST_slab populacija ima umeren, ne nizak, sirov identitet — pada u srednji t
 | Naboj, hidrofobnost, aromatičnost, instabilnost, heliks (razlika para) | 0,37–0,80 | 0,01–0,03 (zanemarljivo) |
 
 Ni sa velikom statističkom snagom (n=1800) nijedno testirano biofizičko svojstvo para ne razdvaja pobede od poraza MLP-a unutar BLAST-slabe zone; jedini (mali) signal je da MLP dodatno dobija kada je BLAST skor i unutar te zone niži — isti mehanizam iz 3.7.2, na finijoj rezoluciji, ne nov nezavisan signal.
+
+<!-- RECENZIJA: n=1086+714=1800 "BLAST_slab" naspram n=1928 "ne-crowded" u §3.7.2: ako je BLAST_slab "ispod medijane ranga" (~50%), trebalo bi ~964, ne 1800. Ukupan N i način dobijanja svakog podskupa mora biti jasno naveden — brojevi se trenutno ne uklapaju. -->
+
 
 ## 3.8. Nezavisna validacija na nivou pacijenata
 
@@ -421,9 +510,19 @@ $$\mathrm{MRR}_{+} = \mathrm{mean}(1/\mathrm{rang}), \quad \mathrm{NR}_{-} = \ma
 
 Oba efekta su statistički značajna, u suprotnim smerovima, sva tri testa. MLP(Hadamard) značajno bolje prioritizuje prave unakrsno reaktivne partnere; BLAST značajno bolje potiskuje prave negativne kandidate, efektom veće apsolutne i relativne veličine. Modeli su komplementarni specijalisti, ne jedan univerzalno superioran.
 
+<!-- RECENZIJA: Dobra i poštena reformulacija — ali sa posledicama kroz ceo rad:
+(1) Protokol (skrivanje pozitivnog/negativnog nalaza, dve metrike) PRIPADA u §2.5.2, ne u Rezultate.
+(2) Ista logika ruši kombinovanu-MRR metriku korišćenu u §3.1, §3.2, §3.3.3 (ablacije na pacijentima) i §3.8.2 (cosine) — ti brojevi se moraju preračunati ili eksplicitno ograditi.
+(3) Δ dat kao raspon ("+0,021–0,029", "−0,142–0,158") — objasniti odakle raspon (point-estimate = prosta razlika sredina: +0,029 i −0,158).
+(4) Mali uzorci: MRR+ na 100 proba / 34 pacijenta, NR- na 76 / 37; "34 uparena" vs "54 pac." drugde — definisati "upareno". Diskutovati snagu (CI za MRR+ [+0,0045,+0,0423] je širok u odnosu na efekat).
+(5) Za pozitive dodati recall@k (klinički interpretabilnije); za negative razmotriti "1 − recall@k za negative".
+(6) Apstrakt i Zaključak MORAJU reći "komplementarno / senzitivnost naspram specifičnosti", NE "MLP bolji" / "najbolje rangiranje". -->
+
+
 ### 3.8.2. ESM kosinusna sličnost naspram MLP(Hadamard)
 
 <!-- NAPOMENA: brojevi u ovoj tabeli su preneti direktno iz RAD.md 4.5 i NISU nezavisno ponovo provereni pod ispravljenom (pravac-svesnom) metrikom primenjenom u 3.8.1 -- videti pre finalizacije. -->
+<!-- RECENZIJA — BLOKATOR ZA SLANJE: ovaj pododeljak koristi upravo kombinovanu MRR metriku koju §3.8.1 proglašava neispravnom za pacijentski skup. Pre slanja: (a) preračunati cosine vs BLAST i cosine vs MLP po MRR+/NR-, ili (b) ukloniti §3.8.2 i zaključak o cosine-u izvesti samo iz LOCO rezultata (§3.3.1: cosine 3B prostor Δ −0,0007 vs cosine; cosine < BLAST na LOCO-u). Ostavljanje "videti pre finalizacije" komentara u tekstu je znak da rad nije spreman. -->
 
 | Poređenje | Wilcoxon p | Cluster-permutacija p | Bootstrap 95% CI |
 |---|---:|---:|---|
@@ -441,10 +540,14 @@ Cosine (netreniran signal nad istom reprezentacijom) je najslabiji od sva tri si
 | RQ3 | Backbone/bilinear/MLP naspram linearnog (3.3, 3.6) | Veći kapacitet ne pomaže ni na jednom od tri testirana nivoa; interakcije između dimenzija ne postoje merljivo |
 | RQ4 | Stabilnost i interpretacija dimenzija (3.4–3.5) + BLAST-komplementarnost (3.7–3.8) | Model koristi stabilan, delom biohemijski interpretabilan podskup dimenzija; prednost nad BLAST-om raste kontinuirano kako BLAST slabi, i statistički je značajna u oba smera na pacijentima (senzitivnost naspram specifičnosti) |
 
+<!-- RECENZIJA: (1) RQ4: "raste kontinuirano kako BLAST slabi" — nije monotono (Q2>Q1, §3.7.2). (2) "značajna u oba smera na pacijentima" može zavarati da MLP dobija oba — jedan smer FAVORIZUJE BLAST. Preformulisati: "MLP dominira u senzitivnosti, BLAST u specifičnosti (većim efektom)". (3) RQ1: "sam trening (ne sama reprezentacija) daje prednost nad BLAST-om" — kvalifikovati: na LOCO-u nema prednosti, na pacijentima je podeljeno. (4) Dodati red: MLP samostalno ≈ BLAST u agregatu, vrednost je u fuziji. -->
+
 ---
 # 4. Diskusija
 
 ## 4.1. Kvalitet reprezentacije i način formiranja para važniji su od povećavanja složenosti modela
+
+<!-- RECENZIJA: Diskusija (4.1-4.9) je uglavnom dobro odmerena i poštena (naročito 4.8). Uskladiti sa §3.8.1: gde god se pominje "prednost MLP-a nad BLAST-om", dodati "u senzitivnosti; BLAST je bolji u specifičnosti". Dodati kratak pasus o ograničenju metrike (nefiltriran MRR / bez gradirane relevantnosti) i kako bi filtered MRR + Hits@k + nDCG + recall@k kriva promenili/učvrstili nalaze. -->
 
 Rezultati pokazuju da povećavanje složenosti modela nije samo po sebi dovelo do boljeg predviđanja unakrsne reaktivnosti. ESM-2 reprezentacije sadržale su informaciju korisnu za razlikovanje cross-reactive parova koja se ne može objasniti samo sastavom aminokiselina. Istovremeno, veći ESM-2 model nije doneo poboljšanje u odnosu na model sa 650 miliona parametara. Slično tome, eksplicitno povećavanje prostora interakcija pomoću bilinearne reprezentacije nije poboljšalo rezultat, dok poređenje MLP-a sa linearnim klasifikatorom nije pokazalo jasnu prednost dodatne nelinearne složenosti.
 
@@ -557,6 +660,8 @@ Ove metodološke odluke menjaju način na koji treba interpretirati rezultate. P
 
 # 4.10. Ograničenja
 
+<!-- RECENZIJA: Numeracija — "4.10" je označeno kao glavni odeljak (#) ali je pododeljak Diskusije; a §5 se pojavljuje DVA puta ("# 5. Budući pravci" i "# 5. Zaključak"). Preurediti: 4.10 Ograničenja (##), 5. Budući pravci, 6. Zaključak. Dodati ograničenja: (a) metrika — nefiltriran rang, bez gradirane relevantnosti, mikro-prosek preteže velike familije; (b) deduplikacija pool-a proizvoljnim pravilom; (c) samo BLAST kao baseline, bez domenskih prediktora; (d) mala pacijentska kohorta (34/37 uparenih pacijenata). -->
+
 ## 4.10.1. Pozitivno-neobeležena priroda skupa podataka
 
 Skup podataka ne omogućava pouzdano razlikovanje svih negativnih parova od neobeleženih parova. Odsustvo dokumentovane unakrsne reaktivnosti ne znači nužno da ona ne postoji, zbog čega negativni primeri mogu sadržati neotkrivene pozitivne odnose. Ograničenje je posebno važno pri tumačenju performansi klasifikatora.
@@ -575,6 +680,8 @@ Povezivanje latentnih dimenzija ESM-2 embeddinga sa biohemijskim i strukturnim o
 
 # 5. Budući pravci istraživanja
 
+<!-- RECENZIJA: (1) Ovaj i sledeći odeljak su oba "# 5" — prenumerisati. (2) Najvažniji predlog — adaptivna fuzija BLAST+MLP — trebalo bi bar u minimalnoj formi (gating po BLAST rr) URADITI u ovom radu: ako pokaže dobitak nad samim BLAST-om na LOCO-u I na pacijentima (uz study/patient-level test), to je "glavni rezultat" koji radu trenutno nedostaje. Bez toga rad ostaje "MLP ≈ BLAST, ali drugačije". -->
+
 Rezultati ovog rada otvaraju nekoliko pravaca za dalja istraživanja. Prvi je razvoj adaptivne fuzije BLAST-a i MLP-a, pri kojoj bi doprinos MLP-a mogao biti veći u slučajevima kada BLAST daje slab ili neodlučan signal. Ova ideja predstavlja hipotezu zasnovanu na uočenoj komplementarnosti dva pristupa i nije validirana u okviru ovog rada.
 
 Dalji rad treba da uključi veće i potpuno nezavisne kohorte pacijenata kako bi se proverila reproduktivnost rezultata na različitim populacijama i eksperimentalnim protokolima. Takođe, analiza zasnovana na strukturi proteina i poznatim epitopima mogla bi pomoći u povezivanju obrazaca naučenih u embedding prostoru sa konkretnijim molekularnim svojstvima. Ove analize treba sprovoditi kao nezavisnu validaciju, a ne kao pretpostavljeni mehanizam modela.
@@ -587,6 +694,12 @@ Konačno, proširenje skupa podataka većim brojem nezavisno i eksperimentalno p
 
 Ovaj rad pokazuje da potencijalna unakrsna reaktivnost proteinskih alergena ne može biti pouzdano opisana jednom merom sličnosti. Dok sama ESM-2 cosine sličnost nije nadmašila BLAST, nadgledano kombinovanje ESM-2 reprezentacija putem Hadamard proizvoda pokazalo je znatno korisniji signal i na nezavisnim pacijentskim slučajevima ostvarilo najbolje rangiranje. Ablacione analize ukazuju da ključ nije u samoj kompleksnosti modela, već u kvalitetu proteinske reprezentacije i načinu na koji se dve reprezentacije povezuju.
 
+<!-- RECENZIJA — PRETERANE TVRDNJE naspram §3.8.1:
+- "znatno korisniji signal" — na LOCO-u je MLP ≈ BLAST (Δ +0,0016, n.z.). Ukloniti "znatno".
+- "ostvarilo najbolje rangiranje" na pacijentima — NETAČNO: §3.8.1 pokazuje podeljen ishod (BLAST značajno bolji u potiskivanju negativa, VEĆIM efektom). Zameniti: "pokazalo komplementaran profil: bolju senzitivnost uz slabiju specifičnost od BLAST-a".
+- Dodati: MLP samostalno ne zamenjuje BLAST; doprinos je kao dopunski signal, najkorisniji kada je BLAST rang slab zbog konkurencije kandidata. -->
+
+
 Rezultati zato ne ukazuju na jednostavnu zamenu BLAST-a novim modelom, već na **nov način korišćenja proteinskih reprezentacija kao dopune postojećim signalima**. Najvažniji nalaz ovog rada nije da je jedan algoritam univerzalno najbolji, već da se informacija relevantna za unakrsnu reaktivnost može nalaziti u odnosu između dva proteinska zapisa, a ne samo u njihovoj pojedinačnoj sličnosti. To predstavlja osnovu za razvoj budućih sistema koji bi sekvencijalne, reprezentacione, strukturne i kliničke informacije povezivali u jedinstven, strogo nezavisno validiran model.
 
 ---
@@ -595,15 +708,23 @@ Rezultati zato ne ukazuju na jednostavnu zamenu BLAST-a novim modelom, već na *
 
 Kod i svi korisceni resursi dostupni na: https://github.com/tardigrafika/Allergorithm
 
+<!-- RECENZIJA: Za časopis nije dovoljan GitHub link. Potrebno: (1) Zenodo DOI za zamrznut release koda + podataka; (2) objavljen kurirani skup parova (par, UniProt ID, nivo dokaza, izvor/PMID, familija) — vredan resurs, povećava citiranost; (3) tačne verzije (ESM-2 checkpoint, BLAST verzija + E-value + matrica, Foldseek verzija, RRF konstanta K, seed-ovi, hiperparametri); (4) skript koji reprodukuje svaku tabelu/figuru; (5) izjava o licenci. -->
+
+
 # Zahvalnice
 
 Želim da se zahvalim svom mentoru Stefanu Nožiniću na stručnom vođstvu, savetima i kontinuiranoj podršci tokom razvoja ovog istraživanja.
 
 Posebnu zahvalnost dugujem Mariji Stefanović na pomoći u razumevanju biološke pozadine problema, savetima u vezi sa alergenima i korisnim komentarima tokom rada.
 
+<!-- RECENZIJA — ETIKA (v. i komentar u §2.5.2): rad koristi pacijentske alergološke nalaze za nezavisnu validaciju. Pre slanja obavezno: izjava o odobrenju etičke komisije / IRB (ili obrazloženje zašto nije potrebno ako su podaci isključivo iz objavljene literature), izjava o informisanom pristanku, izjava o anonimizaciji. RAD.md Zahvalnice pominju "osobe koje su ustupile svoje rezultate alergoloških testiranja" — ako je tako, ovo je human-subjects istraživanje i traži formalno odobrenje. -->
+
+
 
 # Literatura
 Bibliografija 
+
+<!-- RECENZIJA — BLOKATOR: bibliografija je prazna, a Uvod nema nijedan citat. Potrebno: (1) poglavlje "Srodni radovi" (postojeći prediktori unakrsne reaktivnosti/alergenosti: AllerCatPro 2.0, AlgPred 2.0, AllergenOnline, SDAP; strukturni pristupi); (2) citati za ESM-2 (Lin et al. 2023, Science), Foldseek (van Kempen et al. 2024), RRF (Cormack et al. 2009), BLAST, graf-split/LOCO validaciju, PU learning (Bekker & Davis), link-prediction metrike (filtered MRR/Hits@k); (3) 25-40 referenci ukupno, popuniti references.bib. -->
 
 
 
