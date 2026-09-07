@@ -8,6 +8,8 @@ Lana Lejić
 mentor: Stefan Nožinić
 seminar: Računarstvo
 
+<!-- RECENZIJA (peer review, 2026-09): Ovaj fajl se ~70% preklapa sa rad/MLP_RAD.md (novija, uža "mehanistička" verzija). Odlučiti koji je "taj" rad; ne slati oba (salami-slicing / dupla publikacija). Ključna izmena u MLP_RAD.md koju treba preneti i ovde: pacijentski nalaz nije "MLP bolji od BLAST-a" nego KOMPLEMENTARNOST (MLP bolja senzitivnost, BLAST bolja specifičnost, većim efektom) — v. MLP_RAD.md §3.8.1. Apstrakt i Zaključak su prazni/placeholder. -->
+
 ## Apstrakt
 
 kao nešto pametno
@@ -58,6 +60,8 @@ Svaki par klasifikovan je prema pouzdanosti dokaza u jednu od četiri kategorije
 | Suspected | Literatura ukazuje na moguću reaktivnost, dokaz nedovoljan za potvrdu | 277 (14,4%) |
 | Inferred | Izvedeno iz homologije/pripadnosti istoj familiji, bez direktnog testa konkretnog para | 1.093 (56,9%) |
 
+<!-- RECENZIJA: 138+377+277+1.093 = 1.885, a ne 1.922 (v. §2.1) — manjak 37 parova; procenti sabiraju 98,1%. Objasniti (neklasifikovani parovi?) i uskladiti. Nekonzistentnost se propagira u §4.7 (511 ≠ 138+377=515; 825 ≠ 1922−1093=829 ≠ zbir-bez-Inferred 792). Predlog: dodati kolonu "gradirana relevantnost" za nDCG evaluaciju. -->
+
 Parovi iz kategorije **Inferred** nisu korišćeni za treniranje nadgledanih modela, ali su zadržani kao evaluacioni ciljevi. Ova odluka odvaja pitanje "da li model dobro rangira i manje pouzdane parove" (evaluacija) od pitanja "da li model treba da uči iz njih kao iz pouzdanog signala" (trening).
 
 ### 2.2 Problem negativnih i nepoznatih parova
@@ -89,6 +93,14 @@ $$
 $$
 
 gde je $\mathrm{rang}(q)$ pozicija tačnog kandidata u rangiranoj listi za upit $q$. Zbog recipročnog oblika, MRR je osetljiv na finu razliku između bliskih rangova (rang 3 naspram ranga 30 menja vrednost primetno), ali je manje osetljiv na razliku između već udaljenih rangova (rang 300 naspram ranga 600 doprinosi skoro identično malo).
+
+<!-- RECENZIJA — METRIKE: MRR je prihvatljiv kao JEDNA mera, ali nedovoljan i nedovoljno precizno definisan:
+(1) Ovo je formalno predikcija veza u grafu. Koristiti FILTERED rang: pri skorovanju skrivene ivice (q,t) ukloniti iz liste ostale POZNATE prave partnere čvora q. Nefiltriran rang pesimistički i neravnomerno kažnjava gusto povezane familije (nsLTP, profilin) — verovatno deo efekta "zagušenja" iz §4.
+(2) Definisati jedinicu: MRR po skrivenoj ivici (leave-one-edge-out); izveštavati MIKRO i MAKRO (po familiji). "Mikro-prosečan MRR" (§4.1) preteže gusto povezane familije.
+(3) "pozicija tačnog kandidata" (jednina) — upit često ima više poznatih partnera; precizirati da je to rang baš skrivenog partnera.
+(4) Dodati: Hits@{1,5,10} (već definisano niže — zadržati i u glavnim tabelama), nDCG@10 sa gain=f(nivo dokaza), medijalni rang+IQR. Za zadatak 2: recall@k kriva / površina do k≈20 ("work-saved over BLAST").
+(5) PU: ne koristiti precision@k/FPR/AUPRC protiv neoznačenih parova kao da su negativi; AUC samo kao interni dijagnostički signal. -->
+
 
 **Hits@K** ($K\in\{1,5,10\}$) meri udeo upita kod kojih se tačan kandidat nalazi među $K$ najbolje rangiranih kandidata:
 
@@ -181,6 +193,9 @@ Model je treniran korišćenjem funkcije gubitka **Binary Cross-Entropy with Log
 
 Za modele koji koriste reprezentaciju apsolutne razlike ulazne karakteristike standardizovane su korišćenjem z-score normalizacije izračunate isključivo na trening podacima svakog LOCO folda; za Hadamard produkt standardizacija se ne primenjuje,zadržava mali broj parametara u odnosu na dimenzionalnost referentnog skupa podataka i pokazala se kao najuspešnija neuronska varijanta.
 
+<!-- RECENZIJA: Rečenica je izlomljena ("...ne primenjuje,zadržava mali broj parametara...") — nedostaje deo teksta i razmak. Prepisati. Arhitektura "1281 → 256 → 64 → 1" odgovara varijanti sa apsolutnom razlikom + cosine (1280+1); finalni MLP(Hadamard) nema cosine karakteristiku (ulaz 1280) — navesti njegovu tačnu arhitekturu i sve hiperparametre. -->
+
+
 ### 2.5.4 Bilinearni model (detalji u Prilogu A)
 
 Kao izražajnija alternativa Hadamard produktu, ispitan je i bilinearni model $s=u^TWv$ nad niskorangnom (low-rank) faktorizacijom parova reprezentacija. Model nije uključen u završnu konfiguraciju: veći broj parametara doneo je veći rizik od preprilagođavanja na relativno malom broju nezavisnih trening primera, bez poboljšanja u odnosu na Hadamard produkt (detaljni rezultati, formulacija i diskusija u Prilogu A).
@@ -236,6 +251,8 @@ Nijedan klasičan model zasnovan na ručno konstruisanim obeležjima nije pod LO
 | MLP, apsolutna razlika$^{A.2}$ | 0,1060 do 0,1737 | LOCO, sensitivity sweep (svaka konfiguracija poređena sa sopstvenim polaznim modelom na istoj podeli) | dosledno negativno | lošije od polaznog modela u svih osam testiranih konfiguracija |
 | Bilinearni model$^{A.3}$ | 0,1004 | LOCO | −0,0205 | statistički značajno lošije |
 
+<!-- RECENZIJA: (1) "0,1060 do 0,1737" — gornja granica je IZNAD BLAST-a (0,1243) i finalnog modela (0,1259), a red kaže "dosledno negativno". Apsolutni MRR nije uporediv (svaka konfiguracija naspram sopstvenog baseline-a na svojoj podeli) — izvestiti UPARENI Δ (raspon), ne sirovi MRR, ili oboje uz jasno upozorenje. (2) "čist trening" / "referentni skup bez Inferred parova" (sledeći pasus i tabela) — nedefinisan termin; objasniti šta kontrastira. Ako znači izbacivanje Inferred iz treninga, protivreči §2.1.1 ("Inferred nisu korišćeni za treniranje") — razjasniti da li su raniji eksperimenti ipak koristili Inferred. -->
+
 Nijedna od ove dve alternativne reprezentacije para ne dostiže polazni model. MLP(Hadamard), konačna konfiguracija korišćena u ostatku rada, testiran je direktno naspram BLAST-a (umesto naspram cosine polaznog modela) pod metodološki finalnim LOCO protokolom (čist trening, referentni skup podataka bez Inferred parova), zajedno sa proverom veličine ESM-2 baznog modela (backbone):
 
 | Model | MRR | Protokol | Δ vs. BLAST | Δ vs. MLP(Hadamard) 650M | Statistička provera |
@@ -257,6 +274,12 @@ MLP(Hadamard) na ESM-2 650M je jedini neuronski model u radu koji dostiže perfo
 | RRF-4 (+ graph propagation) | 0,1304 | +0,0060 | [+0,0016, +0,0101] | [−0,0015, +0,0172] | ne |
 | RRF + MLP(Hadamard) | 0,1322 | opisno: bez statistički značajne dodatne koristi u odnosu na RRF-3 | nije izračunato | nije izračunato | ne |
 | Weighted RRF (naučene težine signala) | 0,1309 do 0,1332 | ne prevazilazi RRF-4 sa uniformnim težinama | nije izračunato | nije izračunato | ne |
+
+<!-- RECENZIJA — TABELA §4.3:
+(1) Kolona "Δ vs. prethodni korak" se ne slaže sa kolonom MRR: RRF-3 0,1294−0,1209 = 0,0085, a prijavljeno +0,0113. RRF-4 0,1304−0,1294 = 0,0010, a prijavljeno +0,0060 (to je zapravo Δ naspram BLAST-a). Kolona meša referentne tačke — preračunati.
+(2) "RRF-4 ima najviši point-estimate MRR" PROTIVREČI istoj tabeli: RRF + MLP(Hadamard) = 0,1322 i Weighted RRF do 0,1332 su viši. Preformulisati ("najviši među fuzijama bez treniranih težina") ili ukloniti.
+(3) RRF-4 uključuje graph propagation koji se po §2.4.1 NE evaluira pod LOCO (leave-one-edge-out); §2.4.1 izričito kaže "RRF-4 nije direktno uporediv sa glavnim LOCO nalazima". Zato RRF-4 ne sme stajati u LOCO koloni sažete tabele §4.6. Uskladiti.
+(4) "RRF-3 vs BLAST": 0,1294−0,1243 = 0,0051, prijavljeno +0,0057 — sitna nekonzistentnost, verovatno zaokruživanje; proveriti. -->
 
 RRF-4 ima najviši point-estimate MRR na referentnom skupu podataka pod LOCO protokolom, ali njegova superiornost nad BLAST-om i nad RRF-3 nije potvrđena na nivou nezavisnih izvora dokaza: dobitak RRF-3 naspram polaznog (cosine) modela ostaje značajan i na nivou studije, ali dobici RRF-3 naspram BLAST-a i RRF-4 naspram RRF-3 gube značajnost čim se nezavisnost proveri na nivou literaturnog izvora umesto na nivou pojedinačnog para. Fuzija signala je time najbolje opisana kao eksperiment sa najvišim point-estimate rezultatom, ne kao dokazano superioran model.
 
@@ -285,6 +308,8 @@ Nezavisna validacija izvršena je na literaturno dokumentovanim slučajevima stv
 | RRF-4 | 0,517 (n.z.) | 0,044 (značajno) | 0,047 (značajno) |
 | RRF-5 (+ LSE signal) | nije poboljšano naspram RRF-4 | 0,131 (n.z.) | 0,156 (n.z.) |
 | RRF-6 (+ MLP(Hadamard) signal) | 0,168 (n.z., ali bliže značajnosti) | 0,009 (značajno) | nije izračunato |
+
+<!-- RECENZIJA §4.5: (1) "Podgrupa bez dominantne kohorte" — RRF-4 primarni test p=0,517, "značajan" tek posle uklanjanja neimenovane kohorte. Navesti koja kohorta, koliko pacijenata uklonjeno, da li je podela unapred planirana; post-hoc podgrupa bez korekcije za višestruka poređenja — ublažiti tvrdnju. (2) "interno LOCO-potvrđenog dobitka" za LSE — §4.4 za LSE izveštava samo "95% CI (nivo para)", ne LOCO; uskladiti. (3) RRF-5/RRF-6 sastav: da li RRF-6 zadržava LSE signal koji je u RRF-5 pogoršao rezultat? Precizirati. -->
 
 Dodavanje LSE signala (interno LOCO-potvrđenog dobitka za nsLTP/Profilin) u RRF-5 pogoršalo je rezultat na pacijentima; dodavanje MLP(Hadamard) signala u RRF-6 ga je poboljšalo. Ovaj kontrast je sam po sebi nalaz: interni (LOCO) dobitak signala ne predviđa pouzdano njegov doprinos na pacijentskom skupu, dalje razmotreno u Diskusiji.
 
@@ -318,6 +343,9 @@ Cosine je najslabiji od sva tri signala na pacijentskom skupu, statistički zna�
 
 Rezultat ide u **suprotnom smeru** od hipoteze: point-estimate prednost MLP(Hadamard)-a raste, ne opada, sa porastom sekvencijalne sličnosti, i praktično je zanemarljiva baš u tercilu najniže sličnosti. Nijedan pojedinačan tercil sem najnižeg (gde je efekat sam po sebi zanemarljive veličine) nije statistički značajan na ovom uzorku, pa se iz ovoga ne može izvesti čvrst zaključak, ali nalaz ne pruža potporu prvobitnoj hipotezi i naveden je ovde radi transparentnosti, ne da bi potvrdio unapred očekivan rezultat.
 
+<!-- RECENZIJA: (1) CI za najniži tercil [+0,0000, +0,0007] dodiruje nulu — ne zvati ga "značajnim"; širina 0,0007 pri n=60 deluje sumnjivo precizno, proveriti. (2) Posledica koju rad ne izvlači: headline prednost MLP-a nad BLAST-om (Δ≈0,013 iz §4.5) koncentrisana je u tercilu NAJVIŠE sličnosti (+0,0290, n=18 pacijenata) i zanemarljiva tamo gde bi klinički bila najvrednija (niska homologija, panalergeni iz §1.1) — eksplicitno diskutovati u §5.3. U MLP_RAD.md §3.8.1 je ovo reformulisano kao komplementarnost — uskladiti. -->
+
+
 ### 4.6 Sažetak glavnih rezultata
 
 | Model                   | Referentni skup podataka (LOCO)                    | Stvarni pacijenti              |
@@ -330,7 +358,10 @@ Rezultat ide u **suprotnom smeru** od hipoteze: point-estimate prednost MLP(Hada
 
 ### 4.7 Ablaciona studija: koji deo modela zaista doprinosi
 
-Da bi se utvrdilo koja komponenta MLP(Hadamard) modela nosi najviše diskriminativnog signala, sprovedena je ablaciona studija na istom 57-pacijentskom skupu (176 upita, 54 pacijenta). Svaka komponenta zamenjena je pojednostavljenom alternativom, dok su ostale komponente ostale nepromenjene, i rezultat je poređen sa produkcionim polaznim modelom istom uparenom metodologijom kao ranije.
+Da bi se utvrdilo koja komponenta MLP(Hadamard) modela nosi najviše diskriminativnog signala, sprovedena je ablaciona studija na istom 57-pacijentskom skupu (176 upita, 54 pacijenta).
+
+<!-- RECENZIJA §4.7: "57-pacijentskom skupu (176 upita, 54 pacijenta)" — 57 vs 54, uskladiti. Dalje u odeljku: "Confirmed i Strong, ukupno 511 parova" → 138+377=515; "825 u produkcionom skupu" → 1922−1093=829, a zbir kategorija bez Inferred = 792 (v. §2.1.1). "medijan percentil 34,3% ... gotovo izjednačeno sa BLAST-ovih 66,9%" — 34,3 nije blizu 66,9; rečenica je verovatno htela da kaže da je produkcioni baseline (66,2%) blizak BLAST-u — preformulisati. bootstrap CI [+0,0010, +0,0047] je red veličine uži od svih drugih CI u radu — verovatno tipografska greška. Ablacioni Δ MRR na pacijentima su po kombinovanoj metrici koju MLP_RAD.md §3.8.1 odbacuje — preračunati po MRR+/NR-. -->
+ Svaka komponenta zamenjena je pojednostavljenom alternativom, dok su ostale komponente ostale nepromenjene, i rezultat je poređen sa produkcionim polaznim modelom istom uparenom metodologijom kao ranije.
 
 **Arhitektonske komponente.** Testirane su tri zamene: (1) ESM-2 reprezentacija zamenjena aminokiselinskim sastavom proteina (20-dimenzioni vektor frekvencija, bez informacije o rasporedu ili motivima), (2) Hadamard kombinovanje para zamenjeno apsolutnom razlikom, (3) MLP klasifikator zamenjen linearnim modelom (logistička regresija nad istim Hadamard ulazom, bez skrivenih slojeva).
 
@@ -355,6 +386,9 @@ Ovo ograničenje ima direktnu posledicu za dizajn budućih proširenja referentn
 ### 5.2 Očekivanja od strukturnih reprezentacija
 
 Rezultati komponentne ablacije direktno informišu ovo pitanje: kada je ESM-2 reprezentacija zamenjena znatno siromašnijom (aminokiselinski sastav), pad performansi je bio drastičan; obrnuto pitanje, da li bogatija reprezentacija (npr. strukturna, dobijena iz AlphaFold ili OpenFold predikcije) donosi dodatni napredak.Foldseek TM-score, strukturni signal uključen u RRF fuziju, nije samostalno testiran kao jedini signal u ovom radu, ali njegovo prisustvo u RRF-3 nije bilo dovoljno da RRF-3 naspram BLAST-a ostane značajno na nivou studije, što ukazuje da strukturna sličnost, bar u obliku globalnog TM-score poravnanja ne nosi snažan nezavisan signal za ovaj zadatak.
+
+<!-- RECENZIJA: Rečenica je izlomljena ("...donosi dodatni napredak.Foldseek TM-score...") — nedostaje razmak i deo je fragment. Prepisati. Sadržajno: Foldseek TM-score kao samostalan signal na LOCO-u treba stvarno izmeriti (tvrdnja "ne nosi snažan nezavisan signal" se sada izvodi posredno). -->
+
 
 Ovo je značajno zbog toga što je unakrsna reaktivnost fenomen koji zavisi od lokalnih, ne globalnih, strukturnih osobina: dostupnosti i konformacije konkretnih epitopa, ne ukupnog oblika proteina. Globalni TM-score, kao i globalni cosine nad mean-pooled reprezentacijom agregira informaciju preko cele sekvence i time potencijalno razblažuje baš onaj lokalni signal koji bi bio najrelevantniji. LSE pooling nad lokalnim prozorima delimično podržava ovo tumačenje, pokazuje realan dobitak za dve od tri testirane familije, ali ne za sve. To znači da "lokalnija" reprezentacija nije univerzalno rešenje. Na osnovu ovoga, veći potencijal bi verovatno imalo kombinovanje strukturnih reprezentacija sa eksplicitnom informacijom o epitopima i površinskoj dostupnosti aminokiselinskih ostataka, a ne prosta zamena jednog globalnog modela reprezentacije drugim, globalnim ali strukturnim modelom.
 
@@ -449,6 +483,7 @@ Ovaj prilog sadrži pun opis koraka obrade pool-a kandidata i dva dokumentovana 
 
 # Zakljucak
 
+<!-- RECENZIJA: Zaključak je prazan; naslov bez dijakritike. Napisati 1-2 pasusa: (a) MRR-uporedivost MLP(Hadamard) i BLAST na LOCO-u; (b) komplementarnost na pacijentima (senzitivnost vs specifičnost); (c) kapacitet ne pomaže, reprezentacija i pairwise enkodiranje pomažu; (d) ograničenja podataka (PU, nezavisnost izvora). Bez preterivanja. -->
 
 ### Zahvalnica
 
@@ -457,5 +492,8 @@ Ovaj prilog sadrži pun opis koraka obrade pool-a kandidata i dva dokumentovana 
 Posebnu zahvalnost dugujem Mariji Stefanović na pomoći u razumevanju biološke pozadine problema, savetima u vezi sa alergenima i korisnim komentarima tokom rada.
 
 Zahvaljujem se i svim osobama koje su ustupile svoje rezultate alergoloških testiranja, čime su omogućile nezavisnu validaciju modela na stvarnim slučajevima i značajno doprinele ovom istraživanju.
+
+<!-- RECENZIJA — ETIKA: ovo ("osobe koje su ustupile svoje rezultate alergoloških testiranja") znači human-subjects komponentu, a §3.3 je opisuje kao "literaturno dokumentovane slučajeve". Razjasniti. Ako su realni pacijenti: obavezno odobrenje etičke komisije / IRB + izjava o informisanom pristanku + anonimizacija pre slanja u časopis. -->
+
 
 
