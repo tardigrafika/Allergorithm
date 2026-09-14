@@ -10,14 +10,6 @@ Mentor: Stefan Nožinić
 
 ---
 
-## Apstrakt
-
-Ovo bih napisao mnogo više kao apstrakt za naučni rad, bez viška tvrdnji i sa jasnim tokom.
-
-Apstrakt
-
-### Apstrakt
-
 ### Apstrakt
 
 Unakrsna alergijska reaktivnost između proteina ne može se pouzdano opisati jednom merom sličnosti sekvenci. Ovaj rad ispituje da li reprezentacije proteinskog jezičkog modela ESM-2 sadrže signal povezan sa unakrsnom reaktivnošću koji nije obuhvaćen klasičnim metodama poređenja sekvenci. Na skupu proteinskih alergena, ESM-2 reprezentacije korišćene su za učenje modela koji rangira potencijalno unakrsno reaktivne partnere.
