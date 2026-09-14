@@ -1,3 +1,7 @@
+---
+bibliography: references.bib
+---
+
 # Šta model uparenih vrednosti baziran na ESM-2 uči o unakrsnoj reaktivnosti proteina?
 
 Lana Lejić
@@ -8,21 +12,39 @@ Mentor: Stefan Nožinić
 
 ## Apstrakt
 
-nwsto smort
+Ovo bih napisao mnogo više kao apstrakt za naučni rad, bez viška tvrdnji i sa jasnim tokom.
 
+Apstrakt
 
-### Ključne reči ?
+### Apstrakt
 
-nez jel ovo treba d
+### Apstrakt
+
+Unakrsna alergijska reaktivnost između proteina ne može se pouzdano opisati jednom merom sličnosti sekvenci. Ovaj rad ispituje da li reprezentacije proteinskog jezičkog modela ESM-2 sadrže signal povezan sa unakrsnom reaktivnošću koji nije obuhvaćen klasičnim metodama poređenja sekvenci. Na skupu proteinskih alergena, ESM-2 reprezentacije korišćene su za učenje modela koji rangira potencijalno unakrsno reaktivne partnere.
+
+Sama kosinusna sličnost ESM-2 embeddinga nije nadmašila BLAST. Međutim, nadgledani model zasnovan na kombinovanju reprezentacija dva proteina pokazao je komplementaran signal. Najveće poboljšanje u odnosu na BLAST javlja se kod kandidata za koje BLAST daje slabiji signal. Na nezavisnim pacijentskim slučajevima ESM-2 model bolje rangira pozitivne kandidate, dok BLAST bolje razlikuje negativne kandidate.
+
+Rezultati pokazuju da ESM-2 reprezentacije mogu pružiti informaciju koja dopunjuje klasičnu sličnost sekvenci. Kombinovanje ova dva izvora informacije može biti korisno za prioritizaciju kandidata za dalje eksperimentalno ispitivanje.
+
+### Ključne reči
+
+unakrsna reaktivnost alergena; proteinski jezički modeli; ESM-2; Hadamardov proizvod; LOCO validacija; BLAST
 
 
 # 1. Uvod
 
 ### 1.1. Unakrsna reaktivnost kao problem reprezentacije proteina
 
-Unakrsna alergijska reaktivnost predstavlja sposobnost IgE antitela da prepoznaju homologne proteine iz različitih alergenih izvora. Ovaj fenomen nastaje zbog očuvanih molekularnih karakteristika između proteina, ali nije određen isključivo njihovom sekvencijalnom sličnošću. Proteini sa relativno niskim identitetom sekvence mogu izazivati unakrsnu reaktivnost, dok visoka sekvencijalna sličnost sama po sebi ne predstavlja dovoljan uslov za zajedničko imunološko prepoznavanje.
+Unakrsna alergijska reaktivnost predstavlja sposobnost IgE antitela da prepoznaju homologne proteine iz različitih alergenih izvora [@aalberse2001cross; @eaaci2022guide]. Ovaj fenomen nastaje zbog očuvanih molekularnih karakteristika između proteina, ali nije određen isključivo njihovom sekvencijalnom sličnošću. Proteini sa relativno niskim identitetom sekvence mogu izazivati unakrsnu reaktivnost, dok visoka sekvencijalna sličnost sama po sebi ne predstavlja dovoljan uslov za zajedničko imunološko prepoznavanje.
 
 Zbog toga se predikcija unakrsne reaktivnosti može posmatrati kao problem reprezentacije proteina: potrebno je pronaći prikaz proteinske sekvence koji zadržava informacije relevantne za funkcionalnu i imunološku srodnost, a ne samo za evolutivnu sličnost.
+
+Postojeći bioinformatički resursi za alergene baze podataka kao što su WHO/IUIS Allergen Nomenclature [@allergen2026who], Allergome [@allergome2026], AllFam [@meduniwien2026allfam], SDAP [@sdap2026database], COMPARE [@hesi2026compare] i AllergenOnline [@allergenonline2026], kao i alati poput Allermatch-a [@allermatch2026] prvenstveno se oslanjaju na kurirane zapise i jednostavna pravila sekvencijalne sličnosti (pragove procenta identiteta i dužine preklapanja) za procenu potencijalne unakrsne reaktivnosti.
+
+**Istraživački jaz.** Iz navedenog proizlaze tri konkretna nedostatka koje ovaj rad adresira: 
+1) nijedan od postojećih resursa sistematski ne ispituje da li naučene reprezentacije proteinskog jezičkog modela (ESM-2) nose informaciju o unakrsnoj reaktivnosti komplementarnu sekvencijalnom poravnanju (BLAST); 
+2) nijedan to ne čini uz protokol koji eksplicitno kontroliše curenje informacija kroz povezane proteine, umesto nasumične podele parova (LOCO, 2.5.1); 
+3) nijedan ne testira da li se takav signal, ako postoji, prenosi na nezavisne, dokumentovane slučajeve pacijenata, a ne samo na kurirani literaturni skup. Ovaj rad se bavi upravo tom prazninom: da li i kada embedding-based signal nadmašuje ili dopunjuje klasično sekvencijalno poravnanje.
 
 ### 1.2. Jezički modeli za proteine i naučene reprezentacije proteina
 
@@ -51,47 +73,44 @@ Rad ispituje četiri istraživačka pitanja:
 ## 2.1. Skup podataka o unakrsnoj reaktivnosti
 ### 2.1.1. Skup kandidata proteina
 
-Skup kandidata formiran je iz WHO/IUIS Allergen Nomenclature baze i obuhvata proteinske alergene za koje su bile dostupne odgovarajuće aminokiselinske sekvence. Nakon uklanjanja nevalidnih sekvenci, sekvenci kraćih od 30 aminokiselina i potpunih duplikata, konačni skup sadrži 1.536 proteinskih alergena. Izoforme sa različitim aminokiselinskim sekvencama tretirane su kao zasebni kandidati.
-
-Detaljni koraci čišćenja i dokumentovani granični slučajevi opisani su u Supplementary Material-u.
+Skup kandidata formiran je iz WHO/IUIS Allergen Nomenclature baze [@allergen2026who] i obuhvata proteinske alergene za koje su bile dostupne odgovarajuće aminokiselinske sekvence. Nakon uklanjanja nevalidnih sekvenci, sekvenci kraćih od 30 aminokiselina, potpunih duplikata i proteina bez validnog ESM-2 embeddinga, konačni skup sadrži **1.535 proteinskih alergena**. Izoforme sa različitim aminokiselinskim sekvencama tretirane su kao zasebni kandidati.
 
 ### 2.1.2. Kurirani unakrsno reaktivni parovi
 
-Poznati odnosi unakrsne reaktivnosti prikupljeni su iz objavljene naučne literature i povezani sa proteinima iz konačnog skupa kandidata. Ukupno je identifikovano 1.922 jedinstvena para koji obuhvataju 477 alergena i 317 literaturnih izvora. Za svaki par zabeležen je izvor dokaza i nivo pouzdanosti, a kada je bio dostupan i pripadnost proteinskoj familiji.
+Poznati odnosi unakrsne reaktivnosti prikupljeni su iz objavljene naučne literature i povezani sa proteinima iz konačnog skupa kandidata. Ukupno je identifikovano 1.916 jedinstvenih parova koji obuhvataju 477 alergena i 317 literaturnih izvora. Za svaki par zabeležen je izvor dokaza i nivo pouzdanosti, a kada je bio dostupan i pripadnost proteinskoj familiji.
 
-Parovi su klasifikovani u četiri nivoa dokaza: Confirmed (138), Strong (377), Suspected (277) i Inferred (1.093). Kategorija Inferred obuhvata parove čija je unakrsna reaktivnost izvedena iz homologije ili pripadnosti istoj proteinskoj familiji bez direktnog eksperimentalnog dokaza. Ovi parovi nisu korišćeni kao pozitivni primeri tokom treniranja nadgledanih modela, ali su zadržani u evaluacionom skupu.
+Parovi su klasifikovani u četiri nivoa dokaza: Confirmed (138), Strong (377), Suspected (275) i Inferred (1.089), što čini 1.879 parova sa pozitivnim dokazom. Preostalih 37 parova nisu pozitivni dokazi: 36 su "Reported negative" (dokumentovan nalaz odsustva unakrsne reaktivnosti, korišćen kao kontrola) i 1 "Risky/Contested" (sporna, kontradiktorna evidencija). Inferred parovi (unakrsna reaktivnost izvedena iz homologije/familije, bez direktnog eksperimentalnog dokaza) nisu korišćeni kao pozitivni trening primeri, ali su zadržani u evaluaciji.
+
+**Od kandidata do parova — tok podataka.** Dva broja koja se pojavljuju u radu (1.535, 477) opisuju dva različita, ugnježdena skupa, ne dve verzije istog skupa podataka:
+
+```
+1.535 kandidata sa embeddingom (WHO/IUIS, posle čišćenja)  →  CEO candidate pool za rangiranje (BLAST/cosine/MLP)
+        │  samo proteini koji se pojavljuju u BAR JEDNOM kurirano potvrđenom paru
+        ▼
+   477 alergena  →  jedini proteini koji ikad figurišu kao POZITIVAN primer (trening ili evaluacija)
+```
+
+Preostalih ~1.058 kandidata (1.535 − 477) nikada se ne pojavljuju kao pozitivan par. Služe samo kao distraktori u kandidatskom pool-u i kao izvor za uzorkovanje negativa (2.1.3), čineći zadatak realističnim (model mora da izdvoji tačnog partnera iz mnogo više kandidata nego što ima poznatih pozitivnih odnosa).
 
 ### 2.1.3. Pozitivno-neobeleženo okruženje i uzorkovanje negativa
 
-Skup podataka ima karakteristike positive-unlabeled (PU) problema: činjenica da određeni par nije zabeležen u literaturi ne znači da je eksperimentalno potvrđeno da između proteina ne postoji unakrsna reaktivnost. Zbog toga se odsustvo para iz kuriranog skupa ne može direktno interpretirati kao negativna klasa.
+Skup podataka ima karakteristike positive-unlabeled (PU) problema: činjenica da par nije zabeležen u literaturi ne znači da je eksperimentalno potvrđeno odsustvo unakrsne reaktivnosti, pa se odsustvo iz kuriranog skupa ne može direktno tumačiti kao negativna klasa. Negativni primeri za trening zato su uzorkovani iz parova van kurirane pozitivne relacije, nezavisno od proteinskih familija (da se ne uvede implicitna familijska pretpostavka), u fiksnom odnosu **1 pozitivan : 10 negativnih**.
 
-Za treniranje modela negativni primeri su stoga uzorkovani iz parova koji nisu prisutni u kuriranoj pozitivnoj relaciji. Negativno uzorkovanje vršeno je nezavisno od oznaka proteinskih familija kako bi se izbeglo uvođenje eksplicitne familijske pretpostavke u sam problem predikcije. Odnos pozitivnih i negativnih primera i konkretna procedura uzorkovanja navedeni su uz odgovarajuće eksperimente radi potpune reproduktivnosti.
+Pod LOCO protokolom (2.5.1), negativni parovi za svaki fold uzorkuju se isključivo iz proteina TRENING skupa tog folda. Nijedan protein iz test komponente ne učestvuje u konstrukciji trening negativa i generišu se nezavisno (novo seme) za svaki fold, bez deljenog fiksnog skupa negativa.
 
 ## 2.2. ESM-2 vektorske reprezentacije (embeddings) proteina
 
 ### 2.2.1. ESM-2 model
 
-Za generisanje vektorskih reprezentacija proteinskih sekvenci korišćen je **ESM-2 (Evolutionary Scale Modeling 2)** proteinski jezički model. Model je prethodno treniran nad velikim skupom proteinskih sekvenci i uči kontekstualne reprezentacije aminokiselina na osnovu njihovog položaja u sekvenci i konteksta ostalih aminokiselina.
-
-Kao primarni model korišćen je **ESM-2 650M**, koji sadrži približno 650 miliona parametara. **ESM-2 3B**, sa približno 3 milijarde parametara, korišćen je u kontrolnom eksperimentu za ispitivanje uticaja veličine modela na dobijene reprezentacije.
+Za generisanje vektorskih reprezentacija proteinskih sekvenci korišćen je **ESM-2 (Evolutionary Scale Modeling 2)** proteinski jezički model, koji uči kontekstualne reprezentacije amino kiselina na osnovu njihovog položaja i konteksta u sekvenci. Kao primarni model korišćen je **ESM-2 650M** (~650M parametara); **ESM-2 3B** (~3B parametara) korišćen je u kontrolnom eksperimentu za ispitivanje uticaja veličine modela na dobijene reprezentacije.
 
 ### 2.2.2. Reprezentacije po aminokiselini i agregacija srednjom vrednošću (mean pooling)
 
-Za svaku aminokiselinu u ulaznoj sekvenci ESM-2 generiše kontekstualni vektor:
+Za svaku aminokiselinu u ulaznoj sekvenci dužine $L$ ESM-2 generiše kontekstualni vektor $h_i$. Pošto modeli mašinskog učenja zahtevaju reprezentaciju fiksne dimenzionalnosti, per-residue reprezentacije agregirane su primenom **mean pooling-a**: 
 
-$$
-h_1, h_2, \ldots, h_L,
-$$
+$u = \frac{1}{L}\sum_{i=1}^{L} h_i$. 
 
-gde je $L$ dužina proteinske sekvence. Svaki vektor predstavlja aminokiselinu u kontekstu cele sekvence.
-
-Pošto modeli mašinskog učenja zahtevaju reprezentaciju fiksne dimenzionalnosti, per-residue reprezentacije agregirane su primenom **mean pooling-a**:
-
-$$
-u = \frac{1}{L}\sum_{i=1}^{L} h_i.
-$$
-
-Na ovaj način svaka proteinska sekvenca predstavljena je jednim vektorom $u$. Za ESM-2 650M korišćeni su vektori dimenzionalnosti **1280**, dok je ESM-2 3B korišćen sa svojom odgovarajućom izlaznom dimenzionalnošću.
+Na ovaj način svaka proteinska sekvenca predstavljena je jednim vektorom $u$. za ESM-2 650M dimenzionalnosti **1280**, za ESM-2 3B odgovarajućom (većom) izlaznom dimenzionalnošću.
 
 ## 2.3. Reprezentacija parova dva proteina
 
@@ -99,98 +118,92 @@ Pojedinačni embeddingi $u$ i $v$ opisuju proteine zasebno. Za predikciju unakrs
 
 ### 2.3.1. Enkodiranje apsolutnom razlikom (Absolute-difference encoding)
 
-Reprezentacija para apsolutnom razlikom definisana je kao:
+Reprezentacija para apsolutnom razlikom definisana je kao 
 
-$$
-x = |u-v|.
-$$
+$x = |u-v|$
 
-Svaka komponenta vektora $x$ predstavlja apsolutnu razliku između odgovarajućih komponenti embeddinga dva proteina. Na ovaj način reprezentacija direktno opisuje udaljenost proteina duž svake dimenzije prostora reprezentacije.
-
-Apsolutna razlika je simetrična u odnosu na redosled proteina. Zamenom $u$ i $v$ dobija se ista reprezentacija para.
+, svaka komponenta opisuje udaljenost proteina duž odgovarajuće dimenzije reprezentacije. Enkodiranje je simetrično u odnosu na redosled proteina — zamenom $u$ i $v$ dobija se ista reprezentacija.
 
 ### 2.3.2. Hadamardov proizvod (Hadamard encoding)
 
-Hadamardov proizvod definisan je kao:
+Hadamardov proizvod definisan je kao 
 
-$$
-x = u \odot v.
-$$
+$x = u \odot v$
 
-Svaka komponenta rezultujućeg vektora dobija se poelementnim množenjem odgovarajućih komponenti dve proteinske reprezentacije:
-
-$$
-x_i = u_i v_i.
-$$
-
-Ovim enkodiranjem svaka dimenzija predstavlja zajedničku aktivaciju odgovarajuće latentne osobine kod oba proteina. Visoke vrednosti mogu nastati kada oba proteina imaju izraženu istu komponentu reprezentacije, čime se eksplicitno uvode interakcije između njihovih naučenih osobina.
-
-Kao i apsolutna razlika, Hadamardov proizvod je simetričan prema zameni proteina $u$ i $v$.
+,odnosno $x_i = u_i v_i$ po komponenti. Poelementno množenje odgovarajućih komponenti dve proteinske reprezentacije. Svaka dimenzija tako predstavlja zajedničku aktivaciju odgovarajuće latentne osobine kod oba proteina, čime se eksplicitno uvodi interakcija između njihovih naučenih osobina. Kao i apsolutna razlika, Hadamardov proizvod je simetričan prema zameni proteina $u$ i $v$.
 
 ### 2.3.3. Kontrola složenijih interakcija
 
-Pored element-wise enkodiranja, ispitan je bilinearni pristup zasnovan na spoljašnjem proizvodu (outer product):
+Kao kontrolni eksperiment (da li eksplicitno modelovanje složenijih interakcija pruža dodatnu informaciju u odnosu na element-wise enkodiranje) ispitan je i bilinearni pristup zasnovan na spoljašnjem proizvodu:
 
-$$
-X = uv^\mathsf{T}.
-$$
+$X = uv^\mathsf{T}$
 
-Za razliku od prethodnih reprezentacija, outer product eksplicitno modeluje interakciju svake dimenzije embeddinga prvog proteina sa svakom dimenzijom embeddinga drugog proteina. Time se dobija znatno veća reprezentacija para.
+,koji modeluje interakciju svake dimenzije jednog proteina sa svakom dimenzijom drugog. Zbog velike dimenzionalnosti punog outer product-a ($1280\times1280$) korišćena je low-rank parametrizacija (projekcija na 64 dimenzije). Zbog velike dimenzionalnosti i slabije stabilnosti nije uključen u završni model.
 
-Ovaj pristup korišćen je kao kontrolni eksperiment za proveru da li eksplicitno modelovanje složenijih interakcija između embeddinga pruža dodatnu informaciju. Zbog velike dimenzionalnosti i slabije stabilnosti nije uključen u završni model. Detalji eksperimenta dati su u Supplementary Material-u.
 ## 2.4. Prediktivni modeli
 
 ### 2.4.1. MLP(Hadamard)
 
-Za predikciju unakrsne reaktivnosti korišćen je višeslojni perceptron (MLP) nad Hadamardovom reprezentacijom para. Ulaz modela je vektor Hadamardovog proizvoda dobijen iz embeddinga dva proteina.
+Za predikciju unakrsne reaktivnosti korišćen je višeslojni perceptron (MLP) nad Hadamardovom reprezentacijom para: nelinearna funkcija 
 
-MLP predstavlja nelinearnu funkciju koja mapira reprezentaciju para u verovatnoću unakrsne reaktivnosti:
+$\hat{y} = f_{\theta}(x)$ 
 
-$$
-\hat{y} = f_{\theta}(x).
-$$
+koja mapira reprezentaciju para u verovatnoću unakrsne reaktivnosti. Model je treniran minimizacijom binarne unakrsne entropije (BCE) koristeći AdamW, uz dropout, weight decay i early stopping na validacionoj AUC.
 
-Model je treniran minimizacijom binarne unakrsne entropije (binary cross-entropy) koristeći Adam optimizer. Tokom treniranja primenjena je regularizacija kroz dropout i weight decay. Treniranje je prekinuto primenom early stopping-a kada se performanse na validacionom skupu nisu dalje poboljšavale.
+Finalna arhitektura: 
 
-Finalna arhitektura MLP-a sastoji se od dva skrivena sloja sa nelinearnom aktivacionom funkcijom i dropout regularizacijom. Broj neurona po slojevima i ostali hiperparametri određeni su na razvojnom skupu i zatim fiksirani pre završne evaluacije.
+$\mathrm{Hadamard}(1280){\to}\mathrm{Linear}(1280{\to}32){\to}\mathrm{ReLU}{\to}\mathrm{Dropout}(0{,}3){\to}\mathrm{Linear}(32{\to}1)$. 
+
+Ulazne dimenzije Hadamard proizvoda nisu standardizovane (z-score standardizacija je dijagnostikovano štetna za ovaj ulaz. Ona narušava prirodnu skalu proizvoda koja sama nosi deo signala). Svi hiperparametri su fiksirani pre završne evaluacije i identični za svih 40 foldova.
 
 ### 2.4.2. Kontrola linearnim klasifikatorom
 
-Da bi se odvojio doprinos nelinearnosti klasifikatora od informacije sadržane u samoj reprezentaciji para, kao kontrolni model korišćena je logistička regresija.
+Da bi se odvojio doprinos nelinearnosti klasifikatora od informacije sadržane u samoj reprezentaciji para, kao kontrolni model korišćena je logistička regresija nad **istim Hadamardovim ulazom** kao MLP, bez skrivenih nelinearnih slojeva: 
+$\hat{y} = \sigma(w^\mathsf{T}x+b)$
 
-Logistička regresija koristi **isti Hadamardov ulaz** kao MLP. Za razliku od MLP-a, model ne sadrži skrivene nelinearne slojeve. Njegov skor je određen linearnom kombinacijom komponenti ulaznog vektora:
+, gde je $\sigma$ sigmoidna funkcija. Poređenjem ova dva modela uz isti ulaz ispituje se da li dodatna prediktivna sposobnost potiče od same Hadamard reprezentacije ili od sposobnosti MLP-a da nad njom modeluje nelinearne odnose.
 
-$$
-\hat{y} = \sigma(w^\mathsf{T}x+b)
-$$
+### 2.4.3. Baseline modeli
 
-, gde je $\sigma$ sigmoidna funkcija.
+**BLAST** [@ncbi2026blast]: sekvencijalni signal (2.7.1), bez treniranja; kandidati se rangiraju direktno po BLAST skoru poravnanja upit-kandidat sekvenci.
 
-Poređenjem ova dva modela uz isti ulaz može se ispitati da li dodatna prediktivna sposobnost potiče od same Hadamard reprezentacije ili od mogućnosti MLP-a da nad njom modeluje nelinearne odnose.
+**Cosine**: kosinusna sličnost ESM-2 embeddinga ($u$, $v$) bez ikakve naučene transformacije. Netreniran signal nad istom reprezentacijom koju koristi MLP(Hadamard), koristi se da se odvoji doprinos same reprezentacije od doprinosa treninga.
+
+**ESM-2 3B backbone**: identičan MLP(Hadamard) klasifikator i protokol kao primarni model (2.4.1), jedina razlika je backbone (ESM-2 3B umesto 650M, veća izlazna dimenzionalnost embeddinga)
+
+**Bilinearni (low-rank outer product)**: opisan u 2.3.3; treniran istim postupkom (BCE, AdamW, early stopping) kao MLP(Hadamard), ulaz je projektovan outer product umesto Hadamard proizvoda.
 
 ## 2.5. Protokol validacije
 
+Glavna izveštavana metrika je **Mean Reciprocal Rank (MRR)**: za svaki upit $q$ model rangira kandidate
+
+$\mathrm{rr}(q) = 1/r(q)$ gde je $r(q)$ rang tačnog kandidata; 
+$\mathrm{MRR} = \mathrm{mean}_q(\mathrm{rr}(q))$, mikro-prosek preko svih pojedinačnih upita (ne makro-prosek po grupi/proteinu), osim gde je eksplicitno drugačije navedeno. 
+
+AUC (korišćena u 3.1 i za early stopping u 2.4.1) je standardna površina ispod ROC krive validacionog skupa binarnog klasifikatora, nezavisna od MRR-a.
+
 ### 2.5.1. Validacija izostavljanjem povezane komponente (Leave-One-Connected-Component-Out — LOCO)
 
-Random podela parova na trening i test skup nije odgovarajuća za ovaj problem zbog povezanosti proteina kroz mrežu unakrsne reaktivnosti. Ako su dva proteina povezana u istoj komponenti, njihovo razdvajanje između treninga i testa može omogućiti modelu da indirektno iskoristi informacije iz test komponente.
+Random podela parova na trening i test skup nije odgovarajuća zbog povezanosti proteina kroz mrežu unakrsne reaktivnosti: ako su dva proteina u istoj komponenti, njihovo razdvajanje između treninga i testa može omogućiti modelu da indirektno iskoristi informacije iz test komponente. Zbog toga je evaluacija sprovedena metodom **Leave-One-Connected-Component-Out (LOCO)**. Ovde se jednom i eksplicitno definiše koji nivo dokaza (2.1.2) ulazi u graf, u trening i u evaluaciju.
 
-Zbog toga je evaluacija sprovedena metodom **Leave-One-Connected-Component-Out (LOCO)**. Graf unakrsne reaktivnosti formiran je tako da proteini predstavljaju čvorove, a poznati odnosi unakrsne reaktivnosti grane. U svakoj iteraciji jedna povezana komponenta izostavljena je iz treninga i korišćena kao test skup. Model je treniran isključivo nad preostalim komponentama.
+- **Graf i povezane komponente.** Čvorovi grafa su svi proteini iz kandidatskog skupa (2.1.1). Grane grafa su svi parovi sa **pozitivnim dokazom bilo kog nivoa** Confirmed, Strong, Suspected i Inferred "Reported negative" i "Risky/Contested" parovi (37 parova) **nikada nisu grane** i ne utiču na povezanost komponenti. Povezane komponente ovog grafa čine 40 foldova. U svakoj iteraciji jedna komponenta se izostavlja iz treninga i koristi kao test skup, a model se trenira isključivo nad preostalim komponentama.
+- **Trening (pozitivni primeri).** Unutar trening dela svakog folda, kao pozitivni primeri koriste se samo parovi nivoa Confirmed, Strong i Suspected. Inferred parovi **nisu** pozitivni trening primeri, iako jesu grane grafa koje su odredile sam oblik komponenti/foldova.
+- **Evaluacija (ispravni ciljevi rangiranja).** Test skup svakog folda koristi **isti, širi skup grana kao i graf** Confirmed, Strong, Suspected i Inferred kao ispravne (pozitivne) ciljeve pri računanju ranga $r(q)$. 
 
-Ovakva podela omogućava procenu sposobnosti modela da generalizuje na proteinske odnose koji nisu povezani sa primerima dostupnim tokom treniranja.
+Posledica ove definicije: 1.089 Inferred parova oblikuje sastav 40 povezanih komponenti (i time koji proteini padaju u koji fold) i broje se kao ispravni evaluacioni ciljevi, ali nikada nisu pozitivan trening signal.
+
+Rang $r(q)$ pod ovim protokolom računa se nad **celim** kandidatskim skupom (samo je sâm upit isključen). Ostali poznati pozitivni partneri upita nisu uklonjeni iz kandidatske liste pre rangiranja (rangiranje nije "filtrirano" u smislu standardnog knowledge-graph-completion protokola). Ovo je namerno povezano sa analizom "zagušenja" (crowding) u 3.7.2–3.7.3: proteini iz familija sa mnogo međusobno pozitivnih parova mogu imati niži $r(q)$ zbog konkurencije drugih tačnih odgovora, ne zbog lošijeg modela; pacijentski protokol (2.5.2). Nasuprot tome poznati nalazi istog pacijenta eksplicitno se isključuju iz kandidatske liste pre rangiranja. Ovakva podela omogućava procenu generalizacije na proteinske odnose koji nisu povezani sa primerima dostupnim tokom treniranja.
 
 ### 2.5.2. Nezavisna evaluacija na nivou pacijenata
 
-Pored evaluacije na kuriranom skupu, generalizacija modela ispitana je na nezavisnim podacima prikupljenim iz dokumentovanih slučajeva pacijenata. Ovi podaci nisu korišćeni za treniranje modela.
+Generalizacija modela dodatno je ispitana na nezavisnim podacima iz dokumentovanih slučajeva pacijenata koji nisu korišćeni za treniranje. Za svakog pacijenta model rangira kandidate na osnovu dostupnih pozitivnih nalaza, a rezultat se procenjuje na kandidatima čiji status nije korišćen za formiranje upita. Time se proverava da li se naučeni odnos prenosi na podatke nezavisne od kuriranog trening skupa.
 
-Za svakog pacijenta model rangira kandidate na osnovu dostupnih pozitivnih nalaza. Rezultati se zatim procenjuju na kandidatima čiji status nije korišćen za formiranje datog upita. Time se proverava da li naučeni odnos između proteinskih reprezentacija može da se prenese na podatke nezavisne od kuriranog skupa za treniranje.
+Svi pacijentski slučajevi transkribovani su iz prethodno objavljenih, javno dostupnih kliničkih izveštaja (citirani izvor po slučaju); nijedan slučaj nije simuliran niti direktno prikupljen od autora. Pošto je reč isključivo o sekundarnoj analizi već objavljenih, neidentifikovanih podataka, nije bilo potrebno posebno etičko odobrenje.Y
+<!-- ???????? jel moze ovako -->
 
 ### 2.5.3. Statističko testiranje i bootstrap intervali poverenja
 
-Poređenja modela sprovedena su na istim upitima kako bi se razlike u rangiranju procenjivale u uparenim uslovima. Za poređenje performansi korišćen je **Wilcoxon signed-rank test**, koji ne zahteva pretpostavku normalne raspodele razlika između parova rezultata.
-
-Intervali poverenja za razlike u performansama procenjivani su bootstrap postupkom. Kada je struktura podataka to zahtevala, resampling je vršen na nivou literaturnog izvora umesto na nivou pojedinačnih parova, čime se izbegava tretiranje više parova iz iste studije kao potpuno nezavisnih opažanja.
-
-Statistička značajnost i intervali poverenja interpretirani su zajedno sa veličinom uočene razlike, a ne samo na osnovu p-vrednosti.
+Poređenja modela sprovedena su na istim upitima (upareni uslovi), korišćenjem **Wilcoxon signed-rank test-a** (ne zahteva normalnost razlika). Na pacijentskom nivou (2.5.2) korišćen je i **cluster-permutacioni test** (10.000 permutacija, "klaster" = sve probe jednog pacijenta permutovane zajedno) kao nezavisna, robusnija provera koja poštuje zavisnost proba unutar pacijenta. Bootstrap intervali poverenja računati su odvojeno. Uzorkovanje na nivou literaturnog izvora ili pacijenta, umesto pojedinačnih parova, kad god je struktura zavisnosti to zahtevala i interpretirani zajedno sa veličinom razlike, ne samo p-vrednošću.
 
 ## 2.6. Mehanističke analize
 
@@ -198,48 +211,32 @@ Nakon evaluacije prediktivnih performansi, sprovedene su dodatne analize sa cilj
 
 ### 2.6.1. Stabilnost odabranih dimenzija embeddinga kroz različita slučajna semena
 
-Stabilnost važnih dimenzija embeddinga ispitana je ponavljanjem treniranja modela sa različitim slučajnim semenom. Za svako seme izdvojene su dimenzije sa najvećim doprinosom modelu.
+Stabilnost važnih dimenzija ispitana je ponavljanjem treniranja sa 5 različitih slučajnih semena i merenjem preklapanja top-k skupova dimenzija (po $|$težini$|$) **Jaccardovim indeksom** 
+$J(A,B)=|A\cap B|/|A\cup B|$. 
 
-Stabilnost izbora procenjena je preklapanjem skupova najbolje rangiranih dimenzija. Korišćeni su **top-k overlap** i **Jaccardov indeks**:
-
-$$
-J(A,B)=\frac{|A\cap B|}{|A\cup B|}.
-$$
-
-Visoko preklapanje između različitih semena ukazuje na stabilan izbor dimenzija, dok nisko preklapanje ukazuje da se model može oslanjati na različite ekvivalentne dimenzije embedding prostora.
+Visoko preklapanje ukazuje na stabilan izbor dimenzija.
 
 ### 2.6.2. Povezanost dimenzija embeddinga sa biohemijskim i strukturnim deskriptorima
 
-Da bi se ispitalo da li pojedinačne dimenzije embeddinga imaju prepoznatljivu biohemijsku ili strukturnu interpretaciju, njihove vrednosti povezane su sa poznatim osobinama proteina.
-
-Analizirani su deskriptori kao što su dužina sekvence, izoelektrična tačka, ukupni naboj, GRAVY skor, aromatičnost, indeks nestabilnosti, sastav aminokiselina i karakteristike sekundarne strukture.
-
-Ove analize predstavljaju **post-hoc asocijacije** između naučenih reprezentacija i poznatih proteinskih osobina. One ne predstavljaju dokaz da određena osobina uzrokuje prediktivni signal modela.
+Da bi se ispitalo da li pojedinačne dimenzije imaju prepoznatljivu biohemijsku ili strukturnu interpretaciju, njihove vrednosti korelisane su sa poznatim osobinama proteina (dužina, naboj, hidrofobnost, sekundarna struktura, aminokiselinski sastav i drugo. Ove analize su **post-hoc asocijacije**: ne predstavljaju dokaz da određena osobina uzrokuje prediktivni signal modela.
 
 ### 2.6.3. Orezivanje dimenzija (Dimension pruning)
 
-Ispitano je da li dimenzije koje pojedinačno pokazuju diskriminativnu sposobnost mogu zajedno da reprodukuju ponašanje modela. Dimenzije su rangirane prema njihovoj diskriminativnosti korišćenjem **Cohenovog $d$**, nakon čega su formirani podskupovi sa različitim brojem najbolje rangiranih dimenzija.
-
-Modeli trenirani nad ovim podskupovima poređeni su sa modelom koji koristi punu reprezentaciju. Cilj analize je da se utvrdi da li je prediktivni signal koncentrisan u malom broju dimenzija ili zahteva širu reprezentaciju embedding prostora.
+Ispitano je da li dimenzije koje pojedinačno pokazuju diskriminativnu sposobnost (Cohenov $d$, računat po train-fold-u) mogu zajedno da reprodukuju ponašanje punog modela, zadržavanjem top 50% najbolje rangiranih dimenzija po foldu (ostatak nuliran; pun protokol u Supplementary S2.6.3). Cilj je utvrditi da li je prediktivni signal koncentrisan u malom broju dimenzija ili zahteva širu reprezentaciju.
 
 ### 2.6.4. Test međudimenzionalnih interakcija
 
-Da bi se direktno ispitalo da li model koristi interakcije između različitih dimenzija embeddinga, analizirano je **861 par dimenzija** identifikovanih kao relevantne dimenzije reprezentacije.
+Da bi se direktno ispitalo da li model koristi interakcije između različitih dimenzija, poređen je aditivni logistički model sa modelom koji dodaje eksplicitan proizvod između para dimenzija, preko svih 861 para relevantnih dimenzija. Ovim poređenjem testira se da li dodatno modelovanje međudimenzionalnih interakcija pruža informaciju koja nije već sadržana u pojedinačnim dimenzijama.
 
-Upoređena su dva modela. Prvi koristi samo aditivne efekte odabranih dimenzija. Drugi, pored aditivnih efekata, uključuje eksplicitne proizvode između odabranih parova dimenzija.
-
-Ovim poređenjem testira se da li dodatno modelovanje međudimenzionalnih interakcija pruža informaciju koja nije sadržana u pojedinačnim dimenzijama posmatranim nezavisno.
 ## 2.7. Komplementarnost sa BLAST-om
 
 ### 2.7.1. Osnovna linija rangiranja pomoću BLAST-a (BLAST ranking baseline)
 
-BLAST je korišćen kao sekvencijalna baseline metoda za rangiranje kandidata. Za svaki proteinski upit kandidati su rangirani prema BLAST signalu dobijenom poređenjem njegove sekvence sa sekvencama kandidata.
-
-Za svaki upit $q$ i kandidata $c$ beleži se rang kandidata u BLAST rang-listi. Isti skup upita i kandidata koristi se za poređenje sa MLP modelom.
+BLAST je korišćen kao sekvencijalna baseline metoda: za svaki proteinski upit $q$ kandidati $c$ rangirani su direktno prema BLAST skoru poravnanja upit-kandidat sekvenci. Isti skup upita i kandidata koristi se za poređenje sa MLP modelom.
 
 ### 2.7.2. Dobitak MLP-a na nivou upita (Query-level MLP gain)
 
-Da bi se ispitalo gde MLP pruža korist u odnosu na BLAST, za svaki upit izračunata je razlika između njihovih recipročnih rangova:
+Da bi se ispitalo gde MLP pruža korist u odnosu na BLAST, za svaki upit izračunata je razlika recipročnih rangova:
 
 $$
 \Delta_q =
@@ -248,28 +245,51 @@ $$
 \frac{1}{r_{\mathrm{BLAST}}(q)},
 $$
 
-gde su $r_{\mathrm{MLP}}(q)$ i $r_{\mathrm{BLAST}}(q)$ rang tačnog kandidata prema MLP-u i BLAST-u.
+gde su $r_{\mathrm{MLP}}(q)$ i $r_{\mathrm{BLAST}}(q)$ rang tačnog kandidata prema MLP-u i BLAST-u. Pozitivna vrednost označava da je MLP bolje rangirao tačan kandidat; na ovaj način ukupna razlika u MRR-u može se analizirati na nivou pojedinačnih upita.
 
-Pozitivna vrednost $\Delta_q$ označava da je MLP bolje rangirao tačan kandidat, dok negativna vrednost označava prednost BLAST-a. Na ovaj način ukupna razlika u MRR-u može se analizirati na nivou pojedinačnih upita.
+### 2.7.3. Stratifikacija prema jačini BLAST-a i analiza BLAST-slabih upita
 
-### 2.7.3. Stratifikacija prema jačini BLAST-a
-
-Da bi se ispitalo da li doprinos MLP-a zavisi od dostupnosti sekvencijalnog signala, upiti su podeljeni prema uspešnosti BLAST-a.
-
-Za svaku grupu analiziran je MLP gain definisan razlikom recipročnih rangova. Posebna pažnja posvećena je upitima kod kojih BLAST ne obezbeđuje snažan signal.
-
-Ova analiza omogućava da se utvrdi da li MLP predstavlja alternativni signal kada je sekvencijalna sličnost informativna ili prvenstveno dopunjuje BLAST u slučajevima u kojima je sekvencijalni signal slab.
-
-### 2.7.4. Analiza upita sa slabim BLAST rezultatom (BLAST-weak queries)
-
-Upiti sa slabim BLAST rezultatom analizirani su zasebno kako bi se ispitalo da li MLP upravo u ovom režimu pruža najveću dodatnu informaciju.
-
-Unutar ove grupe upiti su podeljeni na slučajeve u kojima je MLP nadmašio BLAST (**MLP-wins**) i slučajeve u kojima je BLAST ostao bolji (**MLP-loses**). Grupe su zatim poređene prema karakteristikama njihovih proteinskih reprezentacija i rangiranja.
-
-Motivacija iza analize je da se utvrdi da li postoje sistematske karakteristike upita kod kojih embedding-based model uspeva da nadomesti nedostatak sekvencijalnog signala.
+Da bi se ispitalo da li doprinos MLP-a zavisi od dostupnosti sekvencijalnog signala, upiti su podeljeni u grupe prema uspešnosti BLAST-a (npr. kvartili BLAST rr), sa $\Delta_q$ analiziranim po grupi — posebna pažnja posvećena je upitima kod kojih BLAST ne obezbeđuje snažan signal (**BLAST-weak**). Unutar te grupe, upiti su dalje podeljeni na slučajeve gde je MLP nadmašio BLAST (**MLP-wins**) naspram slučajeva gde je BLAST ostao bolji (**MLP-loses**), i grupe su poređene prema karakteristikama proteinskih reprezentacija i rangiranja. Cilj je utvrditi da li MLP prvenstveno dopunjuje BLAST kada je sekvencijalni signal slab, i da li postoje sistematske karakteristike upita gde embedding-based model uspeva da nadomesti taj nedostatak.
 
 
 # 3. Rezultati
+
+## 3.0. Glavna tabela: svi modeli i baseline-ovi
+
+**LOCO (zlatni skup, 40 foldova, mikro-MRR preko svih upita):**
+
+| Model | MRR | Δ vs. BLAST | Značajno? |
+|---|---:|---:|---|
+| BLAST (2.7.1) | 0,1243 | referenca | — |
+| Cosine, ESM-2 650M (bez treninga) | 0,1209 | −0,0034 | ne |
+| **MLP(Hadamard), ESM-2 650M** (primarni model) | 0,1259 | +0,0016 | ne, CI uključuje nulu |
+| MLP(Hadamard), ESM-2 3B | 0,1131–0,1136 | −0,0107 do −0,0112 | da, lošije |
+| Bilinearni (low-rank outer product, 2.3.3) | 0,1004 | −0,0239 | da, lošije |
+
+**Nezavisna validacija na pacijentima** (dve odvojene metrike — 3.8.1; senzitivnost/specifičnost, ne jedan MRR):
+
+| Poređenje | MLP | BLAST | Δ | Wilcoxon p | Cluster-perm. p | Bootstrap 95% CI |
+|---|---:|---:|---:|---:|---:|---|
+| MRR₊ (senzitivnost, n=100/34 pac.) | 0,203 | 0,174 | +0,029 | 0,0156 | 0,0227 | [+0,0045, +0,0423] |
+| NR₋ (specifičnost, n=76/37 pac.) | 0,441 | 0,599 | −0,158 | 0,0006 | <0,0001 | [−0,2135, −0,0787] |
+| Cosine vs. BLAST (svi upiti) | — | — | — | — | 0,0205 | [−0,0921, −0,0121] |
+| Cosine vs. MLP(Hadamard) (svi upiti) | — | — | — | — | 0,0026 | [−0,1042, −0,0214] |
+
+Δ je definisana kao srednja **uparena razlika po pacijentu** (MLP−BLAST, makro-prosek preko 34, odn. 37 uparenih pacijenata), ne razlika agregatnih proseka u koloni MLP/BLAST — ista jedinica na kojoj su računati i bootstrap CI (resampling na nivou pacijenta) i cluster-permutacioni test (2.5.3).
+
+### 3.0.1. Stabilnost glavnog LOCO rezultata preko 5 nezavisnih semena
+
+Gornji LOCO rezultat za primarni model (0,1259) potiče od jednog semena (42). Da bi se proverilo da li je ta vrednost reprezentativna ili artefakt jednog seed-a, isti protokol (2.4.1) ponovljen je za 5 nezavisnih semena; BLAST referenca je determinstička (0,1243 za sve semenove):
+
+| Seme | 42 | 137 | 271 | 314 | 500 | Mean (std) |
+|---|---:|---:|---:|---:|---:|---:|
+| LOCO MRR, MLP(Hadamard) 650M | 0,1254 | 0,1229 | 0,1258 | 0,1245 | 0,1162 | **0,1230 (0,0039)** |
+
+Prosek preko 5 semena (0,1230) leži blago ispod BLAST reference (0,1243), unutar jednog standardnog odstupanja — konzistentno sa nalazom da razlika nije statistički značajna (CI uključuje nulu, gornja tabela). Ovo pojačava, a ne slabi, glavni zaključak: LOCO MRR MLP(Hadamard)-a naspram BLAST-a nije robusno pozitivan preko semena; komplementarnost sa BLAST-om po podgrupama upita (3.7) i na pacijentima (3.8) ostaje pouzdaniji, seed-nezavisan nalaz od same tačkaste LOCO MRR razlike.
+
+*Napomena o preciznosti:* seme 42 u ovoj proveri (0,1254) blago odstupa od vrednosti 0,1259 citirane kao rezultat primarnog modela — razlika (0,0005) potiče od manje razlike u verziji skripte (`analysis/hadamard_standardize_multiseed_1548.py`, pisana radi ove provere, naspram originalnog `ml/loco_blast_vs_mlp_hadamard_only_1548.py`), a ne od promene protokola. Razlika je osam puta manja od standardnog odstupanja preko semena (0,0039) i ne menja nijedan zaključak.
+
+Detaljni protokoli, dodatne konfiguracije (sweep apsolutne razlike, linearni klasifikator) i mehanističke analize dimenzija embeddinga dati su u nastavku (3.1–3.9).
 
 ## 3.1. ESM-2 pruža znatno bogatije prediktivne informacije od jednostavnog sastava
 
@@ -283,7 +303,7 @@ Zamena ESM-2 reprezentacije aminokiselinskim sastavom uništava najveći deo per
 
 | Enkodiranje | Protokol | MRR / Δ MRR | Značajno? |
 |---|---|---|---|
-| Apsolutna razlika, 8 konfiguracija (sweep) | LOCO, svaka konfig. naspram sopstvenog polaznog modela na istoj podeli | MRR 0,1060–0,1737, dosledno negativno | lošije u svih 8 konfiguracija |
+| Apsolutna razlika, 8 konfiguracija (sweep arhitekture: veličina skrivenih slojeva, dropout, weight decay) | LOCO, svaka konfig. naspram sopstvenog polaznog modela na istoj podeli | MRR 0,1060–0,1429, dosledno negativno | lošije u svih 8 konfiguracija |
 | Hadamard → apsolutna razlika (ista arhitektura) | Pacijenti (176/54) | Δ = −0,055 [−0,099, −0,016] | da, 2 od 3 testa |
 
 Nijedna testirana konfiguracija apsolutne razlike nije dostigla polazni model pod LOCO-om; ovaj nalaz je motivisao prelazak na Hadamard produkt. Prednost Hadamard enkodiranja potvrđena je nezavisno i na pacijentskom skupu.
@@ -301,9 +321,9 @@ Nijedna testirana konfiguracija apsolutne razlike nije dostigla polazni model po
 
 ### 3.3.2. Veći kapacitet interakcije parova ne poboljšava model
 
-| Model | MRR | Protokol | Δ vs. cosine (0,1209) | Značajno? |
-|---|---:|---|---:|---|
-| Bilinearni model (low-rank outer product) | 0,1004 | LOCO | −0,0205 | da, značajno lošije |
+| Model | MRR | Protokol | Δ vs. BLAST (0,1243) | Δ vs. MLP(Hadamard) (0,1259) | Δ vs. cosine (0,1209, embedding baseline) | Značajno? |
+|---|---:|---|---:|---:|---:|---|
+| Bilinearni model (low-rank outer product, rang 64 — 2.3.3) | 0,1004 | LOCO | −0,0239 | −0,0255 | −0,0205 | da, značajno lošije |
 
 ### 3.3.3. Nelinearna MLP klasifikacija donosi malo u odnosu na linearni klasifikator
 
@@ -324,7 +344,7 @@ Sve analize u ovom odeljku sprovedene su na linearnom Hadamard modelu treniranom
 | Top-20 dimenzija po \|težini\| | 0,80 |
 | Top-50 dimenzija po \|težini\| | 0,77 |
 
-17/20, odnosno 42/50 dimenzija pojavljuje se u top-skupu kod ≥4 od 5 semena — model dosledno koristi skoro isti mali podskup dimenzija, ne nasumičan izbor pri svakom treningu.
+17/20, odnosno 42/50 dimenzija pojavljuje se u top-skupu kod ≥4 od 5 semena — model dosledno koristi skoro isti mali podskup dimenzija, ne nasumičan izbor pri svakom treningu. Za poređenje, očekivani Jaccard indeks pri potpuno nasumičnom izboru dimenzija iz 1280 (dva nezavisna nasumična podskupa iste veličine) iznosi ≈0,008 za top-20 i ≈0,020 za top-50 (hipergeometrijska očekivana vrednost, potvrđeno Monte Carlo simulacijom) — opaženi Jaccard indeks je znatno veći od ove referentne, nasumične vrednosti, što pojačava tvrdnju o stabilnosti.
 
 ### 3.4.2. Pojedinačna diskriminativnost ne objašnjava u potpunosti upotrebu dimenzija u modelu
 
@@ -336,11 +356,11 @@ Preklapanje top-20/top-50 dimenzija po \|težini\| sa top-20/top-50 dimenzija po
 |---|---|---|---|
 | Zadrži top 50% dimenzija po train-fold Cohen's $d$, ostatak nuliran | LOCO (40 folda) | mean Δ = +0,0003 (std 0,0037) | 1/5 semena |
 
-Prosečna razlika je blizu nule, ali to nije "nema efekta" — u 4 od 5 semena je odsecanje blago pogoršalo rezultat; jedino seme u kome je "pobedilo" imalo je neobično nizak baseline u tom konkretnom semenu (regresija ka sredini, ne sistematsko poboljšanje). Odsecanje po Cohen's $d$ uklanja i deo dimenzija koje model stvarno koristi (3.4.2), pa ne uspeva da odvoji šum od signala.
+Sa samo 5 semena i ovako malim efektom (mean +0,0003, std 0,0037), najpošteniji zaključak je: **nije detektovan merljiv efekat odsecanja preko ovih 5 semena**. Odsecanje po Cohen's $d$ uklanja i deo dimenzija koje model stvarno koristi (3.4.2), pa ne uspeva pouzdano da odvoji šum od signala; jača tvrdnja (u bilo kom pravcu) zahtevala bi više semena ili test ekvivalencije (npr. TOST), što nije sprovedeno.
 
 ## 3.5. Većina ključnih dimenzija prati merljiva svojstva proteina
 
-Za svih ~1535 proteina u pool-u izračunata su realna biofizička i strukturna svojstva direktno iz FASTA sekvenci (dužina, GRAVY hidrofobnost, naboj na pH 7, aromatičnost, izoelektrična tačka, indeks nestabilnosti, udeo sekundarne strukture, pun aminokiselinski sastav), i korelisana (Spearman) sa vrednošću svake od 42 dimenzije (3.4.1) preko celog pool-a.
+Za svih ~1535 proteina u pool-u izračunata su realna biofizička i strukturna svojstva direktno iz FASTA sekvenci (dužina, GRAVY hidrofobnost, naboj na pH 7, aromatičnost, izoelektrična tačka, indeks nestabilnosti, udeo alfa-heliksa, pun aminokiselinski sastav — 27 pojedinačnih deskriptora ukupno), i korelisana (Spearman) sa vrednošću svake od 42 dimenzije (3.4.1) preko celog pool-a, u dve faze (3.5.1, 3.5.2; ukupno 630 testova). Na kompletan skup p-vrednosti primenjena je Benjamini–Hochberg FDR korekcija; 484/630 testova ostaje značajno na $q<0{,}05$.
 
 ### 3.5.1. Povezanost sa biohemijskim svojstvima
 
@@ -358,7 +378,7 @@ Preostalih 18 dimenzija (bez korelata u 3.5.1) testirano je protiv udela sekunda
 
 ### 3.5.3. Interpretacija i ograničenja analize latentnih dimenzija
 
-Ukupno **40/42 (95%) relevantnih dimenzija** korelira sa bar jednim od 21 testiranih realnih deskriptora. Preostale dve (nazvane po formalnom indeksu dimenzije) ne prate nijedno kontinuirano svojstvo, ali formalna provera (Mann–Whitney) pokazuje da svaka kodira kategorijsku pripadnost proteinskoj familiji (PR-10, p=1,4×10⁻¹⁷; Tropomyosin, p=4,1×10⁻⁹) — objašnjenje zašto ih korelacija sa kontinuiranim svojstvima nije uhvatila. Nijedna dimenzija ne prelazi \|r\|=0,5; ni jedna nije "čist" enkoder jedne osobine. Ovo su korelacione, ne uzročne asocijacije — ne dokazuju da navedena svojstva pokreću prediktivni signal modela.
+Ukupno **40/42 (95%) relevantnih dimenzija** korelira (na FDR-korigovanom $q<0{,}05$) sa bar jednim od 27 testiranih realnih deskriptora. Preostale dve (nazvane po formalnom indeksu dimenzije) ne prate nijedno kontinuirano svojstvo, ali formalna provera (Mann–Whitney) pokazuje da svaka kodira kategorijsku pripadnost proteinskoj familiji (PR-10, p=1,4×10⁻¹⁷; Tropomyosin, p=4,1×10⁻⁹) — objašnjenje zašto ih korelacija sa kontinuiranim svojstvima nije uhvatila. Nijedna dimenzija ne prelazi \|r\|=0,5; ni jedna nije "čist" enkoder jedne osobine. Ovo su korelacione, ne uzročne asocijacije — ne dokazuju da navedena svojstva pokreću prediktivni signal modela.
 
 ## 3.6. Eksplicitne međudimenzionalne interakcije ne pružaju merljiv dodatni signal
 
@@ -369,13 +389,11 @@ Za svih $\binom{42}{2}=861$ parova relevantnih dimenzija, poređen je aditivni l
 | Maksimalni dobitak od interakcionog člana (ΔAUC) | 0,0006 |
 | Medijalni dobitak | ≈0,000004 |
 
-Nijedan par ne pokazuje merljiv dobitak od eksplicitne interakcije — aditivna kombinacija dve dimenzije već sadrži skoro svu njihovu zajedničku prediktivnu informaciju. Ovo je nezavisna potvrda nalaza iz 3.3.3: interakcija koju Hadamard produkt nosi je ona ugrađena po konstrukciji (ista dimenzija, dva proteina), ne interakcija između različitih dimenzija unutar predstave.
+Nijedan par ne pokazuje merljiv dobitak od eksplicitne interakcije — aditivna kombinacija dve dimenzije već sadrži skoro svu njihovu zajedničku prediktivnu informaciju. Ovo je nezavisna potvrda nalaza iz 3.3.3: interakcija koju Hadamard produkt nosi je ona ugrađena po konstrukciji (ista dimenzija, dva proteina), ne interakcija između različitih dimenzija unutar predstave. Za razliku od 3.4 (5 semena), ova analiza je sprovedena na jednom semenu — navedeno kao ograničenje obima, ne kao dokazano stabilan nalaz preko inicijalizacija.
 
-## 3.7. MLP 
+## 3.7. BLAST-komplementarnost po jačini signala
 
-### 3.7.1. Ukupno LOCO poređenje sa BLAST-om
-
-Videti tabelu u 3.3.1: MLP(Hadamard) 650M i BLAST su statistički izjednačeni pod LOCO-om (0,1259 vs. 0,1243, CI uključuje nulu).
+MLP(Hadamard) 650M i BLAST su statistički izjednačeni pod LOCO-om u celini (0,1259 vs. 0,1243, tabela 3.3.1, CI uključuje nulu); sledeći odeljci pokazuju da ta ukupna izjednačenost krije jak, sistematski obrazac po podgrupama upita.
 
 ### 3.7.2. Dobitak MLP-a raste kako se performanse BLAST-a smanjuju
 
@@ -388,6 +406,8 @@ Videti tabelu u 3.3.1: MLP(Hadamard) 650M i BLAST su statistički izjednačeni p
 
 Spearman(BLAST rr, Δ) = −0,404 (p=1,5×10⁻⁷⁶). MLP nadmašuje BLAST u donja tri kvartila (75% upita); u gornjem kvartilu, gde je BLAST već blizu maksimuma, MLP zaostaje. Familije sa dijagnostikovanim "zagušenjem" kandidata (nsLTP/Profilin/PR-10) imaju sistemski nizak BLAST rr (mean 0,052 naspram 0,193 za ostale familije) — crowding je najekstremniji, ne poseban, slučaj ovog istog obrasca.
 
+**Metodološki oprez.** Pošto je $\Delta_q$ definisan kao razlika dva recipročna ranga koji su oba ograničena na $[0,1]$, deo negativne korelacije u Q4 je delimično i matematička posledica te definicije: kada je $r_{\mathrm{BLAST}}(q)$ već blizu 1 (BLAST rr blizu maksimuma), $\Delta_q$ ne može biti pozitivan bez obzira na MLP, jer nema više prostora na skali prema gore ("plafon"-efekat). Ovo ne poništava nalaz — obrazac je dosledan i u Q1–Q3, gde plafon-efekat nije aktivan a MLP i dalje sistematski dobija — ali znači da se sam koeficijent korelacije preko svih kvartila zajedno ne sme tumačiti kao čista mera komplementarnosti; nosilac dokaza je obrazac po kvartilima, ne jedan globalni Spearman broj.
+
 ### 3.7.3. Upitima sa slabim BLAST-om dominira konkurencija kandidata, a ne nužno nizak identitet sekvence
 
 | Grupa (LOCO) | mean sequence identity % | % upita koji dodiruju crowded familiju |
@@ -396,6 +416,8 @@ Spearman(BLAST rr, Δ) = −0,404 (p=1,5×10⁻⁷⁶). MLP nadmašuje BLAST u d
 | BLAST_slab (rang ispod medijane) | 48–53% | 73,8–81,9% |
 
 BLAST_slab populacija ima umeren, ne nizak, sirov identitet — pada u srednji tercil sekvencijalne sličnosti definisan u 3.7.4/pacijentskoj stratifikaciji, ne u niski. Nizak *rang* BLAST-a je posledica konkurencije mnogo sličnih kandidata unutar iste familije, ne odsustva homologije.
+
+"Crowded familija" ovde je operativno definisana kao fiksan, unapred određen skup od tri proteinske familije (nsLTP, Profilin, PR-10), identifikovan u odvojenoj analizi (raspon MRR-a 13× između familija) kao familije sa neuobičajeno velikim brojem međusobno pozitivnih parova. Ovo je dakle svojstvo familije kojoj upit pripada ("crowded familija"), a ne dinamička, po-upitna mera gustine kandidata ("crowded upit" u smislu "N kandidata unutar praga sličnosti X") — takva gušća, kontinuirana definicija nije korišćena.
 
 ### 3.7.4. Nijedan jednostavan biohemijski potpis ne razlikuje pobede MLP-a od njegovih poraza
 
@@ -414,21 +436,19 @@ Skriveni nalaz (pozitivan ili negativan) evaluira se povratkom njegovog ranga; p
 
 $$\mathrm{MRR}_{+} = \mathrm{mean}(1/\mathrm{rang}), \quad \mathrm{NR}_{-} = \mathrm{mean}\left(\frac{\mathrm{rang}-1}{N-1}\right)\ (\text{veće} = \text{bolje potisnuto})$$
 
-| Metrika | MLP | BLAST | Δ | Wilcoxon p | Cluster-perm. p | Bootstrap 95% CI |
+| Metrika | MLP | BLAST | Δ (uparena, po pacijentu) | Wilcoxon p | Cluster-perm. p | Bootstrap 95% CI |
 |---|---:|---:|---:|---:|---:|---|
-| MRR₊ (n=100 proba, 34 uparena pac.) | 0,203 | 0,174 | +0,021–0,029 | 0,0156 | 0,0227 | [+0,0045, +0,0423] |
-| NR₋ (n=76 proba, 37 uparenih pac.) | 0,441 | 0,599 | −0,142–0,158 | 0,0006 | <0,0001 | [−0,2135, −0,0787] |
+| MRR₊ (n=100 proba, 34 uparena pac.) | 0,203 | 0,174 | +0,029 | 0,0156 | 0,0227 | [+0,0045, +0,0423] |
+| NR₋ (n=76 proba, 37 uparenih pac.) | 0,441 | 0,599 | −0,158 | 0,0006 | <0,0001 | [−0,2135, −0,0787] |
 
-Oba efekta su statistički značajna, u suprotnim smerovima, sva tri testa. MLP(Hadamard) značajno bolje prioritizuje prave unakrsno reaktivne partnere; BLAST značajno bolje potiskuje prave negativne kandidate, efektom veće apsolutne i relativne veličine. Modeli su komplementarni specijalisti, ne jedan univerzalno superioran.
+Δ je srednja razlika (MLP−BLAST) po pacijentu, makro-usrednjena preko uparenih pacijenata — ne prosta razlika prikazanih MLP/BLAST proseka u koloni levo (koje su mikro-proseci preko svih proba). MLP(Hadamard) značajno bolje prioritizuje prave unakrsno reaktivne partnere; BLAST bolje potiskuje prave negativne kandidate, efektom veće apsolutne i relativne veličine. Modeli su komplementarni specijalisti, ne jedan univerzalno superioran.
 
 ### 3.8.2. ESM kosinusna sličnost naspram MLP(Hadamard)
 
-<!-- NAPOMENA: brojevi u ovoj tabeli su preneti direktno iz RAD.md 4.5 i NISU nezavisno ponovo provereni pod ispravljenom (pravac-svesnom) metrikom primenjenom u 3.8.1 -- videti pre finalizacije. -->
-
-| Poređenje | Wilcoxon p | Cluster-permutacija p | Bootstrap 95% CI |
-|---|---:|---:|---|
-| Cosine vs. BLAST (svi upiti) | 0,7994 | 0,0205 | [−0,0921, −0,0121] |
-| Cosine vs. MLP(Hadamard) (svi upiti) | 0,0172 | 0,0026 | [−0,1042, −0,0214] |
+| Poređenje | Cluster-permutacija p | Bootstrap 95% CI |
+|---|---:|---|
+| Cosine vs. BLAST (svi upiti) | 0,0205 | [−0,0921, −0,0121] |
+| Cosine vs. MLP(Hadamard) (svi upiti) | 0,0026 | [−0,1042, −0,0214] |
 
 Cosine (netreniran signal nad istom reprezentacijom) je najslabiji od sva tri signala — prednost MLP(Hadamard)-a nad BLAST-om ne potiče iz same ESM-2 reprezentacije, već iz naučene Hadamard transformacije nad njom.
 
@@ -446,7 +466,7 @@ Cosine (netreniran signal nad istom reprezentacijom) je najslabiji od sva tri si
 
 ## 4.1. Kvalitet reprezentacije i način formiranja para važniji su od povećavanja složenosti modela
 
-Rezultati pokazuju da povećavanje složenosti modela nije samo po sebi dovelo do boljeg predviđanja unakrsne reaktivnosti. ESM-2 reprezentacije sadržale su informaciju korisnu za razlikovanje cross-reactive parova koja se ne može objasniti samo sastavom aminokiselina. Istovremeno, veći ESM-2 model nije doneo poboljšanje u odnosu na model sa 650 miliona parametara. Slično tome, eksplicitno povećavanje prostora interakcija pomoću bilinearne reprezentacije nije poboljšalo rezultat, dok poređenje MLP-a sa linearnim klasifikatorom nije pokazalo jasnu prednost dodatne nelinearne složenosti.
+Rezultati pokazuju da povećavanje složenosti modela nije samo po sebi dovelo do boljeg predviđanja unakrsne reaktivnosti. ESM-2 reprezentacije sadržale su informaciju korisnu za razlikovanje cross-reactive parova koja se ne može objasniti samo sastavom aminokiselina. Istovremeno, veći ESM-2 model nije doneo poboljšanje u odnosu na model sa 650 miliona parametara. Slično tome, eksplicitno povećavanje prostora interakcija pomoću bilinearne reprezentacije nije poboljšalo rezultat, dok poređenje MLP-a sa linearnim klasifikatorom nije pokazalo jasnu prednost dodatne nelinearne složenosti).
 
 Nasuprot tome, način na koji su reprezentacije dva proteina pretvorene u zajedničku reprezentaciju imao je izraženiji uticaj. Hadamardov proizvod pokazao se pogodnijim od apsolutne razlike za formiranje proteinskih parova, što ukazuje da informacija sadržana u pojedinačnim ESM-2 embeddingima nije dovoljna sama po sebi. Važno je i kako se ta informacija međusobno povezuje između dva proteina.
 
@@ -468,11 +488,7 @@ $$
 x_i = u_i v_i.
 $$
 
-Na taj način svaka latentna dimenzija jednog proteina ulazi u model zajedno sa odgovarajućom dimenzijom drugog proteina. Ovo omogućava modelu da detektuje obrasce zajedničke aktivacije ili suprotne aktivacije određenih latentnih osobina. Kod apsolutne razlike, s druge strane, informacija je zasnovana na udaljenosti između odgovarajućih komponenti i ne zadržava njihov zajednički znak.
-
-Dodatna analiza interakcija između dimenzija pokazala je da eksplicitno uvođenje proizvoda između različitih dimenzija nije donelo značajno poboljšanje. To je važno za interpretaciju Hadamardovog rezultata: prednost ovog enkodiranja ne može se jednostavno pripisati tome što model koristi sve moguće parove latentnih dimenzija. Njegova uloga je uža — omogućava **interakciju između odgovarajućih dimenzija reprezentacija dva proteina**.
-
-Stabilnost izabranih dimenzija kroz različite inicijalizacije dodatno pokazuje da model ne koristi potpuno proizvoljne komponente embeddinga. Ipak, relativno mala podudarnost između dimenzija sa najvećim klasifikacionim težinama i dimenzija sa najvećom pojedinačnom diskriminativnošću pokazuje da doprinos pojedinačne dimenzije ne treba posmatrati izolovano. Model koristi kombinaciju više komponenti reprezentacije, čiji doprinos zavisi od odnosa između dva proteina.
+Na taj način svaka latentna dimenzija jednog proteina ulazi u model zajedno sa odgovarajućom dimenzijom drugog proteina. Ovo omogućava modelu da detektuje obrasce zajedničke aktivacije ili suprotne aktivacije određenih latentnih osobina. Kod apsolutne razlike, s druge strane, informacija je zasnovana na udaljenosti između odgovarajućih komponenti i ne zadržava njihov zajednički znak. Njegova uloga je uža pa omogućava **interakciju između odgovarajućih dimenzija reprezentacija dva proteina**, ne interakciju svih mogućih parova latentnih dimenzija.
 
 Zbog toga se Hadamardov proizvod može posmatrati kao jednostavan način da se iz dva pojedinačna ESM-2 embeddinga formira reprezentacija njihovog odnosa. Rezultati ne pokazuju da ova reprezentacija eksplicitno modeluje sve moguće proteinske interakcije. Pokazuju da je upravo ova ograničena, dimenzijski usklađena forma interakcije bila pogodnija za zadatak predviđanja unakrsne reaktivnosti od testiranih alternativnih enkodiranja.
 
@@ -483,8 +499,6 @@ Poređenje MLP klasifikatora sa logističkom regresijom nad istom Hadamardovom r
 U tom kontekstu, uloga klasifikatora može biti pre svega da kombinuje već postojeće signale iz pairwise reprezentacije. Ako su relevantni obrasci nakon ovog postupka dovoljno separabilni, linearni model može da ih iskoristi bez potrebe za dodatnim slojevima nelinearnih transformacija.
 
 Ovaj nalaz ne znači da je odnos između proteina inherentno linearan. ESM-2 reprezentacija je rezultat nelinearnog procesa učenja, a Hadamardov proizvod uvodi multiplicativnu interakciju između odgovarajućih dimenzija dva proteina. Linearna priroda završnog klasifikatora zato ne treba da se tumači kao odsustvo nelinearnosti u celom modelu. Preciznije, rezultat pokazuje da **nakon formiranja odgovarajuće reprezentacije para nije pronađena potreba za dodatnom nelinearnom transformacijom na nivou klasifikatora**.
-
-Ovakva interpretacija je u skladu sa poređenjem različitih nivoa modela: povećavanje veličine ESM-2 modela, proširivanje prostora interakcija i dodavanje nelinearnosti završnom klasifikatoru nisu dali stabilno poboljšanje. Najizraženija razlika pojavila se pri izboru načina na koji se pojedinačne proteinske reprezentacije pretvaraju u reprezentaciju para.
 
 ## 4.4. Signal je raspoređen širom embedding prostora
 
@@ -502,13 +516,11 @@ Zajedno, ovi nalazi podržavaju sliku **distribuiranog signala**. Model koristi 
 
 ## 4.5. Šta model uči što jednostavni deskriptori ne obuhvataju
 
-Poređenje ESM-2 reprezentacija sa jednostavnim deskriptorima pokazalo je da informacija korisna za predikciju unakrsne reaktivnosti nije obuhvaćena samo osnovnim biohemijskim osobinama proteina. ESM-2 reprezentacija je na nezavisnoj evaluaciji pokazala znatno bolje ponašanje od reprezentacije zasnovane na sastavu aminokiselina. Istovremeno, analiza pojedinačnih latentnih dimenzija pokazala je da mnoge od njih jesu povezane sa merljivim biohemijskim i strukturnim svojstvima.
+Poređenje ESM-2 reprezentacija sa jednostavnim deskriptorima pokazalo je da informacija korisna za predikciju nije obuhvaćena samo osnovnim biohemijskim osobinama proteina. Ipak, kao što je pokazano u 4.4, većina bitnih dimenzija je upravo sa takvim osobinama korelisana. Ova dva rezultata nisu kontradiktorna: ESM-2 embedding može sadržati informacije povezane sa poznatim biohemijskim osobinama, ali ih organizovati u višedimenzionalnu reprezentaciju koju jednostavni zbirni deskriptori ne mogu u potpunosti opisati; sama korelacija dimenzije sa svojstvom ne pokazuje da je to svojstvo mehanizam koji određuje predikciju.
 
-Ova dva rezultata nisu međusobno kontradiktorna. ESM-2 embedding može sadržati informacije povezane sa poznatim biohemijskim osobinama, ali ih organizovati u višedimenzionalnu reprezentaciju koju jednostavni zbirni deskriptori ne mogu u potpunosti opisati. Sama činjenica da je dimenzija korelisana sa određenim svojstvom ne pokazuje da je upravo to svojstvo mehanizam koji određuje predikciju.
+Dodatno, analiza parova na kojima je MLP nadmašio BLAST naspram parova gde je BLAST bio bolji nije otkrila jednostavan biohemijski obrazac koji bi razdvojio ove dve grupe. Razlike u ispitivanim deskriptorima ne pružaju stabilan kriterijum za predviđanje kada će model biti uspešniji od klasičnog poravnanja.
 
-Dodatno, analiza parova na kojima je MLP nadmašio BLAST u odnosu na parove na kojima je BLAST bio bolji nije otkrila jednostavan biohemijski obrazac koji bi razdvojio ove dve grupe. Razlike u ispitivanim deskriptorima nisu pružile stabilan kriterijum za predviđanje toga kada će model biti uspešniji od klasičnog poravnanja sekvenci.
-
-Najopreznija interpretacija ovih rezultata jeste da model koristi **finiju organizaciju informacija u latentnom prostoru ESM-2** koja nije direktno predstavljena pojedinačnim deskriptorima. Takva interpretacija je u skladu sa činjenicom da je signal distribuiran kroz više dimenzija i da njihova pojedinačna svojstva ne objašnjavaju u potpunosti ponašanje modela. Međutim, ovi rezultati ne predstavljaju dokaz da je upravo geometrija latentnog prostora uzrok boljih predikcija. Za potvrdu takvog mehanizma bile bi potrebne dodatne intervencione i reprezentacione analize.
+Najopreznija interpretacija je da model koristi **finiju organizaciju informacija u latentnom prostoru ESM-2** koja nije direktno predstavljena pojedinačnim deskriptorima.
 
 ## 4.6. Komplementarnost sa poravnanjem sekvenci
 
@@ -518,23 +530,11 @@ Na LOCO evaluaciji ukupna razlika između MLP-a i BLAST-a bila je mala, što pok
 
 Ovaj obrazac pokazuje da vrednost ESM-2 reprezentacije nije ravnomerno raspoređena kroz sve slučajeve. Kada sekvencijalno poravnanje već daje snažan signal, dodatna informacija koju MLP izvlači iz embeddinga ima manji doprinos. Kada je BLAST signal slabiji, ESM-2 reprezentacija može pružiti informaciju koja nije dovoljno izražena kroz direktnu sekvencijalnu sličnost.
 
-Analiza BLAST-slabih slučajeva dodatno pokazuje da slab BLAST rang ne znači nužno i nisku sekvencijalnu sličnost. U značajnom broju takvih slučajeva problem nastaje zbog konkurencije između više kandidata sa sličnim BLAST rezultatima. MLP u tim situacijama može drugačije rangirati kandidate koristeći informacije iz njihove latentne reprezentacije.
+Analiza BLAST-slabih slučajeva dodatno pokazuje da slab BLAST *rang* ne znači nužno i nisku sekvencijalnu sličnost — termin „slab BLAST" u ovom radu treba razumeti prvenstveno kao slabiji rang kandidata, ne kao sinonim za nizak identitet sekvence. U značajnom broju takvih slučajeva problem nastaje zbog konkurencije između više kandidata sa sličnim, umerenim BLAST rezultatima (3.7.3), ne zbog odsustva homologije; niti je pronađen jednostavan biohemijski obrazac koji bi razlikovao parove na kojima MLP dobija od onih na kojima gubi (3.7.4). MLP u tim situacijama drugačije rangira kandidate koristeći informacije iz njihove latentne reprezentacije.
 
-Zbog toga se najprirodnije tumačenje odnosa između ova dva pristupa ne zasniva na pitanju koji je model „bolji“. BLAST i MLP predstavljaju **dva različita izvora informacije o odnosu između proteina**. BLAST direktno koristi sekvencijalnu sličnost, dok MLP koristi obrasce prisutne u ESM-2 embedding prostoru. Njihova komplementarnost je naročito izražena kada sekvencijalni signal nije dovoljan da jednoznačno rangira kandidate.
+Zbog toga se najprirodnije tumačenje odnosa između ova dva pristupa ne zasniva na pitanju koji je model „bolji“. BLAST i MLP predstavljaju **dva različita izvora informacije o odnosu između proteina**. BLAST direktno koristi sekvencijalnu sličnost, dok MLP koristi obrasce prisutne u ESM-2 embedding prostoru. Njihova komplementarnost je naročito izražena kada sekvencijalni signal nije dovoljan da jednoznačno rangira kandidate — umesto da se ESM-2 model posmatra kao zamena za postojeće metode poravnanja, prirodnije je posmatrati ga kao dopunski izvor informacije.
 
-Ovaj rezultat ima i praktičnu implikaciju za razvoj prediktivnih sistema. Umesto da se ESM-2 model posmatra kao zamena za postojeće metode poravnanja, prirodnije je posmatrati ga kao dopunski izvor informacije koji može biti najkorisniji upravo u slučajevima u kojima klasična sekvencijalna sličnost daje slab ili neodlučan signal.
-
-## 4.7. Zašto „slab BLAST“ ne znači „nizak identitet sekvence“
-
-Rezultati pokazuju da slab BLAST signal ne treba automatski tumačiti kao nisku sekvencijalnu sličnost. U grupi kandidata sa slabijim BLAST rangom nalazio se značajan broj proteina sa umerenim procentom identiteta. Problem je često bio u tome što je više kandidata istovremeno imalo relativno slične sekvencijalne rezultate.
-
-Ovaj nalaz je važan za interpretaciju komplementarnosti MLP-a i BLAST-a. MLP nije nužno najkorisniji onda kada između dva proteina ne postoji nikakva sekvencijalna sličnost. Njegova prednost može da se pojavi i u situacijama u kojima sekvencijalna sličnost postoji, ali BLAST na osnovu nje ne može dovoljno dobro da izdvoji relevantnog kandidata iz grupe sličnih proteina.
-
-Analiza BLAST-slabih slučajeva podržava upravo takvo tumačenje. U tim slučajevima nije pronađen jednostavan biohemijski obrazac koji bi razlikovao parove na kojima MLP dobija od onih na kojima gubi. Umesto toga, rezultati ukazuju da je važan deo problema povezan sa načinom rangiranja konkurentskih kandidata.
-
-Zbog toga termin „slab BLAST“ u ovom radu treba razumeti prvenstveno kao **slabiji rang kandidata prema BLAST signalu**, a ne kao sinonim za nisku sekvencijalnu sličnost.
-
-## 4.8. Šta nam model ne govori?
+## 4.7. Šta nam model ne govori?
 
 Iako analiza embedding prostora pokazuje povezanost latentnih dimenzija sa različitim biohemijskim i strukturnim svojstvima, ovi rezultati ne omogućavaju zaključak da ta svojstva uzrokuju unakrsnu reaktivnost. Korelacija latentne dimenzije sa naelektrisanjem, izoelektričnom tačkom ili sekundarnom strukturom pokazuje samo da su informacije povezane u reprezentaciji.
 
@@ -544,34 +544,27 @@ Slično tome, pojedinačna dimenzija ESM-2 embeddinga ne treba da se tumači kao
 
 Zbog toga interpretaciju modela treba ograničiti na ono što je direktno podržano eksperimentima: ESM-2 embedding sadrži informaciju korisnu za ovaj zadatak, Hadamardovo enkodiranje omogućava njeno korišćenje na nivou proteinskog para, a deo te informacije povezan je sa poznatim osobinama proteina. Precizan biološki mehanizam koji stoji iza tih obrazaca ostaje otvoreno pitanje.
 
-## 4.9. Metodološke implikacije
+## 4.8. Ograničenja
 
-Izbor evaluacionog protokola značajno utiče na zaključke o sposobnosti modela da predviđa unakrsnu reaktivnost. Zbog povezanosti proteinskih parova kroz zajedničke komponente, nasumična podela parova može dovesti do curenja informacija između treninga i testa. Zbog toga je u radu korišćena LOCO validacija, pri kojoj se čitave povezane komponente proteinskog grafa izdvajaju iz treninga i koriste za testiranje. Na taj način se procenjuje generalizacija na proteinske odnose koji nisu direktno prisutni u trening skupu.
-
-Rezultati dobijeni na nivou pojedinačnih proteinskih parova ne predstavljaju nužno ponašanje modela u nezavisnom kliničkom okruženju. Zbog toga je pacijentska evaluacija tretirana kao zaseban nivo validacije, pri čemu podaci pacijenata nisu korišćeni za treniranje modela. Ovakva evaluacija omogućava ispitivanje da li obrasci naučeni na kuriranom skupu proteinskih odnosa imaju vrednost i kada se model primeni na nezavisne nalaze.
-
-Statistička analiza je takođe prilagođena strukturi podataka. Kada više proteinskih parova potiče iz istog literaturnog izvora ili kada više posmatranja pripada istom pacijentu, ta posmatranja nisu nužno nezavisna. Zbog toga je pri proceni razlika između modela potrebno uzeti u obzir nivo na kojem nastaje zavisnost, a ne tretirati svaki par kao potpuno nezavisnu jedinicu.
-
-Ove metodološke odluke menjaju način na koji treba interpretirati rezultate. Poboljšanje na slučajno podeljenom skupu nije dovoljno da pokaže generalizaciju na nove proteinske odnose, dok rezultat na jednom proteinskom paru nije dovoljan da pokaže korisnost za nezavisne pacijente. Kombinovanje LOCO evaluacije, nezavisne pacijentske evaluacije i statističkih testova na odgovarajućem nivou zavisnosti daje strožu procenu toga šta model zaista nauči i gde se njegova prednost pojavljuje.
-
-
-# 4.10. Ograničenja
-
-## 4.10.1. Pozitivno-neobeležena priroda skupa podataka
+### 4.8.1. Pozitivno-neobeležena priroda skupa podataka
 
 Skup podataka ne omogućava pouzdano razlikovanje svih negativnih parova od neobeleženih parova. Odsustvo dokumentovane unakrsne reaktivnosti ne znači nužno da ona ne postoji, zbog čega negativni primeri mogu sadržati neotkrivene pozitivne odnose. Ograničenje je posebno važno pri tumačenju performansi klasifikatora.
 
-## 4.10.2. Ograničen broj nezavisnih bioloških primera
+### 4.8.2. Ograničen broj nezavisnih bioloških primera
 
 Iako skup sadrži veliki broj proteinskih parova, broj međusobno nezavisnih bioloških primera je ograničen njihovom povezanošću kroz zajedničke proteine i literaturne izvore. Zbog toga je korišćena LOCO validacija kako bi se smanjio uticaj ove zavisnosti. Ipak, rezultati treba da se tumače kao procena generalizacije na nove povezane komponente, a ne kao potpuno nezavisna procena na velikom broju nezavisnih eksperimenata.
 
-## 4.10.3. Ograničena nezavisna kohorta pacijenata
+### 4.8.3. Ograničena nezavisna kohorta pacijenata
 
 Pacijentska evaluacija predstavlja nezavisnu proveru modela, ali je njen obim ograničen brojem dostupnih pacijenata i kompletnim nalazima. Rezultate stoga treba posmatrati kao potvrdu potencijala modela na nezavisnim podacima, a ne kao konačnu procenu kliničke primenljivosti.
 
-## 4.10.4. Post-hoc interpretacija dimenzija embeddinga
+### 4.8.4. Post-hoc interpretacija dimenzija embeddinga
 
 Povezivanje latentnih dimenzija ESM-2 embeddinga sa biohemijskim i strukturnim osobinama izvršeno je nakon treniranja modela. Takve analize mogu ukazati na moguće značenje naučenih reprezentacija, ali ne dokazuju da određena osobina uzrokuje predikciju niti da latentna dimenzija ima jednu jasno definisanu biološku funkciju.
+
+### 4.8.5. Namena modela: prioritizacija kandidata, ne dijagnoza
+
+Model je razvijen i evaluiran kao alat za **prioritizaciju kandidata za dalje eksperimentalno testiranje**, rangiranje proteina prema verovatnoći unakrsne reaktivnosti radi usmeravanja skupljih laboratorijskih ili kliničkih provera (npr. skin-prick ili specifičnog IgE testiranja). On **nije** dijagnostički alat: nijedan nalaz modela ne predstavlja potvrdu niti isključenje unakrsne reaktivnosti kod konkretnog pacijenta, niti zamenu za klinički pregled i standardizovano alergološko testiranje.
 
 # 5. Budući pravci istraživanja
 
@@ -583,7 +576,7 @@ Konačno, proširenje skupa podataka većim brojem nezavisno i eksperimentalno p
 
 ---
 
-# 5. Zaključak 
+# 6. Zaključak
 
 Ovaj rad pokazuje da potencijalna unakrsna reaktivnost proteinskih alergena ne može biti pouzdano opisana jednom merom sličnosti. Dok sama ESM-2 cosine sličnost nije nadmašila BLAST, nadgledano kombinovanje ESM-2 reprezentacija putem Hadamard proizvoda pokazalo je znatno korisniji signal i na nezavisnim pacijentskim slučajevima ostvarilo najbolje rangiranje. Ablacione analize ukazuju da ključ nije u samoj kompleksnosti modela, već u kvalitetu proteinske reprezentacije i načinu na koji se dve reprezentacije povezuju.
 
@@ -593,7 +586,7 @@ Rezultati zato ne ukazuju na jednostavnu zamenu BLAST-a novim modelom, već na *
 
 # Dostupnost podataka i koda
 
-Kod i svi korisceni resursi dostupni na: https://github.com/tardigrafika/Allergorithm
+Kod i svi korišćeni resursi dostupni na: https://github.com/tardigrafika/Allergorithm
 
 # Zahvalnice
 
