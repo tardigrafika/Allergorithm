@@ -1,0 +1,9 @@
+# Colab vec dolazi sa GPU-spremnim torch-om -- NE reinstaliraj torch/torchvision/torchaudio
+# (rizik da pip stavi CPU-only ili pogresan CUDA build i pokvari GPU runtime).
+# Ako ti ipak zatreba: proveri prvo `import torch; torch.cuda.is_available()` PRE ovog pip install-a.
+
+transformers>=4.30
+pandas
+numpy
+scikit-learn
+scipy
