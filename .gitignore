@@ -45,3 +45,13 @@ output/
 
 # Project instructions, kept local only
 CLAUDE.md
+
+
+**.json
+
+analysis/
+
+data/
+finetuning/
+
+ml/checkpoints
